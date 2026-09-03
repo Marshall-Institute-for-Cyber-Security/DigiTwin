@@ -18,9 +18,11 @@ hardware.
 ```
 src/digitwin/
   __init__.py            public exports
-  plc.py                 core engine: Tag, TagType, PLC, three-phase scan
+  plc.py                 core engine: three-phase scan + firmware (first-scan
+                         bit, retentive tags, restarts, watchdog)
+  instructions.py        IEC timer/counter blocks: TON, TOF, CTU, ONS
   io.py                  I/O bus + IOTransport protocol + in-process transport
-  executive.py           fixed-dt tick loop: plant.step -> transfer -> plc.scan
+  executive.py           timed tick loop: FREE_RUN / REAL_TIME / SCALED modes
   demo.py                runnable demo: tank plant wired to a PLC via the bus
   programs/
     __init__.py
@@ -34,13 +36,17 @@ docs/
   ROADMAP.md             concept roadmap: target architecture + phased design
   TODO.md                phase-ordered build checklist
 tests/
+  test_engine.py         scan phasing, first-scan, retentive, restarts, watchdog
+  test_instructions.py   TON / TOF / CTU / ONS
   test_plant.py          component dynamics / scaling / hysteresis
-  test_executive.py      demo integration: control drives valves, plant owns level
+  test_executive.py      demo integration + pacing modes
+  test_start_stop_tank.py  seal-in latch behaviour
 ```
 
-Phase 1 (plant/controller split) is landed; `pytest` is wired up but coverage is
-still thin. Backfilling engine tests (scan phasing, seal-in latch) and the rest
-of Phase 2 is the current work — see [docs/TODO.md](docs/TODO.md).
+Phases 1 and 2 are landed (plant/controller split; timed executive, firmware
+realism, timer/counter blocks). Phase 2b (PLC hardware abstraction —
+`HardwareProfile`, vendor/model subclasses) is the current work — see
+[docs/TODO.md](docs/TODO.md).
 
 ## Commands
 
@@ -78,9 +84,14 @@ The PLC models the classic **three-phase scan cycle** (`PLC.scan()` in
 
 1. **Input scan** — physical inputs (`TagType.DISCRETE_INPUT`) are frozen into
    `input_image` at the start of the scan.
-2. **Program scan** — the program runs against that frozen image.
+2. **Program scan** — the program runs against that frozen image (timed; a scan
+   over `watchdog_s` latches `plc.watchdog_tripped`).
 3. **Output scan** — staged outputs in `output_image` are flushed to tags at the
    end.
+
+`plc.first_scan` is true only on scan 1 (re-armed by `cold_start` / `warm_start`
+/ `power_cycle`). `cold_start` resets non-retentive tags to `initial_value`;
+`retentive=True` tags survive it. Keep these semantics.
 
 Therefore, in program code:
 
@@ -90,24 +101,25 @@ Therefore, in program code:
   scan, not immediately.
 - Use `plc.read()` / `plc.write()` only for internal bits (`INTERNAL_BIT`) and
   words (`WORD`).
-- Programs are callables `(plc: PLC) -> None`. A program that needs edge
-  detection or memory holds its own instance state until Phase 2 introduces real
-  timer/counter objects. (`StartStopTankProgram` is now stateless — its old
-  `_prev_*` physics bookkeeping moved to the plant.)
+- Programs are callables `(plc: PLC) -> None`. For edge detection or timing, hold
+  a `digitwin.instructions` block (`TON`, `TOF`, `CTU`, `ONS`) as instance state
+  and call it each scan — don't hand-roll `_prev_*` flags.
 
 ## Direction (so new code lands the right way)
 
-Phase 1 split control from physics; keep them apart:
+Control, physics, and timing are separate layers; keep them apart:
 
 - **Control logic** lives in `programs/` — reads sensor tags, commands actuator
-  tags, nothing else.
+  tags, holds `instructions` blocks for timing. Nothing else.
 - **Physical behavior** (tank levels, valve dynamics, sensor noise) lives in
   `digitwin/plant/` behind the `PlantModel` protocol (`step(dt, io)`).
-- They communicate **only** through the I/O bus (`digitwin/io.py`); its
-  synchronous `IOTransport` abstraction is later swapped for OPC UA (`asyncua`,
-  adapter owns its loop) or Modbus (`pymodbus`, sync) — see the Phase 6 roadmap
-  notes for how the client-transport and slave-server roles differ. Never let a
-  program import from `plant/` or vice versa.
+- **Time** is the executive's: it owns `dt` and the pacing mode. Instructions
+  and the plant receive `dt`; they never sleep or look at the wall clock.
+- Control and plant communicate **only** through the I/O bus (`digitwin/io.py`);
+  its synchronous `IOTransport` abstraction is later swapped for OPC UA
+  (`asyncua`, adapter owns its loop) or Modbus (`pymodbus`, sync) — see the
+  Phase 6 roadmap notes for the client-transport vs slave-server split. Never
+  let a program import from `plant/` or vice versa.
 - Still ahead (Phase 2b): `PLC` becomes an abstract base; concrete
   `PLC_<Vendor>_<Model>` subclasses carry a `HardwareProfile` (I/O counts,
   memory map, address syntax).

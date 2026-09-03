@@ -41,3 +41,10 @@ The program contains **only control logic**. Physical behaviour lives in a
 plant model (`digitwin.plant`) that the PLC reaches only through the I/O bus
 (`digitwin.io`); the `Executive` steps the plant and the PLC together each
 tick. `digitwin.demo` wires a tank plant to the start/stop program.
+
+For edge detection or timing, hold an instruction block from
+`digitwin.instructions` (`TON`, `TOF`, `CTU`, `ONS`) and call it each scan. The
+`Executive` runs `FREE_RUN` (as fast as possible), `REAL_TIME`, or `SCALED`
+(`scale`× wall-clock); pacing never changes `dt`, so the trajectory is
+identical in every mode. `PLC` also models a first-scan bit, retentive tags,
+cold/warm/power-cycle restarts, and a program-scan watchdog.

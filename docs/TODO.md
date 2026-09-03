@@ -26,15 +26,15 @@ Order follows the roadmap's **Suggested sequencing** table.
 
 ## Phase 2 — Real-time executive & scan-semantics fidelity
 
-- [ ] `Executive(plc, plant, io, scan_ms, mode)` — modes `real_time` / `scaled` / `free_run`
-- [ ] Per-tick order: `plant.step` → `io.transfer_inputs` → `plc.scan` → `io.transfer_outputs`
-- [ ] Record actual scan duration + jitter
-- [ ] First-scan bit (set only on scan 1)
-- [ ] `retentive: bool` on `Tag`; non-retentive reset to initial on cold start
-- [ ] Cold start / warm start / power cycle entry points
-- [ ] Watchdog — flag program scans over budget
-- [ ] Timer / counter instruction objects: `TON`, `TOF`, `CTU`, `ONS` (driven by `dt`)
-- [ ] **Validate:** `scaled` 50× matches `real_time` trajectory; `TON` 2 s preset fires at right scan count
+- [x] `Executive` — `ExecutiveMode` `FREE_RUN` / `REAL_TIME` / `SCALED` (+ `scale`), `run_for(seconds)`
+- [x] Per-tick order: `plant.step` → `_transfer_inputs` → `plc.scan` → `_transfer_outputs`
+- [x] Record actual scan duration (`plc.last_scan_duration`) + jitter (`last_jitter_s` / `worst_jitter_s`)
+- [x] First-scan bit (`plc.first_scan`, true only on scan 1; re-armed by a restart)
+- [x] `retentive: bool` on `Tag` (+ `initial_value`); non-retentive reset to initial on cold start
+- [x] Cold start / warm start / power cycle entry points (`PLC.cold_start` / `warm_start` / `power_cycle`)
+- [x] Watchdog — `PLC(watchdog_s=…)` latches `watchdog_tripped` when a program scan runs over budget
+- [x] Timer / counter instruction objects: `TON`, `TOF`, `CTU`, `ONS` (`digitwin/instructions.py`)
+- [x] **Validate:** `SCALED` 50× matches `FREE_RUN` trajectory; `TON` 2 s preset fires on the 20th 0.1 s scan
 
 ## Phase 2b — PLC hardware abstraction (vendor/model classes)
 
