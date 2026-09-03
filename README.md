@@ -2,16 +2,6 @@
 
 A small soft-PLC engine and simulation harness.
 
-## Layout
-
-```
-src/digitwin/
-  plc.py                    # Tag / TagType / PLC — the three-phase scan cycle
-  programs/
-    start_stop_tank.py      # seal-in start/stop + filling/draining tank level
-  demo.py                   # wires up a PLC with a tag table and runs a few scans
-```
-
 ## Usage
 
 With [uv](https://docs.astral.sh/uv/):
