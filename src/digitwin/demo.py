@@ -1,7 +1,15 @@
-"""Runnable demo: wire up a PLC with the start/stop tank program and scan it."""
+"""Runnable demo: a tank plant wired to a PLC through the I/O bus.
+
+The control program latches start/stop and commands the valves; the tank
+level is now integrated by :class:`digitwin.plant.tank.Tank` and read back
+through an analog level transmitter. The executive steps both each tick.
+"""
 
 from __future__ import annotations
 
+from digitwin.executive import Executive
+from digitwin.io import InProcessTransport, IOBus
+from digitwin.plant import AnalogSensor, CompositePlant, Tank
 from digitwin.plc import PLC, TagType, TagValue
 from digitwin.programs import StartStopTankProgram
 
@@ -17,10 +25,16 @@ DEMO_TAGS: list[TagSpec] = [
     ("stop_bit", TagType.INTERNAL_BIT, True, "%M0"),
     ("green_light", TagType.DISCRETE_OUTPUT, False, "%Q0.0"),
     ("red_light", TagType.DISCRETE_OUTPUT, False, "%Q0.1"),
+    ("fill_valve", TagType.DISCRETE_OUTPUT, False, "%Q0.2"),
+    ("drain_valve", TagType.DISCRETE_OUTPUT, False, "%Q0.3"),
     ("tank_level", TagType.WORD, 0, "%MW0"),
     ("tank_fill_permitted", TagType.INTERNAL_BIT, True, "%M11"),
     ("tank_drain_permitted", TagType.INTERNAL_BIT, False, "%M10"),
 ]
+
+# PLC tag <-> bus signal wiring for the in-process transport.
+INPUT_WIRING = {"tank_level": "tank_level"}
+OUTPUT_WIRING = {"fill_valve": "fill_valve", "drain_valve": "drain_valve"}
 
 
 def build_demo_plc() -> PLC:
@@ -30,16 +44,44 @@ def build_demo_plc() -> PLC:
     return plc
 
 
-def main() -> None:
+def build_demo() -> Executive:
+    """Assemble the tank plant, the PLC, and the executive that steps them."""
     plc = build_demo_plc()
-    plc.write("start_button", True)  # simulate pressing start
 
-    for i in range(5):
-        plc.scan()
-        print(
-            f"{i} level: {plc.read('tank_level')} "
-            f"green: {plc.read('green_light')} red: {plc.read('red_light')}"
-        )
+    tank = Tank(area=2.0, fill_rate=20.0, drain_coeff=3.0, level_max=100.0)
+    transmitter = AnalogSensor(source=tank.level_signal, dest="tank_level")
+    plant = CompositePlant([tank, transmitter])
+
+    bus = IOBus()
+    transport = InProcessTransport(bus, inputs=INPUT_WIRING, outputs=OUTPUT_WIRING)
+    return Executive(plc, plant, bus, transport, dt=0.1)
+
+
+def _report(sim: Executive) -> None:
+    plc = sim.plc
+    print(
+        f"t={sim.elapsed:4.1f}s  level={int(plc.read('tank_level')):3d}  "
+        f"green={int(plc.read('green_light'))} red={int(plc.read('red_light'))}  "
+        f"fill={int(plc.read('fill_valve'))} drain={int(plc.read('drain_valve'))}"
+    )
+
+
+def main() -> None:
+    sim = build_demo()
+
+    sim.plc.write("start_button", True)  # press start
+    for _ in range(5):
+        sim.tick()
+    sim.plc.write("start_button", False)  # release; seal-in holds it running
+
+    for step in range(1, 121):
+        sim.tick()
+        if step == 45:
+            sim.plc.write("stop_button", True)  # press stop
+        elif step == 50:
+            sim.plc.write("stop_button", False)
+        if step % 15 == 0:
+            _report(sim)
 
 
 if __name__ == "__main__":
