@@ -10,9 +10,8 @@ is a proper **digital twin for PLCs**: a simulated controller plus a simulated
 physical plant, running in synchronized time, observable, and able to mirror real
 hardware.
 
-- **Roadmap / design rationale:** `docs/ROADMAP.md`
-  (outside the repo — ask the user if it's missing)
-- **Active checklist:** [TODO.md](TODO.md) — phase-ordered, references the roadmap
+- **Roadmap / design rationale:** [docs/ROADMAP.md](docs/ROADMAP.md)
+- **Active checklist:** [docs/TODO.md](docs/TODO.md) — phase-ordered, references the roadmap
 
 ## Layout
 
@@ -24,10 +23,14 @@ src/digitwin/
   programs/
     __init__.py
     start_stop_tank.py   example scan-cycle program (seal-in start/stop + tank)
+docs/
+  ROADMAP.md             concept roadmap: target architecture + phased design
+  TODO.md                phase-ordered build checklist
 ```
 
 There are **no tests yet** — adding `pytest` + a `tests/` tree is the first task
-in TODO.md (Phase 7 baseline slice). Do it before large refactors.
+in [docs/TODO.md](docs/TODO.md) (Phase 7 baseline slice). Do it before large
+refactors.
 
 ## Commands
 
@@ -93,5 +96,6 @@ tank physics. That is a known wart. The roadmap's Phase 1 separates them:
 - `PLC` will become an abstract base; concrete `PLC_<Vendor>_<Model>` subclasses
   carry a `HardwareProfile` (I/O counts, memory map, address syntax).
 
-When adding features, check TODO.md for which phase it belongs to and follow that
-phase's design notes in the roadmap rather than extending the flat structure.
+When adding features, check [docs/TODO.md](docs/TODO.md) for which phase it
+belongs to and follow that phase's design notes in the roadmap rather than
+extending the flat structure.
