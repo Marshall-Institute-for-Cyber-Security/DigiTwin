@@ -19,6 +19,12 @@ from digitwin.plc import TagValue
 IOValue = int | float | bool
 
 
+class TransportError(Exception):
+    """An I/O transport failed to move values across the PLC boundary (timeout,
+    dropped connection, protocol fault). The in-process transport never raises
+    it; the OPC UA / Modbus adapters (Phase 6) will."""
+
+
 class IOBus:
     """A flat namespace of named signal values shared by plant and transport.
 
@@ -48,7 +54,8 @@ class IOTransport(Protocol):
     ``write_outputs`` accepts ``{output tag name: value}`` for every output the
     PLC produced and forwards the ones it knows. The signature is intentionally
     batch-oriented so an OPC UA / Modbus adapter can implement it with a single
-    round-trip.
+    round-trip. A networked implementation raises :class:`TransportError` when a
+    round-trip fails.
     """
 
     def read_inputs(self) -> dict[str, TagValue]: ...
