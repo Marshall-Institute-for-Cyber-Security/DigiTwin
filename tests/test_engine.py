@@ -12,6 +12,7 @@ import time
 
 import pytest
 
+from digitwin.models import PLC_Generic
 from digitwin.plc import PLC, TagType, TagValue
 
 
@@ -21,7 +22,7 @@ def test_input_image_contains_only_discrete_inputs() -> None:
     def program(plc: PLC) -> None:
         frozen.update(plc.input_image)
 
-    plc = PLC("t", program)
+    plc = PLC_Generic("t", program)
     plc.define_tag("di", TagType.DISCRETE_INPUT, True)
     plc.define_tag("do", TagType.DISCRETE_OUTPUT, True)
     plc.define_tag("bit", TagType.INTERNAL_BIT, True)
@@ -40,7 +41,7 @@ def test_discrete_input_is_frozen_for_the_whole_scan() -> None:
         plc.tags["btn"].value = True  # hardware toggles mid-scan
         seen.append(plc.read_input("btn"))  # program still sees the frozen image
 
-    plc = PLC("t", program)
+    plc = PLC_Generic("t", program)
     plc.define_tag("btn", TagType.DISCRETE_INPUT, False)
 
     plc.scan()
@@ -57,7 +58,7 @@ def test_outputs_are_staged_and_flushed_only_at_end_of_scan() -> None:
         plc.write_output("lamp", True)
         during_scan.append(plc.read("lamp"))  # tag not updated yet
 
-    plc = PLC("t", program)
+    plc = PLC_Generic("t", program)
     plc.define_tag("lamp", TagType.DISCRETE_OUTPUT, False)
 
     plc.scan()
@@ -76,7 +77,7 @@ def test_output_holds_its_last_value_when_not_restaged() -> None:
             plc.write_output("lamp", True)
         # scan 2 stages nothing
 
-    plc = PLC("t", program)
+    plc = PLC_Generic("t", program)
     plc.define_tag("lamp", TagType.DISCRETE_OUTPUT, False)
 
     plc.scan()
@@ -94,7 +95,7 @@ def test_read_and_write_are_immediate_for_internal_bits_and_words() -> None:
         mid["flag"] = plc.read("flag")
         mid["count"] = plc.read("count")
 
-    plc = PLC("t", program)
+    plc = PLC_Generic("t", program)
     plc.define_tag("count", TagType.WORD, 0)
     plc.define_tag("flag", TagType.INTERNAL_BIT, False)
 
@@ -109,7 +110,7 @@ def test_full_cycle_reads_input_and_drives_output() -> None:
     def passthrough(plc: PLC) -> None:
         plc.write_output("out", plc.read_input("in"))
 
-    plc = PLC("t", passthrough)
+    plc = PLC_Generic("t", passthrough)
     plc.define_tag("in", TagType.DISCRETE_INPUT, False)
     plc.define_tag("out", TagType.DISCRETE_OUTPUT, False)
 
@@ -131,7 +132,7 @@ def test_read_input_rejects_non_discrete_input_tags() -> None:
         except KeyError:
             errors.append("bit")
 
-    plc = PLC("t", program)
+    plc = PLC_Generic("t", program)
     plc.define_tag("bit", TagType.INTERNAL_BIT, True)
 
     plc.scan()
@@ -139,7 +140,7 @@ def test_read_input_rejects_non_discrete_input_tags() -> None:
 
 
 def test_define_tag_rejects_duplicate_names() -> None:
-    plc = PLC("t", lambda _plc: None)
+    plc = PLC_Generic("t", lambda _plc: None)
     plc.define_tag("x", TagType.INTERNAL_BIT)
 
     with pytest.raises(ValueError, match="already exists"):
@@ -148,7 +149,7 @@ def test_define_tag_rejects_duplicate_names() -> None:
 
 def test_first_scan_is_true_only_on_the_first_scan() -> None:
     seen: list[bool] = []
-    plc = PLC("t", lambda p: seen.append(p.first_scan))
+    plc = PLC_Generic("t", lambda p: seen.append(p.first_scan))
 
     plc.scan()
     plc.scan()
@@ -158,7 +159,7 @@ def test_first_scan_is_true_only_on_the_first_scan() -> None:
 
 
 def test_cold_start_resets_non_retentive_tags_only() -> None:
-    plc = PLC("t", lambda _plc: None)
+    plc = PLC_Generic("t", lambda _plc: None)
     plc.define_tag("volatile", TagType.WORD, 0)
     plc.define_tag("kept", TagType.WORD, 0, retentive=True)
     plc.write("volatile", 42)
@@ -172,7 +173,7 @@ def test_cold_start_resets_non_retentive_tags_only() -> None:
 
 def test_cold_start_re_arms_the_first_scan_bit() -> None:
     seen: list[bool] = []
-    plc = PLC("t", lambda p: seen.append(p.first_scan))
+    plc = PLC_Generic("t", lambda p: seen.append(p.first_scan))
 
     plc.scan()
     plc.scan()
@@ -184,7 +185,7 @@ def test_cold_start_re_arms_the_first_scan_bit() -> None:
 
 
 def test_warm_start_keeps_all_values_but_restarts_the_scan_cycle() -> None:
-    plc = PLC("t", lambda _plc: None)
+    plc = PLC_Generic("t", lambda _plc: None)
     plc.define_tag("v", TagType.WORD, 0)
     plc.write("v", 7)
     plc.scan()
@@ -196,7 +197,7 @@ def test_warm_start_keeps_all_values_but_restarts_the_scan_cycle() -> None:
 
 
 def test_watchdog_trips_when_the_program_runs_over_budget() -> None:
-    plc = PLC("t", lambda _plc: time.sleep(0.02), watchdog_s=0.005)
+    plc = PLC_Generic("t", lambda _plc: time.sleep(0.02), watchdog_s=0.005)
 
     plc.scan()
 
@@ -205,7 +206,7 @@ def test_watchdog_trips_when_the_program_runs_over_budget() -> None:
 
 
 def test_watchdog_stays_clear_for_a_fast_program() -> None:
-    plc = PLC("t", lambda _plc: None, watchdog_s=0.5)
+    plc = PLC_Generic("t", lambda _plc: None, watchdog_s=0.5)
 
     plc.scan()
 

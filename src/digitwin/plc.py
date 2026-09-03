@@ -1,17 +1,23 @@
 """Core soft-PLC engine: tags, the three-phase scan cycle, and firmware realism.
 
 The scan cycle (freeze inputs -> run program -> flush outputs) is unchanged
-from Phase 1. Phase 2 adds firmware-level behaviour around it: a first-scan
-bit, retentive vs non-retentive tags, cold/warm/power-cycle restarts, and a
-program-scan watchdog.
+from Phase 1. Phase 2 added firmware behaviour around it: a first-scan bit,
+retentive vs non-retentive tags, cold/warm/power-cycle restarts, and a
+program-scan watchdog. Phase 2b makes ``PLC`` abstract — a concrete model
+subclass carries a ``HardwareProfile`` and every ``native_address`` is
+validated against it.
 """
 
 from __future__ import annotations
 
 import time
+from abc import ABC
 from dataclasses import dataclass
 from enum import Enum
-from typing import Protocol
+from typing import TYPE_CHECKING, ClassVar, Protocol
+
+if TYPE_CHECKING:
+    from digitwin.hardware import HardwareProfile
 
 
 class TagType(Enum):
@@ -40,12 +46,16 @@ class Program(Protocol):
     def __call__(self, plc: PLC) -> None: ...
 
 
-class PLC:
-    """A minimal soft PLC.
+class PLC(ABC):
+    """Abstract soft-PLC engine: the three-phase scan cycle plus firmware
+    behaviour (first-scan bit, retentive tags, restarts, watchdog).
 
-    Runs a user program every scan using the classic three-phase cycle:
-    freeze inputs, execute the program, then flush outputs.
+    Concrete controllers subclass this and set a class-level ``profile``
+    (see ``digitwin.models``). ``PLC`` itself will not instantiate — there is
+    no hardware to validate native addresses against.
     """
+
+    profile: ClassVar[HardwareProfile]
 
     def __init__(
         self,
@@ -54,9 +64,18 @@ class PLC:
         *,
         watchdog_s: float | None = None,
     ) -> None:
+        if not hasattr(type(self), "profile"):
+            raise TypeError(
+                f"{type(self).__name__} has no hardware profile; instantiate a "
+                "concrete PLC subclass from digitwin.models"
+            )
         self.name = name
         self.program = program
-        self.watchdog_s = watchdog_s
+        self.watchdog_s = (
+            watchdog_s
+            if watchdog_s is not None
+            else self.profile.default_watchdog_ms / 1000
+        )
         self.tags: dict[str, Tag] = {}
         self.input_image: dict[str, TagValue] = {}
         self.output_image: dict[str, TagValue] = {}
@@ -76,6 +95,8 @@ class PLC:
     ) -> Tag:
         if tag_name in self.tags:
             raise ValueError(f"Tag {tag_name!r} already exists")
+        if native_address is not None:
+            self.profile.validate_address(native_address, tag_type)
         tag = Tag(
             tag_name,
             tag_type,

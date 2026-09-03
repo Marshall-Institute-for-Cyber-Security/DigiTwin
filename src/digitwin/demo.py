@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from digitwin.executive import Executive, ExecutiveMode
 from digitwin.io import InProcessTransport, IOBus
+from digitwin.models import PLC_Generic
 from digitwin.plant import AnalogSensor, CompositePlant, Tank
 from digitwin.plc import PLC, TagType, TagValue
 from digitwin.programs import StartStopTankProgram
@@ -42,7 +43,7 @@ RETENTIVE_TAGS = {"start_bit", "stop_bit"}
 
 
 def build_demo_plc() -> PLC:
-    plc = PLC("demo_plc", StartStopTankProgram(), watchdog_s=0.05)
+    plc = PLC_Generic("demo_plc", StartStopTankProgram(), watchdog_s=0.05)
     for name, tag_type, initial_value, native_address in DEMO_TAGS:
         plc.define_tag(
             name,
