@@ -11,10 +11,11 @@ class StartStopTankProgram:
         oit_start = plc.read("oit_start_button")
         oit_stop = plc.read("oit_stop_button")
 
+        # seal-in start/stop bits
         if start_pb or oit_start:
             plc.write("start_bit", True)
             plc.write("stop_bit", False)
-        if start_pb or oit_start:
+        if stop_pb or oit_stop:
             plc.write("stop_bit", True)
             plc.write("start_bit", False)
 
@@ -24,7 +25,7 @@ class StartStopTankProgram:
         plc.write_output("green_light", stop_bit)
         plc.write_output("red_light", start_bit)
 
-        # Tank level counter (0-99), fills while running, drains while stopped
+        # tank level counter (0-99), fills while running, drains while stopped
         level = plc.read("tank_level")
         fill_permitted = level <= 99
         drain_permitted = level >= 1
