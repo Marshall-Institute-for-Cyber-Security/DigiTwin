@@ -1,9 +1,12 @@
-"""Executive / demo integration: control drives valves, plant owns the level."""
+"""Executive / demo integration: control drives valves, plant owns the level,
+and the pacing modes don't change the simulation maths."""
 
 from __future__ import annotations
 
+import time
+
 from digitwin.demo import build_demo
-from digitwin.executive import Executive
+from digitwin.executive import Executive, ExecutiveMode
 from digitwin.plant import CompositePlant, Tank
 
 
@@ -50,3 +53,40 @@ def test_program_never_writes_the_level_tag() -> None:
     # A bare program scan (no transport transfer) must leave tank_level alone.
     sim.plc.scan()
     assert sim.plc.read("tank_level") == 0
+
+
+def test_scaled_mode_produces_the_same_trajectory_as_free_run() -> None:
+    def level_after_20(mode: ExecutiveMode, scale: float) -> float:
+        sim = build_demo()
+        sim.mode = mode
+        sim.scale = scale
+        sim.plc.write("start_button", True)
+        sim.run(20)
+        return _tank(sim).level
+
+    baseline = level_after_20(ExecutiveMode.FREE_RUN, 1.0)
+    scaled = level_after_20(ExecutiveMode.SCALED, 50.0)
+
+    assert scaled == baseline
+
+
+def test_real_time_mode_actually_spends_wall_time() -> None:
+    sim = build_demo()
+    sim.mode = ExecutiveMode.REAL_TIME
+    sim.dt = 0.01
+
+    started = time.perf_counter()
+    sim.run(12)
+    wall = time.perf_counter() - started
+
+    assert wall >= 0.05  # 12 * 10 ms, minus the first (unpaced) tick and slack
+
+
+def test_free_run_mode_does_not_sleep() -> None:
+    sim = build_demo()
+    sim.dt = 0.01
+
+    started = time.perf_counter()
+    sim.run(200)
+
+    assert time.perf_counter() - started < 0.5  # 200 * 10 ms if it were paced
