@@ -1,11 +1,14 @@
-"""Characterization tests for the three-phase scan engine in ``plc.py``.
+"""Characterization tests for the scan engine and firmware behaviour in
+``plc.py``: three-phase scan, first-scan bit, retentive tags, cold/warm
+restarts, and the program-scan watchdog.
 
-These pin the current semantics before Phase 2 changes them (first-scan bit,
-retentive reset, cold start). If a change here is intentional, update the
-test in the same commit and say why.
+If a change here is intentional, update the test in the same commit and say
+why.
 """
 
 from __future__ import annotations
+
+import time
 
 import pytest
 
@@ -141,3 +144,69 @@ def test_define_tag_rejects_duplicate_names() -> None:
 
     with pytest.raises(ValueError, match="already exists"):
         plc.define_tag("x", TagType.WORD)
+
+
+def test_first_scan_is_true_only_on_the_first_scan() -> None:
+    seen: list[bool] = []
+    plc = PLC("t", lambda p: seen.append(p.first_scan))
+
+    plc.scan()
+    plc.scan()
+    plc.scan()
+
+    assert seen == [True, False, False]
+
+
+def test_cold_start_resets_non_retentive_tags_only() -> None:
+    plc = PLC("t", lambda _plc: None)
+    plc.define_tag("volatile", TagType.WORD, 0)
+    plc.define_tag("kept", TagType.WORD, 0, retentive=True)
+    plc.write("volatile", 42)
+    plc.write("kept", 42)
+
+    plc.cold_start()
+
+    assert plc.read("volatile") == 0
+    assert plc.read("kept") == 42
+
+
+def test_cold_start_re_arms_the_first_scan_bit() -> None:
+    seen: list[bool] = []
+    plc = PLC("t", lambda p: seen.append(p.first_scan))
+
+    plc.scan()
+    plc.scan()
+    plc.cold_start()
+    plc.scan()
+
+    assert seen == [True, False, True]
+    assert plc.scan_count == 1
+
+
+def test_warm_start_keeps_all_values_but_restarts_the_scan_cycle() -> None:
+    plc = PLC("t", lambda _plc: None)
+    plc.define_tag("v", TagType.WORD, 0)
+    plc.write("v", 7)
+    plc.scan()
+
+    plc.warm_start()
+
+    assert plc.read("v") == 7
+    assert plc.scan_count == 0
+
+
+def test_watchdog_trips_when_the_program_runs_over_budget() -> None:
+    plc = PLC("t", lambda _plc: time.sleep(0.02), watchdog_s=0.005)
+
+    plc.scan()
+
+    assert plc.watchdog_tripped is True
+    assert plc.last_scan_duration >= 0.02
+
+
+def test_watchdog_stays_clear_for_a_fast_program() -> None:
+    plc = PLC("t", lambda _plc: None, watchdog_s=0.5)
+
+    plc.scan()
+
+    assert plc.watchdog_tripped is False
