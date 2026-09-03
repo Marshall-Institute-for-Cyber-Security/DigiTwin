@@ -7,7 +7,7 @@ through an analog level transmitter. The executive steps both each tick.
 
 from __future__ import annotations
 
-from digitwin.executive import Executive
+from digitwin.executive import Executive, ExecutiveMode
 from digitwin.io import InProcessTransport, IOBus
 from digitwin.plant import AnalogSensor, CompositePlant, Tank
 from digitwin.plc import PLC, TagType, TagValue
@@ -37,14 +37,24 @@ INPUT_WIRING = {"tank_level": "tank_level"}
 OUTPUT_WIRING = {"fill_valve": "fill_valve", "drain_valve": "drain_valve"}
 
 
+# Retentive: the latch state should survive a power cycle like a real seal-in.
+RETENTIVE_TAGS = {"start_bit", "stop_bit"}
+
+
 def build_demo_plc() -> PLC:
-    plc = PLC("demo_plc", StartStopTankProgram())
+    plc = PLC("demo_plc", StartStopTankProgram(), watchdog_s=0.05)
     for name, tag_type, initial_value, native_address in DEMO_TAGS:
-        plc.define_tag(name, tag_type, initial_value, native_address=native_address)
+        plc.define_tag(
+            name,
+            tag_type,
+            initial_value,
+            native_address=native_address,
+            retentive=name in RETENTIVE_TAGS,
+        )
     return plc
 
 
-def build_demo() -> Executive:
+def build_demo(mode: ExecutiveMode = ExecutiveMode.FREE_RUN, scale: float = 1.0) -> Executive:
     """Assemble the tank plant, the PLC, and the executive that steps them."""
     plc = build_demo_plc()
 
@@ -54,7 +64,7 @@ def build_demo() -> Executive:
 
     bus = IOBus()
     transport = InProcessTransport(bus, inputs=INPUT_WIRING, outputs=OUTPUT_WIRING)
-    return Executive(plc, plant, bus, transport, dt=0.1)
+    return Executive(plc, plant, bus, transport, dt=0.1, mode=mode, scale=scale)
 
 
 def _report(sim: Executive) -> None:
@@ -62,7 +72,8 @@ def _report(sim: Executive) -> None:
     print(
         f"t={sim.elapsed:4.1f}s  level={int(plc.read('tank_level')):3d}  "
         f"green={int(plc.read('green_light'))} red={int(plc.read('red_light'))}  "
-        f"fill={int(plc.read('fill_valve'))} drain={int(plc.read('drain_valve'))}"
+        f"fill={int(plc.read('fill_valve'))} drain={int(plc.read('drain_valve'))}  "
+        f"scan={sim.last_scan_s * 1e6:4.0f}us"
     )
 
 
@@ -82,6 +93,8 @@ def main() -> None:
             sim.plc.write("stop_button", False)
         if step % 15 == 0:
             _report(sim)
+
+    print(f"scans={sim.plc.scan_count}  watchdog_tripped={sim.plc.watchdog_tripped}")
 
 
 if __name__ == "__main__":
