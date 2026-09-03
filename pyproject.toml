@@ -1,0 +1,43 @@
+[project]
+name = "digitwin"
+version = "0.1.0"
+description = "A small soft-PLC engine and simulation harness."
+readme = "README.md"
+authors = [
+    { name = "zl", email = "a@a" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.11",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+digitwin = "digitwin.demo:main"
+
+[build-system]
+requires = ["uv_build>=0.12.7,<0.13.0"]
+build-backend = "uv_build"
+
+# uv installs this group automatically on `uv sync`; it mirrors the
+# `dev` extra above so plain-pip users can run `pip install -e ".[dev]"`.
+[dependency-groups]
+dev = [
+    "mypy>=1.11",
+    "ruff>=0.6",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src"]
