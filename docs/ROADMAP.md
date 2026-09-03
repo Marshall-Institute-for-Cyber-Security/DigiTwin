@@ -96,6 +96,20 @@ moves into a plant model that the PLC can only influence through I/O.
   plant. (Keep edge-detection only where it is genuinely control logic.)
 - The demo becomes: `TankPlant` (one `Tank` + two valves + a level transmitter)
   wired to the PLC through the I/O bus, stepped by the executive.
+- `digitwin/io.py` — the I/O bus plus an `IOTransport` protocol
+  (`read_inputs()` / `write_outputs()`) and an in-process transport. Lock the
+  protocol signature down now against the Phase 6 adapters so it never has to
+  change:
+  - **Keep it synchronous.** The executive is a synchronous loop, so the
+    protocol methods are plain `def`. `pymodbus` ships a synchronous
+    `ModbusTcpClient` / `ModbusTcpServer` that fits directly; `asyncua` is
+    async-only, so *its* adapter owns an event loop and exposes a sync facade.
+    Do not make `IOTransport` async for one adapter's convenience.
+  - **Reads can fail.** A networked transport read is a round-trip that can time
+    out. `read_inputs()` returns the input image plus a freshness flag (or raises
+    a typed `TransportError`); the executive chooses hold-last-value vs. fault the
+    input. Phase 7's "comms dropout" fault is then just a transport that stops
+    responding — no special case.
 
 **Why this is the backbone:** without it, the "twin" is just a program talking to
 itself. With it, you can swap in a higher-fidelity tank, inject a stuck valve, or
@@ -265,9 +279,31 @@ against, real equipment over standard protocols.
 - **Transport abstraction in `io.py`** (designed for in Phase 1): an `IOTransport`
   protocol with `read_inputs()` / `write_outputs()`. In-process transport couples
   plant↔PLC; other transports move the boundary.
-- **Adapters** (`digitwin/adapters/`):
-  - `opcua` — map tags to OPC UA nodes (client and/or server). `asyncua` lib.
-  - `modbus` — map tags to coils/registers. `pymodbus` lib.
+- **Adapters** (`digitwin/adapters/`), each a thin translation between the tag
+  table and a wire protocol. Optional extras in `pyproject.toml`
+  (`[project.optional-dependencies]`, installed as `digitwin[modbus]` /
+  `digitwin[opcua]`); import the third-party lib **lazily inside the adapter
+  module** so the base install stays stdlib-only.
+  - `opcua` — map tags to OPC UA nodes (client and/or server). `asyncua` lib
+    (async-only; the adapter owns its event loop and presents a sync facade to
+    the executive).
+  - `modbus` — `pymodbus` lib. Two distinct roles; do not conflate them:
+    - **Client transport** — `ModbusClientTransport(IOTransport)`. The twin is
+      the Modbus *master*, polling a slave that owns the real I/O (or an external
+      plant sim). `read_inputs()` reads discrete inputs / input registers;
+      `write_outputs()` writes coils / holding registers. Sits on the plant↔PLC
+      boundary exactly like the in-process transport. Use the synchronous
+      `ModbusTcpClient` to match the executive.
+    - **Server adapter** — `ModbusSlaveServer`. The twin is a Modbus *slave* so
+      an external SCADA/HMI (or a real master) can read/write twin tags. This is
+      a side window onto the tag table, *not* in the scan path — it belongs with
+      the historian / HMI branch, not `IOTransport`. Back it with `pymodbus`'s
+      datastore, synced to the tag table once per scan.
+  - **Register mapping** (both Modbus roles): a declared tag→register table
+    (`%I0.3` → discrete input 3; a `WORD` tag → holding register N). Modbus
+    registers are 16-bit and zero-based; a float or 32-bit int spans two
+    registers with **configurable word/byte order** (the endianness question that
+    bites every Modbus integration). Analog values carry a scale/offset.
   - These are optional extras in `pyproject.toml` (`[project.optional-dependencies]`).
 - **Three connection topologies**, all just transport swaps:
   1. *Virtual commissioning* — real PLC runs the logic, DigiTwin is the plant:
@@ -343,8 +379,10 @@ This is a design document, so "verification" means the phasing holds together:
 
 1. Each phase lists a concrete validation step that can run without the later
    phases — check that dependency direction is respected.
-2. Phase 1's `IOTransport` protocol must be expressive enough for Phase 6's OPC UA
-   adapter — sanity-check the signature against `asyncua` before committing to it.
+2. Phase 1's `IOTransport` protocol must be expressive enough for Phase 6's
+   adapters — sanity-check the signature against both `asyncua` (async, node
+   model) and `pymodbus` (sync, register model) before committing to it, and keep
+   it synchronous so the `pymodbus` client transport drops in without a bridge.
 3. The demo must stay runnable (`uv run digitwin`) and produce equivalent output
    after Phase 1, Phase 2 (scaled mode), Phase 2b (rebuilt on `PLC_Generic`), and
    Phase 4 (from YAML).

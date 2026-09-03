@@ -16,6 +16,8 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [ ] `DiscreteSensor` — threshold + hysteresis → discrete input
 - [ ] `AnalogSensor` — range, noise sigma, filter tau → scaled word
 - [ ] `digitwin/io.py` — I/O bus + `IOTransport` protocol + in-process transport
+  - [ ] Keep the protocol **synchronous** (`def read_inputs` / `def write_outputs`) — matches the executive; `pymodbus` sync client fits directly, the `asyncua` adapter wraps its own loop
+  - [ ] `read_inputs()` reports staleness or raises `TransportError` — networked reads can time out (Phase 7 comms-dropout reuses this)
 - [ ] Strip physics out of `StartStopTankProgram`; make it pure control logic
 - [ ] Rebuild `demo.py` as `TankPlant` + PLC wired through the I/O bus
 - [ ] **Validate:** demo still fills on start / drains on stop; level comes from `Tank.step()`
@@ -81,10 +83,13 @@ Order follows the roadmap's **Suggested sequencing** table.
 
 ## Phase 6 — External synchronization (twin of a real PLC)
 
-- [ ] Confirm `IOTransport` protocol is adapter-ready (check against `asyncua`)
-- [ ] `digitwin/adapters/opcua.py` — map tags to OPC UA nodes (client + server)
-- [ ] `digitwin/adapters/modbus.py` — map tags to coils / registers
-- [ ] Add `opcua` / `modbus` optional-dependency extras to `pyproject.toml`
+- [ ] Confirm `IOTransport` protocol is adapter-ready — sync signature checked against `asyncua` (async) and `pymodbus` (sync)
+- [ ] `digitwin/adapters/opcua.py` — map tags to OPC UA nodes (client + server); `asyncua`, adapter owns the event loop
+- [ ] `digitwin/adapters/modbus.py` — `pymodbus`, imported lazily inside the module:
+  - [ ] `ModbusClientTransport(IOTransport)` — twin as master; `read_inputs` ← discrete inputs / input registers, `write_outputs` → coils / holding registers; sync `ModbusTcpClient`
+  - [ ] `ModbusSlaveServer` — twin as slave for external SCADA/HMI; side window on the tag table, synced once per scan, **not** an `IOTransport`
+  - [ ] tag→register map: 16-bit zero-based registers, float / int32 = 2 registers with configurable word+byte order, scale/offset on analog values
+- [ ] Add `opcua` / `modbus` optional-dependency extras to `pyproject.toml` (`digitwin[modbus]`)
 - [ ] Topology: virtual commissioning (real PLC logic, DigiTwin is the plant)
 - [ ] Topology: shadow mode (real PLC + twin get same field inputs, compare outputs)
 - [ ] Topology: predictive (twin fed live inputs, runs faster than real time)

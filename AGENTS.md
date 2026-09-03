@@ -92,7 +92,9 @@ tank physics. That is a known wart. The roadmap's Phase 1 separates them:
 - **Physical behavior** (tank levels, valve dynamics, sensor noise) moves to a
   new `digitwin/plant/` package behind a `PlantModel` protocol.
 - They communicate only through an **I/O bus** (`digitwin/io.py`), whose
-  `IOTransport` abstraction is later swapped for OPC UA / Modbus.
+  synchronous `IOTransport` abstraction is later swapped for OPC UA (`asyncua`)
+  or Modbus (`pymodbus`) adapters — see the Phase 6 notes in the roadmap for how
+  the client transport vs. slave-server roles differ.
 - `PLC` will become an abstract base; concrete `PLC_<Vendor>_<Model>` subclasses
   carry a `HardwareProfile` (I/O counts, memory map, address syntax).
 
