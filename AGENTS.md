@@ -10,7 +10,7 @@ is a proper **digital twin for PLCs**: a simulated controller plus a simulated
 physical plant, running in synchronized time, observable, and able to mirror real
 hardware.
 
-- **Roadmap / design rationale:** `C:\Users\lambert232\.claude\plans\can-you-take-a-effervescent-clock.md`
+- **Roadmap / design rationale:** `docs/ROADMAP.md`
   (outside the repo — ask the user if it's missing)
 - **Active checklist:** [TODO.md](TODO.md) — phase-ordered, references the roadmap
 
