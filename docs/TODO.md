@@ -10,18 +10,18 @@ Order follows the roadmap's **Suggested sequencing** table.
 
 ## Phase 1 — Split the plant from the controller  _(foundation)_
 
-- [ ] Add `PlantModel` protocol: `step(dt, io) -> None` (`digitwin/plant/base.py`)
-- [ ] `Tank` component — level integrates `(q_in - q_out) / area`, outflow `∝ √level` (`digitwin/plant/tank.py`)
+- [x] Add `PlantModel` protocol: `step(dt, io) -> None` (`digitwin/plant/base.py`) — also `CompositePlant`
+- [x] `Tank` component — level integrates `(q_in - q_out) / area`, outflow `∝ √level` (`digitwin/plant/tank.py`)
 - [ ] `Motor` / `Pump` component — start/stop with spin-up ramp + running feedback
-- [ ] `DiscreteSensor` — threshold + hysteresis → discrete input
-- [ ] `AnalogSensor` — range, noise sigma, filter tau → scaled word
-- [ ] `digitwin/io.py` — I/O bus + `IOTransport` protocol + in-process transport
-  - [ ] Keep the protocol **synchronous** (`def read_inputs` / `def write_outputs`) — matches the executive; `pymodbus` sync client fits directly, the `asyncua` adapter wraps its own loop
+- [x] `DiscreteSensor` — threshold + hysteresis → discrete input (`digitwin/plant/sensors.py`)
+- [x] `AnalogSensor` — range, noise sigma, filter tau → scaled word (`digitwin/plant/sensors.py`)
+- [x] `digitwin/io.py` — I/O bus + `IOTransport` protocol + in-process transport
+  - [x] Keep the protocol **synchronous** (`def read_inputs` / `def write_outputs`) — matches the executive; `pymodbus` sync client fits directly, the `asyncua` adapter wraps its own loop
   - [ ] `read_inputs()` reports staleness or raises `TransportError` — networked reads can time out (Phase 7 comms-dropout reuses this)
-- [ ] Strip physics out of `StartStopTankProgram`; make it pure control logic
-- [ ] Rebuild `demo.py` as `TankPlant` + PLC wired through the I/O bus
-- [ ] **Validate:** demo still fills on start / drains on stop; level comes from `Tank.step()`
-- [ ] Test: step plant with fixed valve command, check level vs analytic solution
+- [x] Strip physics out of `StartStopTankProgram`; make it pure control logic
+- [x] Rebuild `demo.py` as tank plant + PLC wired through the I/O bus, stepped by a minimal `Executive`
+- [x] **Validate:** demo still fills on start / drains on stop; level comes from `Tank.step()`
+- [x] Test: step plant with fixed valve command, check level vs analytic solution (`tests/test_plant.py`)
 
 
 ## Phase 2 — Real-time executive & scan-semantics fidelity

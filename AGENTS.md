@@ -19,24 +19,35 @@ hardware.
 src/digitwin/
   __init__.py            public exports
   plc.py                 core engine: Tag, TagType, PLC, three-phase scan
-  demo.py                runnable demo: wires tags + program, scans in a loop
+  io.py                  I/O bus + IOTransport protocol + in-process transport
+  executive.py           fixed-dt tick loop: plant.step -> transfer -> plc.scan
+  demo.py                runnable demo: tank plant wired to a PLC via the bus
   programs/
     __init__.py
-    start_stop_tank.py   example scan-cycle program (seal-in start/stop + tank)
+    start_stop_tank.py   example control program (seal-in start/stop, valves)
+  plant/
+    __init__.py
+    base.py              PlantModel protocol + CompositePlant container
+    tank.py              Tank: level integrates (q_in - q_out) / area
+    sensors.py           AnalogSensor (scaled word), DiscreteSensor (hysteresis)
 docs/
   ROADMAP.md             concept roadmap: target architecture + phased design
   TODO.md                phase-ordered build checklist
+tests/
+  test_plant.py          component dynamics / scaling / hysteresis
+  test_executive.py      demo integration: control drives valves, plant owns level
 ```
 
-There are **no tests yet** — adding `pytest` + a `tests/` tree is the first task
-in [docs/TODO.md](docs/TODO.md) (Phase 7 baseline slice). Do it before large
-refactors.
+Phase 1 (plant/controller split) is landed; `pytest` is wired up but coverage is
+still thin. Backfilling engine tests (scan phasing, seal-in latch) and the rest
+of Phase 2 is the current work — see [docs/TODO.md](docs/TODO.md).
 
 ## Commands
 
 ```bash
 uv sync                 # create venv, install dev tools
 uv run digitwin         # run the demo simulation
+uv run pytest           # run the test suite
 uv run ruff check .     # lint
 uv run mypy             # type-check (strict, src/ only)
 ```
@@ -57,8 +68,8 @@ POSIX scripts.
 - **No runtime dependencies** without discussing it first. Dev-only tools and
   future protocol adapters (`opcua`, `modbus`) go in optional-dependency extras,
   not the base install.
-- Keep `src/digitwin/__init__.py` and `programs/__init__.py` export lists in sync
-  with what's public.
+- Keep the export lists in `src/digitwin/__init__.py`, `programs/__init__.py`,
+  and `plant/__init__.py` in sync with what's public.
 
 ## Engine invariants — do not break these
 
@@ -80,23 +91,26 @@ Therefore, in program code:
 - Use `plc.read()` / `plc.write()` only for internal bits (`INTERNAL_BIT`) and
   words (`WORD`).
 - Programs are callables `(plc: PLC) -> None`. A program that needs edge
-  detection or memory holds its own state (see `StartStopTankProgram`'s
-  `_prev_*` flags) — until Phase 2 introduces real timer/counter objects.
+  detection or memory holds its own instance state until Phase 2 introduces real
+  timer/counter objects. (`StartStopTankProgram` is now stateless — its old
+  `_prev_*` physics bookkeeping moved to the plant.)
 
 ## Direction (so new code lands the right way)
 
-The current `StartStopTankProgram` both runs control logic **and** simulates the
-tank physics. That is a known wart. The roadmap's Phase 1 separates them:
+Phase 1 split control from physics; keep them apart:
 
-- **Control logic** stays in `programs/`.
-- **Physical behavior** (tank levels, valve dynamics, sensor noise) moves to a
-  new `digitwin/plant/` package behind a `PlantModel` protocol.
-- They communicate only through an **I/O bus** (`digitwin/io.py`), whose
-  synchronous `IOTransport` abstraction is later swapped for OPC UA (`asyncua`)
-  or Modbus (`pymodbus`) adapters — see the Phase 6 notes in the roadmap for how
-  the client transport vs. slave-server roles differ.
-- `PLC` will become an abstract base; concrete `PLC_<Vendor>_<Model>` subclasses
-  carry a `HardwareProfile` (I/O counts, memory map, address syntax).
+- **Control logic** lives in `programs/` — reads sensor tags, commands actuator
+  tags, nothing else.
+- **Physical behavior** (tank levels, valve dynamics, sensor noise) lives in
+  `digitwin/plant/` behind the `PlantModel` protocol (`step(dt, io)`).
+- They communicate **only** through the I/O bus (`digitwin/io.py`); its
+  synchronous `IOTransport` abstraction is later swapped for OPC UA (`asyncua`,
+  adapter owns its loop) or Modbus (`pymodbus`, sync) — see the Phase 6 roadmap
+  notes for how the client-transport and slave-server roles differ. Never let a
+  program import from `plant/` or vice versa.
+- Still ahead (Phase 2b): `PLC` becomes an abstract base; concrete
+  `PLC_<Vendor>_<Model>` subclasses carry a `HardwareProfile` (I/O counts,
+  memory map, address syntax).
 
 When adding features, check [docs/TODO.md](docs/TODO.md) for which phase it
 belongs to and follow that phase's design notes in the roadmap rather than
