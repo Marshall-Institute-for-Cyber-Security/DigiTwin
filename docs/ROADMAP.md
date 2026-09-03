@@ -252,6 +252,17 @@ historian output to the hardcoded version.
 
 ---
 
+## Phase 4.5 - Real-world testing and validation.
+
+**Goal:** validate that the twin PLC is an effective replacement for (1) a virtual PLC over modbus and (2) an actual PLC over modbus, replacing a hardware PLC with our twin.
+
+- Use FactoryIO to validate modbus server, registers, coils, writing programs, etc.
+- Use Cyberhive ICS Wall M221 PLC program and compare against the real PLC hardware in a side-by-side test.
+
+**Important:** do not continue past this point until proper hardware PLC is virtualized!!!
+
+---
+
 ## Phase 5 — HMI / visualization
 
 **Goal:** a live operator-style view, because a twin you can't watch isn't much
