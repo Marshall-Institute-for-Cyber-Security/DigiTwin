@@ -15,6 +15,14 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.6",
 ]
+modbus = [
+    # 3.11 renamed slave= -> device_id= on the client; ModbusSlaveServer's
+    # live-sync bridge additionally depends on SimDevice/action (pymodbus's
+    # simulator-backed datastore), verified against 3.15 — the floor here is
+    # the highest version this repo has actually run against, not a
+    # guarantee it works on everything back to 3.11.
+    "pymodbus>=3.15,<4",
+]
 
 [project.scripts]
 digitwin = "digitwin.demo:main"
@@ -46,3 +54,9 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 python_version = "3.12"
 strict = true
 files = ["src", "tests"]
+
+# pymodbus is an optional extra (digitwin[modbus]); mypy runs without it
+# installed, and the adapter imports it lazily at runtime anyway.
+[[tool.mypy.overrides]]
+module = "pymodbus.*"
+ignore_missing_imports = true

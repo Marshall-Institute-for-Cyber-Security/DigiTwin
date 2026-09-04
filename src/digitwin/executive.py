@@ -15,12 +15,14 @@ simulation maths is identical in every mode.
 from __future__ import annotations
 
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import Enum
 
+from digitwin.adapters.modbus import ModbusSlaveServer
 from digitwin.events import EventCategory, EventLog, EventSeverity
 from digitwin.historian import Historian
-from digitwin.io import IOBus, IOTransport
+from digitwin.io import IOBus, IOTransport, TransportError
 from digitwin.plant.base import PlantModel
 from digitwin.plc import PLC, TagType, TagValue
 from digitwin.snapshot import SnapshotRecorder
@@ -46,6 +48,10 @@ class Executive:
     historian: Historian | None = None
     events: EventLog | None = None
     snapshots: SnapshotRecorder | None = None
+    # ModbusSlaveServer isn't a passive observer like the three above — its
+    # `accept` map writes into tags — but it's synced from the same once-per-
+    # tick hook, never mid-scan. See digitwin.adapters.modbus.
+    modbus_slave: ModbusSlaveServer | None = None
 
     scan_count: int = 0
     elapsed: float = 0.0
@@ -53,8 +59,19 @@ class Executive:
     last_jitter_s: float = 0.0
     worst_jitter_s: float = 0.0
 
+    # Transport health (hold-last on read failure, fault event on both edges).
+    # Retry policy lives in the transport; by the time TransportError reaches
+    # here, this scan's exchange is down. See TransportError.partial_inputs.
+    consecutive_read_failures: int = 0
+    consecutive_write_failures: int = 0
+
     _deadline: float | None = field(default=None, repr=False)
     _watchdog_seen: bool = field(default=False, repr=False)
+
+    @property
+    def transport_ok(self) -> bool:
+        """False while either direction is mid-fault (see the *_failures counters)."""
+        return self.consecutive_read_failures == 0 and self.consecutive_write_failures == 0
 
     def tick(self) -> None:
         self.plant.step(self.dt, self.bus)
@@ -76,7 +93,19 @@ class Executive:
         self.run(round(sim_seconds / self.dt))
 
     def _transfer_inputs(self) -> None:
-        for tag_name, value in self.transport.read_inputs().items():
+        try:
+            values = self.transport.read_inputs()
+        except TransportError as exc:
+            # Hold-last: apply whatever this block-oriented read did recover,
+            # and leave every other input tag at its previous value.
+            self._apply_inputs(exc.partial_inputs)
+            self._on_transport_failure(exc, "input read", is_write=False)
+            return
+        self._apply_inputs(values)
+        self._on_transport_recovery(is_write=False)
+
+    def _apply_inputs(self, values: Mapping[str, TagValue]) -> None:
+        for tag_name, value in values.items():
             self.plc.tags[tag_name].value = value
 
     def _transfer_outputs(self) -> None:
@@ -85,7 +114,54 @@ class Executive:
             for name, tag in self.plc.tags.items()
             if tag.tag_type in (TagType.DISCRETE_OUTPUT, TagType.ANALOG_OUTPUT)
         }
-        self.transport.write_outputs(outputs)
+        try:
+            self.transport.write_outputs(outputs)
+        except TransportError as exc:
+            self._on_transport_failure(exc, "output write", is_write=True)
+            return
+        self._on_transport_recovery(is_write=True)
+
+    def _on_transport_failure(self, exc: TransportError, label: str, *, is_write: bool) -> None:
+        """Log once on fault entry, not every scan a sustained fault persists.
+
+        A failed write means the PLC's output_image has diverged from what the
+        field device actually holds (the command never arrived) — worse than a
+        stale read, so it's always an ERROR; a stale read is a WARNING.
+        """
+        if is_write:
+            was_ok = self.consecutive_write_failures == 0
+            self.consecutive_write_failures += 1
+        else:
+            was_ok = self.consecutive_read_failures == 0
+            self.consecutive_read_failures += 1
+        if was_ok and self.events is not None:
+            self.events.log(
+                self.elapsed,
+                EventCategory.FAULT,
+                f"{label} failed: {exc}",
+                severity=EventSeverity.ERROR if is_write else EventSeverity.WARNING,
+                source=self.plc.name,
+                scan=self.plc.scan_count,
+            )
+
+    def _on_transport_recovery(self, *, is_write: bool) -> None:
+        failures = (
+            self.consecutive_write_failures if is_write else self.consecutive_read_failures
+        )
+        if failures and self.events is not None:
+            self.events.log(
+                self.elapsed,
+                EventCategory.FAULT,
+                f"{'output write' if is_write else 'input read'} recovered",
+                severity=EventSeverity.INFO,
+                source=self.plc.name,
+                scan=self.plc.scan_count,
+                failed_scans=failures,
+            )
+        if is_write:
+            self.consecutive_write_failures = 0
+        else:
+            self.consecutive_read_failures = 0
 
     def _observe(self) -> None:
         """Feed the Phase 3 observers, after the tick's state has settled.
@@ -114,6 +190,9 @@ class Executive:
 
         if self.snapshots is not None:
             self.snapshots.maybe_capture(self)
+
+        if self.modbus_slave is not None:
+            self.modbus_slave.sync()
 
     def reset_pacing(self) -> None:
         """Forget the wall-clock cadence origin, so the next tick re-establishes

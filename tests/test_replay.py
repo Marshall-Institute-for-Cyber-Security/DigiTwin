@@ -8,9 +8,9 @@ from pathlib import Path
 import pytest
 
 from digitwin.demo import build_demo, build_demo_plc
-from digitwin.io import TransportError
+from digitwin.events import EventCategory, EventLog, EventSeverity
 from digitwin.plant import NullPlant
-from digitwin.plc import PLC, Program
+from digitwin.plc import PLC, Program, TagType
 from digitwin.replay import (
     IORecording,
     RecordingTransport,
@@ -94,16 +94,37 @@ def test_replay_flags_the_one_tag_a_changed_program_disagrees_on() -> None:
     assert {tag for _, tag, _, _ in differences} == {"green_light"}
 
 
-def test_an_exhausted_recording_reports_a_transport_failure() -> None:
+def test_an_exhausted_recording_holds_last_value_and_logs_a_fault() -> None:
+    """The executive's transport failure policy (hold-last + a fault event on
+    entry) applies here exactly as it would to a real networked transport that
+    stops answering — an exhausted recording is just another way a
+    ``TransportError`` shows up."""
     recording = _recorded_demo_run(10)
-    sim = build_replay(build_demo_plc(), recording)
-
+    plc = build_demo_plc()
+    sim = build_replay(plc, recording)
+    sim.events = EventLog()
     sim.run(10)
 
     assert isinstance(sim.transport, ReplayTransport)
     assert sim.transport.exhausted
-    with pytest.raises(TransportError, match="exhausted"):
-        sim.tick()
+
+    physical_inputs = [
+        name
+        for name, tag in plc.tags.items()
+        if tag.tag_type in (TagType.DISCRETE_INPUT, TagType.ANALOG_INPUT)
+    ]
+    before = {name: plc.tags[name].value for name in physical_inputs}
+
+    sim.tick()  # recording exhausted; must not raise
+
+    after = {name: plc.tags[name].value for name in physical_inputs}
+    assert after == before  # hold-last
+    assert sim.transport_ok is False
+
+    faults = sim.events.query(category=EventCategory.FAULT)
+    assert len(faults) == 1
+    assert "exhausted" in faults[0].message
+    assert faults[0].severity is EventSeverity.WARNING
 
 
 def test_hold_last_keeps_feeding_the_final_frame() -> None:

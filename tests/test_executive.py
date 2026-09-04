@@ -6,8 +6,9 @@ from __future__ import annotations
 import time
 
 from digitwin.demo import build_demo
+from digitwin.events import EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
-from digitwin.io import IOBus
+from digitwin.io import IOBus, TransportError
 from digitwin.models import PLC_Generic
 from digitwin.plant import CompositePlant, NullPlant, Tank
 from digitwin.plc import PLC, TagType, TagValue
@@ -123,3 +124,99 @@ def test_analog_output_reaches_the_transport_alongside_discrete_outputs() -> Non
     sim.tick()
 
     assert transport.received == {"do": True, "ao": 77}
+
+
+class _ScriptedTransport:
+    """Test double: each call to read/write pops the next scripted outcome —
+    a value dict for success, or a ``TransportError`` to raise."""
+
+    def __init__(self) -> None:
+        self.read_script: list[dict[str, TagValue] | TransportError] = []
+        self.write_script: list[TransportError | None] = []
+        self.write_calls: list[dict[str, TagValue]] = []
+
+    def read_inputs(self) -> dict[str, TagValue]:
+        outcome = self.read_script.pop(0)
+        if isinstance(outcome, TransportError):
+            raise outcome
+        return outcome
+
+    def write_outputs(self, outputs: dict[str, TagValue]) -> None:
+        self.write_calls.append(dict(outputs))
+        outcome = self.write_script.pop(0) if self.write_script else None
+        if outcome is not None:
+            raise outcome
+
+
+def test_read_failure_holds_last_value_and_applies_partial_inputs() -> None:
+    plc = PLC_Generic("t", lambda plc: None)
+    plc.define_tag("di_a", TagType.DISCRETE_INPUT, False)
+    plc.define_tag("di_b", TagType.DISCRETE_INPUT, False)
+
+    transport = _ScriptedTransport()
+    transport.read_script = [
+        {"di_a": True, "di_b": True},
+        TransportError("block B timed out", partial_inputs={"di_a": False}),
+    ]
+    sim = Executive(plc, NullPlant(), IOBus(), transport)
+
+    sim.tick()
+    assert plc.read_input("di_a") is True
+    assert plc.read_input("di_b") is True
+
+    sim.tick()
+    # di_a got a fresh value from the surviving partial read; di_b, absent
+    # from the failed block, held its last value.
+    assert plc.read_input("di_a") is False
+    assert plc.read_input("di_b") is True
+
+
+def test_read_failure_logs_fault_once_then_recovery_event() -> None:
+    plc = PLC_Generic("t", lambda plc: None)
+    transport = _ScriptedTransport()
+    transport.read_script = [
+        TransportError("timeout"),
+        TransportError("timeout"),
+        {},
+    ]
+    events = EventLog()
+    sim = Executive(plc, NullPlant(), IOBus(), transport, events=events)
+
+    sim.run(3)
+
+    faults = events.query(category=EventCategory.FAULT)
+    assert [e.severity for e in faults] == [EventSeverity.WARNING, EventSeverity.INFO]
+    assert faults[0].message == "input read failed: timeout"
+    assert faults[1].message == "input read recovered"
+    assert faults[1].data["failed_scans"] == 2
+    assert sim.consecutive_read_failures == 0
+
+
+def test_write_failure_logs_error_severity_and_diverges_from_read_faults() -> None:
+    plc = PLC_Generic("t", lambda plc: None)
+    transport = _ScriptedTransport()
+    transport.read_script = [{}]
+    transport.write_script = [TransportError("write timeout")]
+    events = EventLog()
+    sim = Executive(plc, NullPlant(), IOBus(), transport, events=events)
+
+    sim.tick()
+
+    faults = events.query(category=EventCategory.FAULT)
+    assert len(faults) == 1
+    assert faults[0].severity is EventSeverity.ERROR
+    assert faults[0].message == "output write failed: write timeout"
+    assert sim.consecutive_write_failures == 1
+
+
+def test_transport_ok_reflects_either_direction_faulting() -> None:
+    plc = PLC_Generic("t", lambda plc: None)
+    transport = _ScriptedTransport()
+    transport.read_script = [TransportError("timeout"), {}]
+    sim = Executive(plc, NullPlant(), IOBus(), transport)
+
+    sim.tick()
+    assert sim.transport_ok is False
+
+    sim.tick()
+    assert sim.transport_ok is True

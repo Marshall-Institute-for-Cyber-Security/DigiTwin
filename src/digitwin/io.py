@@ -22,8 +22,25 @@ IOValue = int | float | bool
 
 class TransportError(Exception):
     """An I/O transport failed to move values across the PLC boundary (timeout,
-    dropped connection, protocol fault). The in-process transport never raises
-    it; the OPC UA / Modbus adapters (Phase 6) will."""
+    dropped connection, protocol fault).
+
+    ``partial_inputs`` carries whichever input values were read successfully
+    before the failure. A networked read walks a register map in blocks (one
+    round trip per contiguous group), so one block timing out shouldn't
+    discard the ones that already came back — the executive applies these and
+    holds the last value for everything else. Writes have nothing to apply
+    back, so ``partial_inputs`` is always empty there.
+
+    The in-process transport never raises it; the OPC UA / Modbus adapters
+    (Phase 6) will."""
+
+    def __init__(
+        self, message: str, *, partial_inputs: Mapping[str, TagValue] | None = None
+    ) -> None:
+        super().__init__(message)
+        self.partial_inputs: dict[str, TagValue] = (
+            dict(partial_inputs) if partial_inputs else {}
+        )
 
 
 class IOBus:
@@ -60,8 +77,14 @@ class IOTransport(Protocol):
     ``write_outputs`` accepts ``{output tag name: value}`` for every output the
     PLC produced and forwards the ones it knows. The signature is intentionally
     batch-oriented so an OPC UA / Modbus adapter can implement it with a single
-    round-trip. A networked implementation raises :class:`TransportError` when a
-    round-trip fails.
+    round-trip — or several, for a register map split across blocks.
+
+    A round-trip that fails outright raises :class:`TransportError`. A read
+    that fails partway through raises it too, with ``partial_inputs`` set to
+    whatever was read before the failing block, so a scan's worth of good
+    reads isn't discarded over one bad one. Retry policy — attempts, timeout —
+    belongs to the transport, not the caller: by the time ``TransportError``
+    reaches the executive, the exchange is down for this scan.
     """
 
     def read_inputs(self) -> dict[str, TagValue]: ...

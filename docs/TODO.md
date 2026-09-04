@@ -17,7 +17,7 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [x] `AnalogSensor` — range, noise sigma, filter tau → scaled word (`digitwin/plant/sensors.py`)
 - [x] `digitwin/io.py` — I/O bus + `IOTransport` protocol + in-process transport
   - [x] Keep the protocol **synchronous** (`def read_inputs` / `def write_outputs`) — matches the executive; `pymodbus` sync client fits directly, the `asyncua` adapter wraps its own loop
-  - [ ] `read_inputs()` reports staleness or raises `TransportError` — networked reads can time out (Phase 7 comms-dropout reuses this)
+  - [x] `read_inputs()` raises `TransportError` (with `partial_inputs` for a block-partial read) on a timeout; `write_outputs()` raises it on a failed write. The executive holds the last value per tag and logs one `EventCategory.FAULT` event on entry and one on recovery (`Executive._on_transport_failure` / `_on_transport_recovery`, `digitwin/executive.py`) — WARNING for a stale read, ERROR for a failed write (output_image has diverged from the field). Phase 7's comms-dropout fault reuses this path unchanged
 - [x] Strip physics out of `StartStopTankProgram`; make it pure control logic
 - [x] Rebuild `demo.py` as tank plant + PLC wired through the I/O bus, stepped by a minimal `Executive`
 - [x] **Validate:** demo still fills on start / drains on stop; level comes from `Tank.step()`
@@ -112,11 +112,15 @@ behaves the same.
 
 - [ ] Confirm `IOTransport` protocol is adapter-ready — sync signature checked against `asyncua` (async) and `pymodbus` (sync)
 - [ ] `digitwin/adapters/opcua.py` — map tags to OPC UA nodes (client + server); `asyncua`, adapter owns the event loop
-- [ ] `digitwin/adapters/modbus.py` — `pymodbus`, imported lazily inside the module:
-  - [ ] `ModbusClientTransport(IOTransport)` — twin as master; `read_inputs` ← discrete inputs / input registers, `write_outputs` → coils / holding registers; sync `ModbusTcpClient`
-  - [ ] `ModbusSlaveServer` — twin as slave for external SCADA/HMI; side window on the tag table, synced once per scan, **not** an `IOTransport`
-  - [ ] tag→register map: 16-bit zero-based registers, float / int32 = 2 registers with configurable word+byte order, scale/offset on analog values
-- [ ] Add `opcua` / `modbus` optional-dependency extras to `pyproject.toml` (`digitwin[modbus]`)
+- [x] `digitwin/adapters/modbus.py` — `pymodbus`, imported lazily (on first `connect()`, not at module scope):
+  - [x] `ModbusClientTransport(IOTransport)` — twin as master; `read_inputs` ← discrete inputs / input registers, `write_outputs` → coils / holding registers; sync `ModbusTcpClient`. Wired by native address like `InProcessTransport` (`plc.tag_at`), one round trip per contiguous address block per kind, `TransportError.partial_inputs` carries whatever blocks already succeeded
+  - [x] `ModbusSlaveServer` — twin as slave for external SCADA/HMI; side window on the tag table keyed by **tag name** (`publish` → read-only, `accept` → remote can overwrite), synced once per tick from `Executive._observe()` via a new optional `Executive.modbus_slave` field — **not** an `IOTransport`, never mid-scan
+  - [x] `RegisterMap`: `coil` / `discrete_input` / `holding_register` / `input_register` kinds, 16-bit zero-based, `length=2` for a 32-bit value with configurable `word_order` + `byte_order`, `scale`/`offset` on analog values
+  - [ ] no signed-integer handling — `scale`/`offset` cover unsigned raw counts only; a device reporting native int16/int32 needs the caller to fold the sign into `scale`/`offset` itself
+- [x] Add `modbus` optional-dependency extra to `pyproject.toml` (`digitwin[modbus]`, pinned `pymodbus>=3.15,<4` — 3.11 renamed `slave=`→`device_id=`; the slave-server bridge additionally needs pymodbus's `SimDevice`/`action` datastore, verified only on 3.15). mypy override so `pymodbus.*` doesn't need to be installed to typecheck. `opcua` extra still open
+- [x] Test `ModbusClientTransport` **and** `ModbusSlaveServer` against a real `pymodbus` install, not just the fake client — `tests/test_modbus.py::test_client_and_slave_server_interoperate_over_a_real_socket` runs a real `ModbusSlaveServer` (standing in for a remote field device) against a real `ModbusClientTransport` over an actual TCP socket, both directions, both bit and word kinds. `test_slave_server_serves_a_real_pymodbus_client_end_to_end` does the same against a raw `pymodbus` client. Both skip via `pytest.importorskip("pymodbus")` when the `modbus` extra isn't installed (`uv sync --extra modbus`)
+  - Server bridge: `ModbusDeviceContext`/`ModbusServerContext` are pymodbus-deprecated one-shot snapshots (deep-copy data at construction, no live hook) — `ModbusSlaveServer` instead builds a `SimDevice` per address with an `action` callback (`_make_action` in `digitwin/adapters/modbus.py`) that bridges every register access to `_SlaveStore` live. `stop()` uses pymodbus's own `ServerStop()` rather than abruptly stopping the event loop, which otherwise leaves a cancelled-mid-flight accept on Windows
+  - `ServerStop()` tracks the running server through a pymodbus-global, so only one `ModbusSlaveServer` can be live per process at a time — not exercised by any test, worth knowing if a twin ever needs two
 - [ ] Topology: virtual commissioning (real PLC logic, DigiTwin is the plant)
 - [ ] Topology: shadow mode (real PLC + twin get same field inputs, compare outputs)
 - [ ] Topology: predictive (twin fed live inputs, runs faster than real time)

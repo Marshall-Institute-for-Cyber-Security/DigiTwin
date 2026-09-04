@@ -1,5 +1,6 @@
 """DigiTwin: a small soft-PLC engine and simulation harness."""
 
+from digitwin.adapters import ModbusClientTransport, ModbusSlaveServer, RegisterMap
 from digitwin.events import Event, EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
 from digitwin.hardware import (
@@ -85,12 +86,15 @@ __all__ = [
     "IOValue",
     "InProcessTransport",
     "JsonlSink",
+    "ModbusClientTransport",
+    "ModbusSlaveServer",
     "NullPlant",
     "ParsedAddress",
     "PlantModel",
     "Program",
     "RecordSink",
     "RecordingTransport",
+    "RegisterMap",
     "ReplayTransport",
     "Sample",
     "SampleMode",
