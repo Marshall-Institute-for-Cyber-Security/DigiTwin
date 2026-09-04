@@ -36,21 +36,23 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [x] Timer / counter instruction objects: `TON`, `TOF`, `CTU`, `ONS` (`digitwin/instructions.py`)
 - [x] **Validate:** `SCALED` 50× matches `FREE_RUN` trajectory; `TON` 2 s preset fires on the 20th 0.1 s scan
 
-## Phase 2b — PLC hardware abstraction (vendor/model classes)
+## Phase 2b — PLC hardware abstraction (vendor/model classes)  _(in progress)_
 
-- [ ] `HardwareProfile` dataclass (`digitwin/hardware.py`) — I/O counts, memory ranges, retentive ranges, system-bit names, watchdog/scan limits, instruction set
-- [ ] Split `PLC` into abstract base (scan engine only) + `self.profile`
-- [ ] `define_tag()` validates `native_address` against the profile
-- [ ] Address → physical channel resolution (I/O bus wires to terminals, not tag names)
-- [ ] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word)
-- [ ] Address-syntax strategies: `IEC_DOTTED`, `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON`
-- [ ] `digitwin/models/generic.py` — `PLC_Generic` matching today's demo
-- [ ] `digitwin/models/schneider_tm221.py` — `PLC_Schneider_TM221CE16T` (9 DI, 7 DO, 2 AI)
-- [ ] Model registry + `plc_from_model("TM221CE16T", program)` factory
+- [x] `HardwareProfile` dataclass (`digitwin/hardware.py`) — I/O counts, memory + retentive ranges, `address_syntax`, `first_scan_bit`, `default_watchdog_ms` / `min_scan_ms`
+  - [ ] `instruction_set` field still unadded (feeds the _(later)_ capability gating below)
+- [x] Split `PLC` into abstract base — `ABC`, scan engine + firmware only, `ClassVar profile`; refuses to instantiate without one, `watchdog_s` defaults from `profile.default_watchdog_ms`
+- [x] `define_tag()` validates `native_address` against the profile — syntax, area vs tag type, index range; raises `AddressError`
+- [x] `AddressArea` / `ParsedAddress` — address string → `(area, linear index)`
+- [ ] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — bus + `InProcessTransport` still wire by tag name
+- [ ] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word) — `plc.first_scan` is still a bare bool, not a tag; `profile.first_scan_bit` name is unused
+- [ ] Address-syntax strategies — _partial:_ `AddressSyntax` protocol + `IEC_DOTTED` done; `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON` not started
+- [x] `digitwin/models/generic.py` — `PLC_Generic` (permissive; demo + engine tests now run on it)
+- [x] `digitwin/models/schneider_tm221.py` — `PLC_Schneider_TM221CE16T` (9 DI, 7 DO, 2 AI, `%M0..511`, `%MW0..7999`)
+- [x] Model registry + `plc_from_model("TM221CE16T", program)` factory (`digitwin/models/__init__.py`)
 - [ ] _(later)_ capability gating — check program instructions against `profile.instruction_set`
 - [ ] _(later)_ per-model fidelity knobs — relay vs transistor switching delay, analog quantization, jitter band
-- [ ] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0`
-- [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2
+- [ ] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0` — validation logic supports it, but no `tests/test_hardware.py` covers it yet
+- [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2 — demo runs on `PLC_Generic` and the suite is green (36 tests); the byte-for-byte historian diff waits on the Phase 3 historian
 - [ ] Sanity-check `HardwareProfile` fields against a second-vendor datasheet (S7-1200 or Micro850)
 
 ## Phase 3 — Observability (historian, events, snapshots)
@@ -101,6 +103,6 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [ ] `digitwin/scenario.py` — timed steps + assertions, runs in `free_run`, usable as pytest cases
 - [ ] Fault library — sensor stuck/drift/noise, actuator stuck/slow/reversed, wire break, comms dropout (injected via I/O bus)
 - [ ] Golden historian traces for demo scenarios; CI diffs them in free-run
-- [ ] Add `pytest` to dev deps (`pyproject.toml`), create `tests/`
-- [ ] Unit tests for current engine: scan phasing, seal-in latch, edge detection
+- [x] Add `pytest` to dev deps (`pyproject.toml`), create `tests/`
+- [x] Unit tests for current engine: scan phasing, seal-in latch, edge detection (`test_engine.py`, `test_start_stop_tank.py`, `test_instructions.py`, `test_plant.py`, `test_executive.py` — 36 tests)
 - [ ] **Validate:** `uv run pytest` green; tank scenario passes; flipping seal-in logic fails exactly one scenario
