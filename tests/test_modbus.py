@@ -336,10 +336,32 @@ def test_sync_round_trips_a_32bit_value_through_accept() -> None:
     assert plc.tags["setpoint"].value == 0x1234_5678
 
 
-def test_construction_rejects_a_write_only_kind_in_publish() -> None:
+def test_publish_accepts_a_coil_or_holding_register_kind() -> None:
+    """A program-owned tag can ride a master-writable Modbus table (a real
+    device's own memory map doesn't reserve coil/holding_register for
+    master-writable data -- see the class docstring); publish just means the
+    program's value wins every tick, not that the wire kind must be
+    read-only."""
     plc = _plc()
-    with pytest.raises(ValueError, match="not a readable kind"):
-        ModbusSlaveServer(plc=plc, publish={"alarm": RegisterMap(kind="coil", address=0)})
+    plc.tags["alarm"].value = True
+    server = ModbusSlaveServer(plc=plc, publish={"alarm": RegisterMap(kind="coil", address=0)})
+
+    server.sync()
+
+    assert server._store.read("coil", 0, 1) == [1]
+
+
+def test_a_published_coil_ignores_a_stray_remote_write_on_the_next_sync() -> None:
+    plc = _plc()
+    plc.tags["alarm"].value = True
+    server = ModbusSlaveServer(plc=plc, publish={"alarm": RegisterMap(kind="coil", address=0)})
+    server.sync()
+
+    server._store.write("coil", 0, [0])  # as if a remote master wrote it directly
+    server.sync()
+
+    assert server._store.read("coil", 0, 1) == [1]  # publish reasserted the tag's value
+    assert plc.tags["alarm"].value is True  # never had a path back into the tag
 
 
 def test_construction_rejects_a_read_only_kind_in_accept() -> None:
@@ -418,6 +440,46 @@ def test_slave_server_serves_a_real_pymodbus_client_end_to_end() -> None:
 
     server.sync()
     assert plc.tags["setpoint"].value == 777
+
+
+def test_slave_server_serves_a_published_coil_via_read_coils() -> None:
+    """A program-owned bit (e.g. a seal-in latch) published as a coil must be
+    readable via FC1 (Read Coils) -- the function code a real HMI's Modbus
+    driver uses for that memory area regardless of who "owns" writing it."""
+    pytest.importorskip("pymodbus")
+    import socket
+    import time
+
+    from pymodbus.client import ModbusTcpClient
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+        probe.bind(("127.0.0.1", 0))
+        port = probe.getsockname()[1]
+
+    plc = _plc()
+    plc.tags["alarm"].value = True
+    server = ModbusSlaveServer(
+        plc=plc,
+        publish={"alarm": RegisterMap(kind="coil", address=1)},
+        host="127.0.0.1",
+        port=port,
+    )
+    server.sync()
+    server.start()
+    client: Any = ModbusTcpClient("127.0.0.1", port=port, timeout=1.0)
+    try:
+        deadline = time.monotonic() + 3.0
+        while not client.connect():
+            if time.monotonic() > deadline:
+                pytest.fail("real pymodbus server never accepted a connection")
+            time.sleep(0.05)
+
+        read = client.read_coils(address=1, count=1, device_id=1)
+        assert not read.isError()
+        assert read.bits[0] is True
+    finally:
+        client.close()
+        server.stop()
 
 
 def test_client_and_slave_server_interoperate_over_a_real_socket() -> None:

@@ -396,9 +396,16 @@ def _build_device(
             SimData(address=a, count=1, values=0, datatype=DataType.REGISTERS) for a in addresses
         ]
 
-    co = bit_block(_addresses(accept, "coil"))
+    # coil / holding_register can come from either dict now: accept (remote
+    # writes flow into the tag) or publish (program-owned, read-only on the
+    # wire) -- both need their addresses in the same SimData block, since
+    # there's only one coil/holding_register table on the wire.
+    def merged(kind: RegisterKind) -> list[int]:
+        return sorted(set(_addresses(accept, kind)) | set(_addresses(publish, kind)))
+
+    co = bit_block(merged("coil"))
     di = bit_block(_addresses(publish, "discrete_input"))
-    hr = word_block(_addresses(accept, "holding_register"))
+    hr = word_block(merged("holding_register"))
     ir = word_block(_addresses(publish, "input_register"))
 
     return SimDevice(
@@ -418,12 +425,22 @@ class ModbusSlaveServer:
     be called once per tick, from ``Executive._observe()``, after that tick's
     scan has already settled (same slot the historian and event log use).
 
-    ``publish`` exposes tags for read-only access on the wire (``discrete_input``
-    / ``input_register`` kinds); ``accept`` lets the remote master overwrite
-    tags (``coil`` / ``holding_register`` kinds). Both are keyed by **tag
-    name**, not native address — unlike ``ModbusClientTransport``, this isn't
-    wiring a physical terminal, it's an operator window onto whichever tags
-    (physical or internal) the model chooses to expose.
+    ``publish`` pushes a tag's value onto the wire every tick — any
+    ``RegisterMap`` kind, including ``coil`` / ``holding_register``. A real
+    device's own Modbus map (e.g. the M221's: every ``%M``/``%MW`` is a
+    coil/holding-register, full stop, regardless of whether the ladder or the
+    master is the "real" writer) doesn't reserve those kinds for
+    master-writable data, so neither does this: a published coil is simply
+    read-only in practice — a stray remote write lands in the wire store but
+    is overwritten again by the next tick's publish, never reaching the tag.
+    ``accept`` is the only path that lets the remote master's write reach the
+    tag table, which is why it stays restricted to the kinds Modbus can
+    actually write (``coil`` / ``holding_register`` — there's no write
+    function code for ``discrete_input`` / ``input_register`` at all). Both
+    dicts are keyed by **tag name**, not native address — unlike
+    ``ModbusClientTransport``, this isn't wiring a physical terminal, it's an
+    operator window onto whichever tags (physical or internal) the model
+    chooses to expose.
 
     Network start/stop (:meth:`start` / :meth:`stop`) runs pymodbus's asyncio
     server on a background thread with its own event loop, backed by a
@@ -447,11 +464,10 @@ class ModbusSlaveServer:
     _thread: Any = field(default=None, repr=False, init=False, compare=False)
 
     def __post_init__(self) -> None:
-        for tag_name, reg in self.publish.items():
-            if reg.kind not in _INPUT_KINDS:
-                raise ValueError(
-                    f"published tag {tag_name!r} maps to {reg.kind!r}, not a readable kind"
-                )
+        for tag_name in self.publish:
+            # Every RegisterKind is valid here -- see the class docstring for
+            # why a published coil/holding_register is fine (it's read-only
+            # in practice; see sync()).
             if tag_name not in self.plc.tags:
                 raise KeyError(f"published tag {tag_name!r} is not defined on {self.plc.name!r}")
         for tag_name, reg in self.accept.items():
