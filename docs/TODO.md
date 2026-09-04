@@ -38,21 +38,29 @@ Order follows the roadmap's **Suggested sequencing** table.
 
 ## Phase 2b — PLC hardware abstraction (vendor/model classes)  _(in progress)_
 
-- [x] `HardwareProfile` dataclass (`digitwin/hardware.py`) — I/O counts, memory + retentive ranges, `address_syntax`, `first_scan_bit`, `default_watchdog_ms` / `min_scan_ms`
+- [x] `HardwareProfile` dataclass (`digitwin/hardware.py`) — I/O counts, memory + retentive ranges, `address_syntax`, system bits, `default_watchdog_ms` / `min_scan_ms`
   - [ ] `instruction_set` field still unadded (feeds the _(later)_ capability gating below)
-- [x] Split `PLC` into abstract base — `ABC`, scan engine + firmware only, `ClassVar profile`; refuses to instantiate without one, `watchdog_s` defaults from `profile.default_watchdog_ms`
+  - [ ] `min_scan_ms` is catalog data only — nothing reads it; the executive never clamps `dt` against it
+  - [ ] no `output_type` (relay vs transistor) or comms-port fields yet — the roadmap's profile sketch lists both
+- [x] Split `PLC` into abstract base — scan engine + firmware only, `ClassVar profile`, `watchdog_s` defaults from `profile.default_watchdog_ms`. Note: `PLC` declares no abstract *members*, so `ABC` isn't what stops instantiation — the runtime `TypeError` in `__init__` is (mypy does not see `PLC` as abstract)
 - [x] `define_tag()` validates `native_address` against the profile — syntax, area vs tag type, index range; raises `AddressError`
+  - [ ] validation is opt-in: a tag with `native_address=None` is never checked, so profile limits are bypassable
+  - [ ] `%S` / `%SW` indices are not range-checked (`hardware.py::_range_check` ends before them)
+- [x] One tag per address — a second tag claiming an address already in use raises `AddressError`; unaddressed tags never collide
+- [x] Retentive ranges are applied — `define_tag`'s `retentive` defaults to `profile.is_retentive(native_address)`, so `%M5` on the TM221 survives a cold start with no caller involvement; pass `retentive=` to override. `PLC_Generic` deliberately declares no retain range
 - [x] `AddressArea` / `ParsedAddress` — address string → `(area, linear index)`
 - [ ] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — bus + `InProcessTransport` still wire by tag name
 - [x] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word) — `PLC._define_system_tags()` reads `profile.first_scan_bit` / `always_on_bit` / `always_off_bit` / `scan_time_word` and defines+syncs them each scan (`FIRST_SCAN_TAG`, `ALWAYS_ON_TAG`, `ALWAYS_OFF_TAG`, `SCAN_TIME_MS_TAG` in `plc.py`); `plc.first_scan` bare bool kept for internal engine use, tag mirrors it for programs
+- [ ] Analog I/O never crosses the scan boundary — `ANALOG_INPUT` maps onto `TagType.WORD`, but the input image freezes only `DISCRETE_INPUT`, so a `%IW0.0` tag has to be read live with `plc.read()`; symmetrically `Executive._transfer_outputs` ships only `DISCRETE_OUTPUT`, so a `%QW` output never reaches the plant. The demo dodges this by putting `tank_level` at `%MW0`. Probably wants `TagType.ANALOG_INPUT` / `ANALOG_OUTPUT` rather than a patched freeze list
 - [ ] Address-syntax strategies — _partial:_ `AddressSyntax` protocol + `IEC_DOTTED` done; `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON` not started
 - [x] `digitwin/models/generic.py` — `PLC_Generic` (permissive; demo + engine tests now run on it)
 - [x] `digitwin/models/schneider_tm221.py` — `PLC_Schneider_TM221CE16T` (9 DI, 7 DO, 2 AI, `%M0..511`, `%MW0..7999`)
 - [x] Model registry + `plc_from_model("TM221CE16T", program)` factory (`digitwin/models/__init__.py`)
 - [ ] _(later)_ capability gating — check program instructions against `profile.instruction_set`
 - [ ] _(later)_ per-model fidelity knobs — relay vs transistor switching delay, analog quantization, jitter band
-- [x] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0` — covered in `tests/test_hardware.py` (53 tests total)
+- [x] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0` — covered in `tests/test_hardware.py` (60 tests total)
 - [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2 — demo runs on `PLC_Generic` and the suite is green; the byte-for-byte historian diff waits on the Phase 3 historian
+- [ ] **Verify the TM221 profile against the M221 system-object reference** — `always_on_bit="%S20"`, `always_off_bit="%S21"`, `scan_time_word="%SW10"` and `retentive_words=(0, 1999)` were filled in to exercise the mechanism and are marked UNVERIFIED in the module. `tests/test_hardware.py` now asserts them, so fix profile and assertions in one commit
 - [ ] Sanity-check `HardwareProfile` fields against a second-vendor datasheet (S7-1200 or Micro850)
 
 ## Phase 3 — Observability (historian, events, snapshots)
@@ -104,5 +112,6 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [ ] Fault library — sensor stuck/drift/noise, actuator stuck/slow/reversed, wire break, comms dropout (injected via I/O bus)
 - [ ] Golden historian traces for demo scenarios; CI diffs them in free-run
 - [x] Add `pytest` to dev deps (`pyproject.toml`), create `tests/`
-- [x] Unit tests for current engine: scan phasing, seal-in latch, edge detection (`test_engine.py`, `test_start_stop_tank.py`, `test_instructions.py`, `test_plant.py`, `test_executive.py` — 36 tests)
+- [x] Unit tests for current engine: scan phasing, seal-in latch, edge detection, hardware profiles (`test_engine.py`, `test_start_stop_tank.py`, `test_instructions.py`, `test_plant.py`, `test_executive.py`, `test_hardware.py` — 60 tests)
+- [x] `mypy --strict` covers `tests/` as well as `src/` (`pyproject.toml`), so test-side type claims are checked too
 - [ ] **Validate:** `uv run pytest` green; tank scenario passes; flipping seal-in logic fails exactly one scenario

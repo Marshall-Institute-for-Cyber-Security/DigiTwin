@@ -4,8 +4,9 @@ The scan cycle (freeze inputs -> run program -> flush outputs) is unchanged
 from Phase 1. Phase 2 added firmware behaviour around it: a first-scan bit,
 retentive vs non-retentive tags, cold/warm/power-cycle restarts, and a
 program-scan watchdog. Phase 2b makes ``PLC`` abstract — a concrete model
-subclass carries a ``HardwareProfile`` and every ``native_address`` is
-validated against it.
+subclass carries a ``HardwareProfile``, every ``native_address`` is validated
+against it and claims its terminal exclusively, and a tag's retentiveness
+defaults to whatever the model retains at that address.
 """
 
 from __future__ import annotations
@@ -49,9 +50,14 @@ class Tag:
 
 
 class Program(Protocol):
-    """A scan-cycle program: called once per scan with the owning PLC."""
+    """A scan-cycle program: called once per scan with the owning PLC.
 
-    def __call__(self, plc: PLC) -> None: ...
+    The argument is positional-only — the engine always calls
+    ``self.program(self)`` — so a program may name its parameter whatever
+    reads best.
+    """
+
+    def __call__(self, plc: PLC, /) -> None: ...
 
 
 class PLC(ABC):
@@ -91,6 +97,8 @@ class PLC(ABC):
         self.first_scan = False
         self.last_scan_duration = 0.0
         self.watchdog_tripped = False
+        # canonical native address -> owning tag name; one terminal, one tag
+        self._addressed: dict[str, str] = {}
         self._define_system_tags()
 
     def _define_system_tags(self) -> None:
@@ -114,19 +122,42 @@ class PLC(ABC):
         initial_value: TagValue = 0,
         native_address: str | None = None,
         *,
-        retentive: bool = False,
+        retentive: bool | None = None,
     ) -> Tag:
+        """Define a tag, validating any ``native_address`` against the profile.
+
+        An address may back only one tag — two tags on one terminal would each
+        hold their own value for it.
+
+        ``retentive`` defaults to what the profile's retain ranges say about the
+        address, since on real hardware retention is a property of the memory
+        area, not of the tag. Pass it explicitly to override that; a tag with no
+        native address defaults to non-retentive.
+        """
+        # Imported here, not at module scope: hardware.py imports TagType from
+        # this module, so a top-level import would be circular.
+        from digitwin.hardware import AddressError
+
         if tag_name in self.tags:
             raise ValueError(f"Tag {tag_name!r} already exists")
         if native_address is not None:
-            self.profile.validate_address(native_address, tag_type)
+            parsed = self.profile.validate_address(native_address, tag_type)
+            canonical = self.profile.address_syntax.format(parsed)
+            owner = self._addressed.get(canonical)
+            if owner is not None:
+                raise AddressError(
+                    f"{native_address!r} is already assigned to tag {owner!r}"
+                )
+            if retentive is None:
+                retentive = self.profile.is_retentive(native_address)
+            self._addressed[canonical] = tag_name
         tag = Tag(
             tag_name,
             tag_type,
             value=initial_value,
             native_address=native_address,
             initial_value=initial_value,
-            retentive=retentive,
+            retentive=bool(retentive),
         )
         self.tags[tag_name] = tag
         return tag

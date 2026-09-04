@@ -1,7 +1,14 @@
 """DigiTwin: a small soft-PLC engine and simulation harness."""
 
 from digitwin.executive import Executive, ExecutiveMode
-from digitwin.hardware import IEC_DOTTED, AddressArea, AddressError, AddressSyntax, HardwareProfile
+from digitwin.hardware import (
+    IEC_DOTTED,
+    AddressArea,
+    AddressError,
+    AddressSyntax,
+    HardwareProfile,
+    ParsedAddress,
+)
 from digitwin.instructions import CTU, ONS, TOF, TON
 from digitwin.io import InProcessTransport, IOBus, IOTransport, IOValue, TransportError
 from digitwin.models import PLC_Generic, PLC_Schneider_TM221CE16T, plc_from_model
@@ -45,6 +52,7 @@ __all__ = [
     "IOTransport",
     "IOValue",
     "InProcessTransport",
+    "ParsedAddress",
     "PlantModel",
     "Program",
     "StartStopTankProgram",

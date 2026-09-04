@@ -34,7 +34,7 @@ def _plc(program: Program = lambda _plc: None) -> PLC_Schneider_TM221CE16T:
 
 def test_plc_refuses_to_instantiate_without_a_profile() -> None:
     with pytest.raises(TypeError, match="no hardware profile"):
-        PLC("t", lambda _plc: None)  # type: ignore[abstract]
+        PLC("t", lambda _plc: None)
 
 
 # --- address validation: accept/reject the TODO's own examples ---------
@@ -87,6 +87,25 @@ def test_generic_profile_is_permissive_but_still_range_checked() -> None:
         plc.define_tag("in512", TagType.DISCRETE_INPUT, False, "%I0.512")
 
 
+# --- one tag per terminal --------------------------------------------------
+
+
+def test_a_second_tag_cannot_claim_an_address_already_in_use() -> None:
+    plc = _plc()
+    plc.define_tag("coil", TagType.DISCRETE_OUTPUT, False, "%Q0.0")
+    with pytest.raises(AddressError, match="already assigned to tag 'coil'"):
+        plc.define_tag("also_coil", TagType.DISCRETE_OUTPUT, False, "%Q0.0")
+
+
+def test_unaddressed_tags_do_not_collide() -> None:
+    plc = _plc()
+    plc.define_tag("a", TagType.INTERNAL_BIT, False)
+    plc.define_tag("b", TagType.INTERNAL_BIT, False)  # no address, no conflict
+
+    assert plc.tags["a"].native_address is None
+    assert plc.tags["b"].native_address is None
+
+
 # --- retentive ranges ----------------------------------------------------
 
 
@@ -99,6 +118,54 @@ def test_is_retentive_reflects_the_profiles_retentive_word_range() -> None:
 def test_is_retentive_reflects_the_profiles_retentive_bit_range() -> None:
     profile = PLC_Schneider_TM221CE16T.profile
     assert profile.is_retentive("%M5") is True
+
+
+def test_a_tag_in_the_retain_range_survives_a_cold_start_without_being_asked() -> None:
+    # Retention is a property of the memory area on real hardware, so the
+    # profile — not the caller — decides by default.
+    plc = _plc()
+    plc.define_tag("retained", TagType.INTERNAL_BIT, False, "%M5")  # in (0, 511)
+    plc.write("retained", True)
+
+    plc.cold_start()
+
+    assert plc.tags["retained"].retentive is True
+    assert plc.read("retained") is True
+
+
+def test_a_tag_outside_the_retain_range_is_wiped_by_a_cold_start() -> None:
+    plc = _plc()
+    plc.define_tag("volatile", TagType.WORD, 0, "%MW5000")  # outside (0, 1999)
+    plc.write("volatile", 7)
+
+    plc.cold_start()
+
+    assert plc.tags["volatile"].retentive is False
+    assert plc.read("volatile") == 0
+
+
+def test_an_explicit_retentive_flag_overrides_the_profile() -> None:
+    plc = _plc()
+    plc.define_tag("opt_out", TagType.INTERNAL_BIT, False, "%M5", retentive=False)
+    plc.write("opt_out", True)
+
+    plc.cold_start()
+
+    assert plc.read("opt_out") is False
+
+
+def test_an_unaddressed_tag_defaults_to_non_retentive() -> None:
+    plc = _plc()
+    plc.define_tag("floating", TagType.INTERNAL_BIT, False)
+
+    assert plc.tags["floating"].retentive is False
+
+
+def test_generic_declares_no_retain_range_so_nothing_retains_by_default() -> None:
+    plc = PLC_Generic("t", lambda _plc: None)
+    plc.define_tag("bit", TagType.INTERNAL_BIT, False, "%M5")
+
+    assert plc.tags["bit"].retentive is False
 
 
 # --- IEC_DOTTED parse/format round-trip ----------------------------------

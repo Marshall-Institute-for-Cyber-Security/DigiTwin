@@ -1,10 +1,11 @@
 """Hardware profiles: what a given PLC model physically has.
 
 A HardwareProfile is pure catalog data - I/O channel counts, addressable
-memory ranges, the native address syntax, the first-scan system bit, and
-watchdog / scan-time limits. It carries no behvior. Concrete PLC subclasses
-(digitwin/model/) each hold one, and PLC.define_tag validates every
-native_addresses against it.
+memory ranges, the native address syntax, the system bits, and watchdog /
+scan-time limits. It carries no behavior of its own. Concrete PLC subclasses
+(digitwin/models/) each hold one; PLC.define_tag validates every
+native_address against it and takes each tag's retentive default from the
+retain ranges below.
 """
 
 from __future__ import annotations
@@ -18,7 +19,8 @@ from digitwin.plc import TagType
 
 
 class AddressError(ValueError):
-    """A native address is malformed or out of range for the harware profile."""
+    """A native address is malformed, out of range for the hardware profile,
+    or already claimed by another tag."""
 
 class AddressArea(Enum):
     DISCRETE_INPUT = "discrete input"   # %I
@@ -117,6 +119,8 @@ class HardwareProfile:
     always_off_bit: str | None = None
     scan_time_word: str | None = None
     default_watchdog_ms: int = 250
+    # Catalog only: the executive does not yet clamp dt against this. See the
+    # Phase 2b fidelity-knob item in docs/TODO.md.
     min_scan_ms: int = 1
 
     def validate_address(self, address: str, tag_type: TagType) -> ParsedAddress:

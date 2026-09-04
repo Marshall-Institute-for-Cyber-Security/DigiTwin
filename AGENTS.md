@@ -18,12 +18,18 @@ hardware.
 ```
 src/digitwin/
   __init__.py            public exports
-  plc.py                 core engine: three-phase scan + firmware (first-scan
-                         bit, retentive tags, restarts, watchdog)
+  plc.py                 core engine: abstract PLC, three-phase scan + firmware
+                         (first-scan bit, retentive tags, restarts, watchdog)
+  hardware.py            HardwareProfile (catalog data) + address syntax:
+                         AddressArea / ParsedAddress / AddressSyntax / IEC_DOTTED
   instructions.py        IEC timer/counter blocks: TON, TOF, CTU, ONS
   io.py                  I/O bus + IOTransport protocol + in-process transport
   executive.py           timed tick loop: FREE_RUN / REAL_TIME / SCALED modes
   demo.py                runnable demo: tank plant wired to a PLC via the bus
+  models/
+    __init__.py          model registry + plc_from_model(name, program)
+    generic.py           PLC_Generic — permissive profile, used by demo + tests
+    schneider_tm221.py   PLC_Schneider_TM221CE16T — 9 DI / 7 DO / 2 AI
   programs/
     __init__.py
     start_stop_tank.py   example control program (seal-in start/stop, valves)
@@ -37,6 +43,7 @@ docs/
   TODO.md                phase-ordered build checklist
 tests/
   test_engine.py         scan phasing, first-scan, retentive, restarts, watchdog
+  test_hardware.py       address validation, retain ranges, system tags, registry
   test_instructions.py   TON / TOF / CTU / ONS
   test_plant.py          component dynamics / scaling / hysteresis
   test_executive.py      demo integration + pacing modes
@@ -44,9 +51,12 @@ tests/
 ```
 
 Phases 1 and 2 are landed (plant/controller split; timed executive, firmware
-realism, timer/counter blocks). Phase 2b (PLC hardware abstraction —
-`HardwareProfile`, vendor/model subclasses) is the current work — see
-[docs/TODO.md](docs/TODO.md).
+realism, timer/counter blocks). Phase 2b (PLC hardware abstraction) is mostly
+landed: `HardwareProfile`, the abstract `PLC` base, vendor/model subclasses, the
+model registry, address validation, and profile-driven retention. Still open in
+2b are terminal-level I/O wiring, analog tags in the scan images, and the other
+address syntaxes — see [docs/TODO.md](docs/TODO.md), which tracks the known gaps
+inline under each landed item.
 
 ## Commands
 
@@ -55,7 +65,7 @@ uv sync                 # create venv, install dev tools
 uv run digitwin         # run the demo simulation
 uv run pytest           # run the test suite
 uv run ruff check .     # lint
-uv run mypy             # type-check (strict, src/ only)
+uv run mypy             # type-check (strict, src/ + tests/)
 ```
 
 Plain-pip equivalent: `pip install -e ".[dev]"`, then `digitwin` / `ruff check .`
@@ -68,7 +78,8 @@ POSIX scripts.
 
 - **Style:** ruff with `E, F, I, UP, B, SIM`; line length 100. `from __future__
   import annotations` at the top of every module.
-- **Typing:** mypy `strict` must pass. Full annotations on all public functions.
+- **Typing:** mypy `strict` must pass over `src/` **and** `tests/`. Full
+  annotations on all public functions.
 - **Docstrings:** one-line module docstring; short class/function docstrings that
   explain intent, matching the terse style already in `plc.py`.
 - **No runtime dependencies** without discussing it first. Dev-only tools and
@@ -91,7 +102,13 @@ The PLC models the classic **three-phase scan cycle** (`PLC.scan()` in
 
 `plc.first_scan` is true only on scan 1 (re-armed by `cold_start` / `warm_start`
 / `power_cycle`). `cold_start` resets non-retentive tags to `initial_value`;
-`retentive=True` tags survive it. Keep these semantics.
+retentive tags survive it. Keep these semantics.
+
+A tag's retentiveness comes from the **hardware profile**, not the caller:
+`define_tag` defaults `retentive` to `profile.is_retentive(native_address)`,
+because on real hardware retention is a property of the memory area. Pass
+`retentive=` only to override that deliberately. An address backs at most one
+tag — a second claim raises `AddressError`.
 
 Therefore, in program code:
 
@@ -120,9 +137,12 @@ Control, physics, and timing are separate layers; keep them apart:
   (`asyncua`, adapter owns its loop) or Modbus (`pymodbus`, sync) — see the
   Phase 6 roadmap notes for the client-transport vs slave-server split. Never
   let a program import from `plant/` or vice versa.
-- Still ahead (Phase 2b): `PLC` becomes an abstract base; concrete
-  `PLC_<Vendor>_<Model>` subclasses carry a `HardwareProfile` (I/O counts,
-  memory map, address syntax).
+- **Hardware identity** lives in `models/`: `PLC` is abstract, and a concrete
+  `PLC_<Vendor>_<Model>` carries a `HardwareProfile` (I/O counts, memory map,
+  retain ranges, address syntax, system bits). Add a controller by adding a
+  profile, not by widening the engine. Profile fields you can't source from a
+  datasheet must be marked UNVERIFIED in the module, as `schneider_tm221.py`
+  does — a plausible-looking invented address is worse than an obvious gap.
 
 When adding features, check [docs/TODO.md](docs/TODO.md) for which phase it
 belongs to and follow that phase's design notes in the roadmap rather than

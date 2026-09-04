@@ -2,6 +2,11 @@
 
 Wide I/O counts and memory so any address the examples use is valid. Use it
 when a specific controller's limits don't matter.
+
+It declares no retain ranges: an invented controller shouldn't imply where a
+real one keeps its retentive memory, so tags on this model are non-retentive
+unless ``define_tag(..., retentive=True)`` says otherwise. Concrete vendor
+models set the real ranges and get retention for free.
 """
 
 from __future__ import annotations
@@ -20,8 +25,8 @@ class PLC_Generic(PLC):
         analog_outputs=64,
         memory_bits=(0, 8191),
         memory_words=(0, 8191),
-        retentive_bits=(0, 8191),
-        retentive_words=(0, 8191),
+        retentive_bits=None,
+        retentive_words=None,
         address_syntax=IEC_DOTTED,
         first_scan_bit="%S1",
         always_on_bit="%S2",
