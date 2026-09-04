@@ -16,7 +16,7 @@ from digitwin.models import PLC_Generic
 from digitwin.plc import PLC, TagType, TagValue
 
 
-def test_input_image_contains_only_discrete_inputs() -> None:
+def test_input_image_contains_only_physical_inputs() -> None:
     frozen: dict[str, TagValue] = {}
 
     def program(plc: PLC) -> None:
@@ -24,13 +24,14 @@ def test_input_image_contains_only_discrete_inputs() -> None:
 
     plc = PLC_Generic("t", program)
     plc.define_tag("di", TagType.DISCRETE_INPUT, True)
+    plc.define_tag("ai", TagType.ANALOG_INPUT, 42)
     plc.define_tag("do", TagType.DISCRETE_OUTPUT, True)
     plc.define_tag("bit", TagType.INTERNAL_BIT, True)
     plc.define_tag("word", TagType.WORD, 5)
 
     plc.scan()
 
-    assert set(frozen) == {"di"}
+    assert set(frozen) == {"di", "ai"}
 
 
 def test_discrete_input_is_frozen_for_the_whole_scan() -> None:

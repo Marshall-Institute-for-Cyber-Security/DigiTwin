@@ -73,7 +73,7 @@ class Executive:
         outputs: dict[str, TagValue] = {
             name: tag.value
             for name, tag in self.plc.tags.items()
-            if tag.tag_type == TagType.DISCRETE_OUTPUT
+            if tag.tag_type in (TagType.DISCRETE_OUTPUT, TagType.ANALOG_OUTPUT)
         }
         self.transport.write_outputs(outputs)
 

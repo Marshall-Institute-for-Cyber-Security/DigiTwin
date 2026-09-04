@@ -72,6 +72,12 @@ def test_address_area_must_match_the_tag_type() -> None:
     with pytest.raises(AddressError, match="can't address a discrete_input tag"):
         plc.define_tag("wrong_area", TagType.DISCRETE_INPUT, False, "%Q0.0")
 
+def test_analog_tag_types_require_their_own_area() -> None:
+    plc = _plc()
+    plc.define_tag("ai0", TagType.ANALOG_INPUT, 0, "%IW0.0")
+
+    with pytest.raises(AddressError, match="can't address a word tag"):
+        plc.define_tag("bad", TagType.WORD, 0, "%IW0.1")
 
 def test_memory_word_range_is_enforced() -> None:
     plc = _plc()

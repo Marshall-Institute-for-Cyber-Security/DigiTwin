@@ -28,7 +28,7 @@ DEMO_TAGS: list[TagSpec] = [
     ("red_light", TagType.DISCRETE_OUTPUT, False, "%Q0.1"),
     ("fill_valve", TagType.DISCRETE_OUTPUT, False, "%Q0.2"),
     ("drain_valve", TagType.DISCRETE_OUTPUT, False, "%Q0.3"),
-    ("tank_level", TagType.WORD, 0, "%MW0"),
+    ("tank_level", TagType.ANALOG_INPUT, 0, "%IW0.0"),
     ("tank_fill_permitted", TagType.INTERNAL_BIT, True, "%M11"),
     ("tank_drain_permitted", TagType.INTERNAL_BIT, False, "%M10"),
 ]

@@ -37,7 +37,7 @@ class StartStopTankProgram:
         plc.write_output("red_light", running)
 
         # Interlocks from the level transmitter; the plant owns the real limits.
-        level = plc.read("tank_level")
+        level = plc.read_input("tank_level")
         fill_permitted = level < TANK_LEVEL_MAX
         drain_permitted = level > TANK_LEVEL_MIN
         plc.write("tank_fill_permitted", fill_permitted)

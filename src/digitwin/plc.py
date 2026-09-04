@@ -24,6 +24,8 @@ if TYPE_CHECKING:
 class TagType(Enum):
     DISCRETE_INPUT = "discrete_input"
     DISCRETE_OUTPUT = "discrete_output"
+    ANALOG_INPUT = "analog_input"
+    ANALOG_OUTPUT = "analog_output"
     INTERNAL_BIT = "internal_bit"
     WORD = "word"
 
@@ -191,7 +193,7 @@ class PLC(ABC):
         self.input_image = {
             name: tag.value
             for name, tag in self.tags.items()
-            if tag.tag_type == TagType.DISCRETE_INPUT
+            if tag.tag_type in (TagType.DISCRETE_INPUT, TagType.ANALOG_INPUT)
         }
 
         # Phase 2: program scan — timed for the watchdog
