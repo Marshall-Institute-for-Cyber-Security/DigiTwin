@@ -29,6 +29,14 @@ class TagType(Enum):
 
 TagValue = int | bool
 
+# System tags PLC auto-populates from its HardwareProfile (see
+# PLC._define_system_tags). Programs read them like any other tag, e.g.
+# plc.read(FIRST_SCAN_TAG).
+FIRST_SCAN_TAG = "first_scan"
+ALWAYS_ON_TAG = "always_on"
+ALWAYS_OFF_TAG = "always_off"
+SCAN_TIME_MS_TAG = "scan_time_ms"
+
 
 @dataclass
 class Tag:
@@ -83,6 +91,21 @@ class PLC(ABC):
         self.first_scan = False
         self.last_scan_duration = 0.0
         self.watchdog_tripped = False
+        self._define_system_tags()
+
+    def _define_system_tags(self) -> None:
+        """Auto-populate the system tags the hardware profile declares
+        addresses for: first-scan bit, always-on/off bits, scan-time word.
+        A profile that leaves one unset (None) simply doesn't get that tag."""
+        p = self.profile
+        if p.first_scan_bit is not None:
+            self.define_tag(FIRST_SCAN_TAG, TagType.INTERNAL_BIT, False, p.first_scan_bit)
+        if p.always_on_bit is not None:
+            self.define_tag(ALWAYS_ON_TAG, TagType.INTERNAL_BIT, True, p.always_on_bit)
+        if p.always_off_bit is not None:
+            self.define_tag(ALWAYS_OFF_TAG, TagType.INTERNAL_BIT, False, p.always_off_bit)
+        if p.scan_time_word is not None:
+            self.define_tag(SCAN_TIME_MS_TAG, TagType.WORD, 0, p.scan_time_word)
 
     def define_tag(
         self,
@@ -126,6 +149,12 @@ class PLC(ABC):
 
     def scan(self) -> None:
         self.first_scan = self.scan_count == 0
+        if FIRST_SCAN_TAG in self.tags:
+            self.tags[FIRST_SCAN_TAG].value = self.first_scan
+        if ALWAYS_ON_TAG in self.tags:
+            self.tags[ALWAYS_ON_TAG].value = True
+        if ALWAYS_OFF_TAG in self.tags:
+            self.tags[ALWAYS_OFF_TAG].value = False
 
         # Phase 1: input scan — freeze physical inputs
         self.input_image = {
@@ -145,6 +174,9 @@ class PLC(ABC):
         # Phase 3: output scan — push to physical outputs
         for name, value in self.output_image.items():
             self.tags[name].value = value
+
+        if SCAN_TIME_MS_TAG in self.tags:
+            self.tags[SCAN_TIME_MS_TAG].value = int(self.last_scan_duration * 1000)
 
         self.scan_count += 1
 

@@ -44,15 +44,15 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [x] `define_tag()` validates `native_address` against the profile — syntax, area vs tag type, index range; raises `AddressError`
 - [x] `AddressArea` / `ParsedAddress` — address string → `(area, linear index)`
 - [ ] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — bus + `InProcessTransport` still wire by tag name
-- [ ] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word) — `plc.first_scan` is still a bare bool, not a tag; `profile.first_scan_bit` name is unused
+- [x] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word) — `PLC._define_system_tags()` reads `profile.first_scan_bit` / `always_on_bit` / `always_off_bit` / `scan_time_word` and defines+syncs them each scan (`FIRST_SCAN_TAG`, `ALWAYS_ON_TAG`, `ALWAYS_OFF_TAG`, `SCAN_TIME_MS_TAG` in `plc.py`); `plc.first_scan` bare bool kept for internal engine use, tag mirrors it for programs
 - [ ] Address-syntax strategies — _partial:_ `AddressSyntax` protocol + `IEC_DOTTED` done; `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON` not started
 - [x] `digitwin/models/generic.py` — `PLC_Generic` (permissive; demo + engine tests now run on it)
 - [x] `digitwin/models/schneider_tm221.py` — `PLC_Schneider_TM221CE16T` (9 DI, 7 DO, 2 AI, `%M0..511`, `%MW0..7999`)
 - [x] Model registry + `plc_from_model("TM221CE16T", program)` factory (`digitwin/models/__init__.py`)
 - [ ] _(later)_ capability gating — check program instructions against `profile.instruction_set`
 - [ ] _(later)_ per-model fidelity knobs — relay vs transistor switching delay, analog quantization, jitter band
-- [ ] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0` — validation logic supports it, but no `tests/test_hardware.py` covers it yet
-- [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2 — demo runs on `PLC_Generic` and the suite is green (36 tests); the byte-for-byte historian diff waits on the Phase 3 historian
+- [x] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0` — covered in `tests/test_hardware.py` (53 tests total)
+- [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2 — demo runs on `PLC_Generic` and the suite is green; the byte-for-byte historian diff waits on the Phase 3 historian
 - [ ] Sanity-check `HardwareProfile` fields against a second-vendor datasheet (S7-1200 or Micro850)
 
 ## Phase 3 — Observability (historian, events, snapshots)

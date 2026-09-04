@@ -24,6 +24,9 @@ class PLC_Generic(PLC):
         retentive_words=(0, 8191),
         address_syntax=IEC_DOTTED,
         first_scan_bit="%S1",
+        always_on_bit="%S2",
+        always_off_bit="%S3",
+        scan_time_word="%SW0",
         default_watchdog_ms=1000,
         min_scan_ms=1,
     )

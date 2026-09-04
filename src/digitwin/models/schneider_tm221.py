@@ -24,6 +24,9 @@ class PLC_Schneider_TM221CE16T(PLC):
         retentive_words=(0, 1999),
         address_syntax=IEC_DOTTED,
         first_scan_bit="%S13",
+        always_on_bit="%S20",
+        always_off_bit="%S21",
+        scan_time_word="%SW10",
         default_watchdog_ms=250,
         min_scan_ms=1,
     )

@@ -113,6 +113,9 @@ class HardwareProfile:
     retentive_words: tuple[int, int] | None = None
     address_syntax: AddressSyntax = IEC_DOTTED
     first_scan_bit: str = "%S13"
+    always_on_bit: str | None = None
+    always_off_bit: str | None = None
+    scan_time_word: str | None = None
     default_watchdog_ms: int = 250
     min_scan_ms: int = 1
 
