@@ -5,8 +5,11 @@ from __future__ import annotations
 
 import time
 
-from digitwin.demo import build_demo
+import pytest
+
+from digitwin.demo import build_demo, build_demo_plc
 from digitwin.executive import Executive, ExecutiveMode
+from digitwin.io import InProcessTransport, IOBus
 from digitwin.plant import CompositePlant, Tank
 
 
@@ -14,6 +17,15 @@ def _tank(sim: Executive) -> Tank:
     plant = sim.plant
     assert isinstance(plant, CompositePlant)
     return next(c for c in plant.components if isinstance(c, Tank))
+
+
+def test_executive_rejects_a_dt_faster_than_the_plcs_min_scan_time() -> None:
+    plc = build_demo_plc()  # PLC_Generic, min_scan_ms=1
+    bus = IOBus()
+    transport = InProcessTransport(plc, bus)
+
+    with pytest.raises(ValueError, match="faster than"):
+        Executive(plc, CompositePlant([]), bus, transport, dt=0.0001)  # 0.1 ms
 
 
 def test_tank_fills_on_start_and_level_comes_from_the_plant() -> None:

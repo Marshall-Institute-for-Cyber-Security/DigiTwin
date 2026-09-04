@@ -47,6 +47,16 @@ class Executive:
 
     _deadline: float | None = field(default=None, repr=False)
 
+    def __post_init__(self) -> None:
+        min_dt = self.plc.profile.min_scan_ms / 1000
+        if self.dt < min_dt:
+            raise ValueError(
+                f"dt={self.dt * 1000:g} ms is faster than "
+                f"{type(self.plc).__name__}'s min_scan_ms "
+                f"({self.plc.profile.min_scan_ms} ms) — the real hardware "
+                "couldn't scan this fast"
+            )
+
     def tick(self) -> None:
         self.plant.step(self.dt, self.bus)
         self._transfer_inputs()

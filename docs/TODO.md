@@ -40,7 +40,7 @@ Order follows the roadmap's **Suggested sequencing** table.
 
 - [x] `HardwareProfile` dataclass (`digitwin/hardware.py`) — I/O counts, memory + retentive ranges, `address_syntax`, system bits, `default_watchdog_ms` / `min_scan_ms`
   - [ ] `instruction_set` field still unadded (feeds the _(later)_ capability gating below)
-  - [ ] `min_scan_ms` is catalog data only — nothing reads it; the executive never clamps `dt` against it
+  - [x] `min_scan_ms` is now enforced — `Executive.__post_init__` raises `ValueError` if `dt` is faster than `plc.profile.min_scan_ms`, rather than silently accepting an unrealistic scan rate
   - [ ] no `output_type` (relay vs transistor) or comms-port fields yet — the roadmap's profile sketch lists both
 - [x] Split `PLC` into abstract base — scan engine + firmware only, `ClassVar profile`, `watchdog_s` defaults from `profile.default_watchdog_ms`. Note: `PLC` declares no abstract *members*, so `ABC` isn't what stops instantiation — the runtime `TypeError` in `__init__` is (mypy does not see `PLC` as abstract)
 - [x] `define_tag()` validates `native_address` against the profile — syntax, area vs tag type, index range; raises `AddressError`
@@ -49,7 +49,7 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [x] One tag per address — a second tag claiming an address already in use raises `AddressError`; unaddressed tags never collide
 - [x] Retentive ranges are applied — `define_tag`'s `retentive` defaults to `profile.is_retentive(native_address)`, so `%M5` on the TM221 survives a cold start with no caller involvement; pass `retentive=` to override. `PLC_Generic` deliberately declares no retain range
 - [x] `AddressArea` / `ParsedAddress` — address string → `(area, linear index)`
-- [ ] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — bus + `InProcessTransport` still wire by tag name
+- [x] Address → physical channel resolution — `PLC.tag_name_at(native_address)` resolves a terminal to whichever tag currently claims it (reusing the `_addressed` map `define_tag` already built for collision detection). `InProcessTransport.inputs`/`outputs` are now keyed by native address, not tag name; the transport calls `tag_name_at` to resolve. Renaming a tag no longer requires touching `demo.py`'s wiring dicts. A wired terminal with no tag defined raises `ValueError` rather than silently dropping data. Covered in `tests/test_io.py`
 - [x] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word) — `PLC._define_system_tags()` reads `profile.first_scan_bit` / `always_on_bit` / `always_off_bit` / `scan_time_word` and defines+syncs them each scan (`FIRST_SCAN_TAG`, `ALWAYS_ON_TAG`, `ALWAYS_OFF_TAG`, `SCAN_TIME_MS_TAG` in `plc.py`); `plc.first_scan` bare bool kept for internal engine use, tag mirrors it for programs
 - [x] Analog I/O now crosses the scan boundary — `TagType.ANALOG_INPUT` / `ANALOG_OUTPUT` added; the input image freezes `DISCRETE_INPUT` + `ANALOG_INPUT`, `Executive._transfer_outputs` ships `DISCRETE_OUTPUT` + `ANALOG_OUTPUT`. `WORD` no longer claims `%IW`/`%QW` addresses — only the new analog types can. `demo.py`'s `tank_level` moved off `%MW0` onto `%IW0.0`; `start_stop_tank.py` reads it via `read_input`
 - [ ] Address-syntax strategies — _partial:_ `AddressSyntax` protocol + `IEC_DOTTED` done; `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON` not started

@@ -180,6 +180,20 @@ class PLC(ABC):
         self.tags[tag_name] = tag
         return tag
 
+    def tag_name_at(self, native_address: str) -> str | None:
+        """Which tag, if any, claims this native address.
+
+        Field wiring connects to a physical terminal, not to whatever name a
+        program happens to give the tag there — this is how a transport
+        resolves "terminal %I0.3" to the tag a given program calls it.
+        Raises AddressError if ``native_address`` isn't valid syntax for this
+        model; returns None if the address is valid but no tag is defined
+        there yet.
+        """
+        parsed = self.profile.address_syntax.parse(native_address)
+        canonical = self.profile.address_syntax.format(parsed)
+        return self._addressed.get(canonical)
+
     def read(self, tag_name: str) -> TagValue:
         """Live read — for internal bits and words, not physical inputs."""
         return self.tags[tag_name].value

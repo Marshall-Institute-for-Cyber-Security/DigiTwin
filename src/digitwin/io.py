@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Protocol
 
-from digitwin.plc import TagValue
+from digitwin.plc import PLC, TagValue
 
 # Bus signals carry the plant's continuous state too, so they are wider than a
 # tag value. The transport narrows floats back to ``TagValue`` at the boundary.
@@ -67,24 +67,40 @@ class IOTransport(Protocol):
 class InProcessTransport:
     """Couples a plant and a PLC that share one :class:`IOBus` in this process.
 
-    ``inputs`` maps each PLC input tag to the bus signal that feeds it;
-    ``outputs`` maps each PLC output tag to the bus signal it drives. Tags with
-    no mapping are simply ignored.
+    ``inputs`` and ``outputs`` map a **physical terminal** (a native address,
+    e.g. ``"%IW0.0"``) to the bus signal wired there — field wiring connects
+    to a terminal, not to whatever name a program happens to give the tag at
+    that address. ``plc`` resolves each terminal to its current tag via
+    :meth:`PLC.tag_name_at`, so swapping which tag a program puts at an
+    address doesn't require touching this wiring.
+
+    A wired terminal with no tag defined there is a wiring/program mismatch,
+    not something to silently drop — it raises ``ValueError``.
     """
 
+    plc: PLC
     bus: IOBus
     inputs: dict[str, str] = field(default_factory=dict)
     outputs: dict[str, str] = field(default_factory=dict)
 
     def read_inputs(self) -> dict[str, TagValue]:
         values: dict[str, TagValue] = {}
-        for tag_name, signal in self.inputs.items():
+        for native_address, signal in self.inputs.items():
+            tag_name = self._resolve(native_address, signal)
             raw = self.bus.get(signal)
             values[tag_name] = bool(raw) if isinstance(raw, bool) else int(raw)
         return values
 
     def write_outputs(self, outputs: dict[str, TagValue]) -> None:
-        for tag_name, value in outputs.items():
-            signal = self.outputs.get(tag_name)
-            if signal is not None:
-                self.bus.set(signal, value)
+        for native_address, signal in self.outputs.items():
+            tag_name = self._resolve(native_address, signal)
+            self.bus.set(signal, outputs[tag_name])
+
+    def _resolve(self, native_address: str, signal: str) -> str:
+        tag_name = self.plc.tag_name_at(native_address)
+        if tag_name is None:
+            raise ValueError(
+                f"terminal {native_address!r} is wired to bus signal {signal!r} "
+                f"but no tag on {type(self.plc).__name__} claims that address"
+            )
+        return tag_name
