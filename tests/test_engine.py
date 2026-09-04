@@ -23,9 +23,9 @@ def test_input_image_contains_only_physical_inputs() -> None:
         frozen.update(plc.input_image)
 
     plc = PLC_Generic("t", program)
-    plc.define_tag("di", TagType.DISCRETE_INPUT, True)
-    plc.define_tag("ai", TagType.ANALOG_INPUT, 42)
-    plc.define_tag("do", TagType.DISCRETE_OUTPUT, True)
+    plc.define_tag("di", TagType.DISCRETE_INPUT, True, "%I0.0")
+    plc.define_tag("ai", TagType.ANALOG_INPUT, 42, "%IW0.0")
+    plc.define_tag("do", TagType.DISCRETE_OUTPUT, True, "%Q0.0")
     plc.define_tag("bit", TagType.INTERNAL_BIT, True)
     plc.define_tag("word", TagType.WORD, 5)
 
@@ -43,7 +43,7 @@ def test_discrete_input_is_frozen_for_the_whole_scan() -> None:
         seen.append(plc.read_input("btn"))  # program still sees the frozen image
 
     plc = PLC_Generic("t", program)
-    plc.define_tag("btn", TagType.DISCRETE_INPUT, False)
+    plc.define_tag("btn", TagType.DISCRETE_INPUT, False, "%I0.0")
 
     plc.scan()
     assert seen == [False, False]
@@ -60,7 +60,7 @@ def test_outputs_are_staged_and_flushed_only_at_end_of_scan() -> None:
         during_scan.append(plc.read("lamp"))  # tag not updated yet
 
     plc = PLC_Generic("t", program)
-    plc.define_tag("lamp", TagType.DISCRETE_OUTPUT, False)
+    plc.define_tag("lamp", TagType.DISCRETE_OUTPUT, False, "%Q0.0")
 
     plc.scan()
 
@@ -79,7 +79,7 @@ def test_output_holds_its_last_value_when_not_restaged() -> None:
         # scan 2 stages nothing
 
     plc = PLC_Generic("t", program)
-    plc.define_tag("lamp", TagType.DISCRETE_OUTPUT, False)
+    plc.define_tag("lamp", TagType.DISCRETE_OUTPUT, False, "%Q0.0")
 
     plc.scan()
     assert plc.read("lamp") is True
@@ -112,8 +112,8 @@ def test_full_cycle_reads_input_and_drives_output() -> None:
         plc.write_output("out", plc.read_input("in"))
 
     plc = PLC_Generic("t", passthrough)
-    plc.define_tag("in", TagType.DISCRETE_INPUT, False)
-    plc.define_tag("out", TagType.DISCRETE_OUTPUT, False)
+    plc.define_tag("in", TagType.DISCRETE_INPUT, False, "%I0.0")
+    plc.define_tag("out", TagType.DISCRETE_OUTPUT, False, "%Q0.0")
 
     plc.tags["in"].value = True
     plc.scan()
