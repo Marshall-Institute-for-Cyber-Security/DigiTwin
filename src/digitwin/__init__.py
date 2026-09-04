@@ -1,5 +1,6 @@
 """DigiTwin: a small soft-PLC engine and simulation harness."""
 
+from digitwin.events import Event, EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
 from digitwin.hardware import (
     IEC_DOTTED,
@@ -9,10 +10,26 @@ from digitwin.hardware import (
     HardwareProfile,
     ParsedAddress,
 )
+from digitwin.historian import (
+    CsvSink,
+    Historian,
+    JsonlSink,
+    RecordSink,
+    Sample,
+    SampleMode,
+    SqliteSink,
+)
 from digitwin.instructions import CTU, ONS, TOF, TON
 from digitwin.io import InProcessTransport, IOBus, IOTransport, IOValue, TransportError
 from digitwin.models import PLC_Generic, PLC_Schneider_TM221CE16T, plc_from_model
-from digitwin.plant import AnalogSensor, CompositePlant, DiscreteSensor, PlantModel, Tank
+from digitwin.plant import (
+    AnalogSensor,
+    CompositePlant,
+    DiscreteSensor,
+    NullPlant,
+    PlantModel,
+    Tank,
+)
 from digitwin.plc import (
     ALWAYS_OFF_TAG,
     ALWAYS_ON_TAG,
@@ -25,6 +42,14 @@ from digitwin.plc import (
     TagValue,
 )
 from digitwin.programs import StartStopTankProgram
+from digitwin.replay import (
+    IORecording,
+    RecordingTransport,
+    ReplayTransport,
+    build_replay,
+    diff_outputs,
+)
+from digitwin.snapshot import Snapshot, SnapshotRecorder
 
 __all__ = [
     "ALWAYS_OFF_TAG",
@@ -44,22 +69,41 @@ __all__ = [
     "AddressSyntax",
     "AnalogSensor",
     "CompositePlant",
+    "CsvSink",
     "DiscreteSensor",
+    "Event",
+    "EventCategory",
+    "EventLog",
+    "EventSeverity",
     "Executive",
     "ExecutiveMode",
     "HardwareProfile",
+    "Historian",
     "IOBus",
+    "IORecording",
     "IOTransport",
     "IOValue",
     "InProcessTransport",
+    "JsonlSink",
+    "NullPlant",
     "ParsedAddress",
     "PlantModel",
     "Program",
+    "RecordSink",
+    "RecordingTransport",
+    "ReplayTransport",
+    "Sample",
+    "SampleMode",
+    "Snapshot",
+    "SnapshotRecorder",
+    "SqliteSink",
     "StartStopTankProgram",
     "Tag",
     "Tank",
     "TagType",
     "TagValue",
     "TransportError",
+    "build_replay",
+    "diff_outputs",
     "plc_from_model",
 ]

@@ -2,12 +2,15 @@
 
 The control program latches start/stop and commands the valves; the tank
 level is now integrated by :class:`digitwin.plant.tank.Tank` and read back
-through an analog level transmitter. The executive steps both each tick.
+through an analog level transmitter. The executive steps both each tick, and
+the Phase 3 observers — a historian and an event log — watch the run.
 """
 
 from __future__ import annotations
 
+from digitwin.events import EventCategory, EventLog
 from digitwin.executive import Executive, ExecutiveMode
+from digitwin.historian import Historian, SampleMode
 from digitwin.io import InProcessTransport, IOBus
 from digitwin.models import PLC_Generic
 from digitwin.plant import AnalogSensor, CompositePlant, Tank
@@ -55,8 +58,17 @@ def build_demo_plc() -> PLC:
     return plc
 
 
-def build_demo(mode: ExecutiveMode = ExecutiveMode.FREE_RUN, scale: float = 1.0) -> Executive:
-    """Assemble the tank plant, the PLC, and the executive that steps them."""
+def build_demo(
+    mode: ExecutiveMode = ExecutiveMode.FREE_RUN,
+    scale: float = 1.0,
+    *,
+    observe: bool = True,
+) -> Executive:
+    """Assemble the tank plant, the PLC, and the executive that steps them.
+
+    ``observe`` attaches the historian and event log; they are pure observers,
+    so the simulation is identical either way.
+    """
     plc = build_demo_plc()
 
     tank = Tank(area=2.0, fill_rate=20.0, drain_coeff=3.0, level_max=100.0)
@@ -65,7 +77,32 @@ def build_demo(mode: ExecutiveMode = ExecutiveMode.FREE_RUN, scale: float = 1.0)
 
     bus = IOBus()
     transport = InProcessTransport(bus, inputs=INPUT_WIRING, outputs=OUTPUT_WIRING)
-    return Executive(plc, plant, bus, transport, dt=0.1, mode=mode, scale=scale)
+    return Executive(
+        plc,
+        plant,
+        bus,
+        transport,
+        dt=0.1,
+        mode=mode,
+        scale=scale,
+        historian=Historian(mode=SampleMode.ON_CHANGE) if observe else None,
+        events=EventLog() if observe else None,
+    )
+
+
+def press(sim: Executive, button: str, pressed: bool) -> None:
+    """Drive a demo pushbutton and log it as an operator action."""
+    sim.plc.write(button, pressed)
+    if sim.events is not None:
+        sim.events.log(
+            sim.elapsed,
+            EventCategory.OPERATOR,
+            f"{button} {'pressed' if pressed else 'released'}",
+            source="demo",
+            scan=sim.plc.scan_count,
+            tag=button,
+            value=pressed,
+        )
 
 
 def _report(sim: Executive) -> None:
@@ -78,24 +115,51 @@ def _report(sim: Executive) -> None:
     )
 
 
+def _observability_report(sim: Executive) -> None:
+    """What the Phase 3 observers saw: trend extremes and the audit trail."""
+    historian = sim.historian
+    if historian is not None:
+        level = historian.series("tank_level")
+        span = historian.span()
+        window = f", t={span[0]:.1f}..{span[1]:.1f}s" if span else ""
+        print(
+            f"historian: {len(historian)} samples across "
+            f"{len(historian.tag_names())} tags{window}"
+        )
+        if level:
+            peak_t, peak = max(level, key=lambda point: point[1])
+            print(f"  tank_level: {len(level)} changes, peak {peak} at t={peak_t:.1f}s")
+            print(f"  level at t=5.0s was {historian.value_at('tank_level', 5.0)}")
+
+    events = sim.events
+    if events is not None:
+        print(f"events: {len(events)}")
+        for event in events:
+            print(
+                f"  t={event.timestamp:5.1f}s  {event.category.value:<8} "
+                f"{event.message}"
+            )
+
+
 def main() -> None:
     sim = build_demo()
 
-    sim.plc.write("start_button", True)  # press start
+    press(sim, "start_button", True)
     for _ in range(5):
         sim.tick()
-    sim.plc.write("start_button", False)  # release; seal-in holds it running
+    press(sim, "start_button", False)  # release; seal-in holds it running
 
     for step in range(1, 121):
         sim.tick()
         if step == 45:
-            sim.plc.write("stop_button", True)  # press stop
+            press(sim, "stop_button", True)
         elif step == 50:
-            sim.plc.write("stop_button", False)
+            press(sim, "stop_button", False)
         if step % 15 == 0:
             _report(sim)
 
     print(f"scans={sim.plc.scan_count}  watchdog_tripped={sim.plc.watchdog_tripped}")
+    _observability_report(sim)
 
 
 if __name__ == "__main__":

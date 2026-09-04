@@ -25,6 +25,14 @@ src/digitwin/
   instructions.py        IEC timer/counter blocks: TON, TOF, CTU, ONS
   io.py                  I/O bus + IOTransport protocol + in-process transport
   executive.py           timed tick loop: FREE_RUN / REAL_TIME / SCALED modes
+                         + the optional Phase 3 observers
+  historian.py           tag trend store (on-change / periodic) + CSV/SQLite/
+                         JSONL sinks behind a RecordSink protocol
+  events.py              structured event log: categories, severity, audit trail
+  snapshot.py            capture/restore full twin state to JSON; SnapshotRecorder
+                         for time-travel (snapshot every N scans, rewind, branch)
+  replay.py              recorded-I/O: RecordingTransport / ReplayTransport /
+                         diff_outputs — re-run a captured run with no plant
   demo.py                runnable demo: tank plant wired to a PLC via the bus
   models/
     __init__.py          model registry + plc_from_model(name, program)
@@ -35,7 +43,7 @@ src/digitwin/
     start_stop_tank.py   example control program (seal-in start/stop, valves)
   plant/
     __init__.py
-    base.py              PlantModel protocol + CompositePlant container
+    base.py              PlantModel protocol + CompositePlant + NullPlant
     tank.py              Tank: level integrates (q_in - q_out) / area
     sensors.py           AnalogSensor (scaled word), DiscreteSensor (hysteresis)
 docs/
@@ -48,10 +56,14 @@ tests/
   test_plant.py          component dynamics / scaling / hysteresis
   test_executive.py      demo integration + pacing modes
   test_start_stop_tank.py  seal-in latch behaviour
+  test_historian.py      sampling modes, query API, sinks, event log
+  test_snapshot.py       capture/restore, JSON round-trip, time-travel
+  test_replay.py         record + replay, divergence diff
 ```
 
-Phases 1 and 2 are landed (plant/controller split; timed executive, firmware
-realism, timer/counter blocks). Phase 2b (PLC hardware abstraction) is mostly
+Phases 1, 2 and 3 are landed (plant/controller split; timed executive, firmware
+realism, timer/counter blocks; historian, event log, snapshot/restore and
+recorded-I/O replay). Phase 2b (PLC hardware abstraction) is mostly
 landed: `HardwareProfile`, the abstract `PLC` base, vendor/model subclasses, the
 model registry, address validation, and profile-driven retention. Still open in
 2b are terminal-level I/O wiring, analog tags in the scan images, and the other
@@ -132,6 +144,11 @@ Control, physics, and timing are separate layers; keep them apart:
   `digitwin/plant/` behind the `PlantModel` protocol (`step(dt, io)`).
 - **Time** is the executive's: it owns `dt` and the pacing mode. Instructions
   and the plant receive `dt`; they never sleep or look at the wall clock.
+- **Observation is passive.** The historian, event log and snapshot recorder
+  are optional `Executive` fields fed once per tick from `_observe()`; nothing
+  in the engine may depend on them, and attaching them must not change the
+  simulation. Observability timestamps are simulation seconds, never wall
+  clock, so a trace is reproducible and pacing-mode-invariant.
 - Control and plant communicate **only** through the I/O bus (`digitwin/io.py`);
   its synchronous `IOTransport` abstraction is later swapped for OPC UA
   (`asyncua`, adapter owns its loop) or Modbus (`pymodbus`, sync) — see the

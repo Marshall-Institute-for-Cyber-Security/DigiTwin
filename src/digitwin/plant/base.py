@@ -19,6 +19,15 @@ class PlantModel(Protocol):
 
 
 @dataclass
+class NullPlant:
+    """A plant with no physics, for runs where the stimulus comes from
+    elsewhere — recorded-I/O replay feeds the PLC from a transport instead."""
+
+    def step(self, dt: float, io: IOBus) -> None:
+        return None
+
+
+@dataclass
 class CompositePlant:
     """A plant assembled from components, stepped in declaration order.
 

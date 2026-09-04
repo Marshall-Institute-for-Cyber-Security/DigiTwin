@@ -59,19 +59,35 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [ ] _(later)_ capability gating — check program instructions against `profile.instruction_set`
 - [ ] _(later)_ per-model fidelity knobs — relay vs transistor switching delay, analog quantization, jitter band
 - [x] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0` — covered in `tests/test_hardware.py` (60 tests total)
-- [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2 — demo runs on `PLC_Generic` and the suite is green; the byte-for-byte historian diff waits on the Phase 3 historian
+- [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2 — demo runs on `PLC_Generic` and the suite is green; the historian now exists and `tests/test_historian.py` proves the trace is pacing-mode-invariant, but there is no stored Phase 2 baseline to diff against. Folds into the Phase 7 golden-trace item
 - [ ] **Verify the TM221 profile against the M221 system-object reference** — `always_on_bit="%S20"`, `always_off_bit="%S21"`, `scan_time_word="%SW10"` and `retentive_words=(0, 1999)` were filled in to exercise the mechanism and are marked UNVERIFIED in the module. `tests/test_hardware.py` now asserts them, so fix profile and assertions in one commit
 - [ ] Sanity-check `HardwareProfile` fields against a second-vendor datasheet (S7-1200 or Micro850)
 
-## Phase 3 — Observability (historian, events, snapshots)
+## Phase 3 — Observability (historian, events, snapshots)  _(landed)_
 
-- [ ] Historian — ring buffer of `(timestamp, tag, value)` on change / at sample rate + query API
-- [ ] Optional persistent sink (CSV / SQLite / Parquet)
-- [ ] Structured event log — mode changes, alarms, watchdog trips, faults, operator actions
-- [ ] Snapshot / restore — full twin state to JSON (tags, plant state, timer accumulators, scan count)
-- [ ] Time-travel: snapshot every N scans, restore + branch
-- [ ] Recorded-I/O replay — persist input image per scan, replay with no plant
-- [ ] **Validate:** run 100 scans, snapshot at 50, restore, run 50 more, diff tag table vs uninterrupted run
+All four observers are optional fields on `Executive` and are fed from
+`Executive._observe()` after the tick settles, timestamped in **simulation**
+seconds — so a trace is identical in every pacing mode and a twin without them
+behaves the same.
+
+- [x] Historian (`digitwin/historian.py`) — bounded `(timestamp, tag, value)` store; `SampleMode.ON_CHANGE` (default) / `PERIODIC` (`interval_s`) / `EVERY_SCAN`, optional `tags` filter, `capacity` bound with a `dropped` counter
+  - [x] Query API: `query` / `series` / `latest` / `value_at` / `snapshot_at` / `tag_names` / `span`
+- [x] Optional persistent sink — `CsvSink`, `SqliteSink`, `JsonlSink` behind a `RecordSink` protocol, batched one write per scan and shared with the event log
+  - [ ] no Parquet sink: it needs `pyarrow` and the base install stays stdlib-only — revisit as an optional extra alongside the Phase 6 ones
+- [x] Structured event log (`digitwin/events.py`) — `Event` with `EventCategory` (MODE / ALARM / WATCHDOG / FAULT / OPERATOR / SYSTEM), `EventSeverity`, `scan`, and free-form `**data`; filtered by `query()`
+  - [x] Watchdog trips are logged by the executive itself, once on the edge
+  - [x] Operator actions: `demo.press()` writes the button *and* logs the action
+  - [ ] Restarts are not logged — `PLC.cold_start` / `warm_start` / `power_cycle` don't know about the event log, and the executive can't see them; either the PLC takes an optional log or the restart entry points move behind the executive
+  - [ ] Alarms are caller-supplied; there is no alarm-condition monitor (limits, deadband, ack) yet
+- [x] Snapshot / restore — full twin state to JSON (`digitwin/snapshot.py`): tag values, scan count / first-scan / watchdog, program instruction state (timer accumulators, counter values, one-shot edges), plant state including sensor RNG, bus signals, executive clock
+  - [x] `capture_state` / `restore_state` walk plain objects reflectively and skip what they can't represent, so an uncapturable attribute is never clobbered on restore; a component can override with `capture_state()` / `restore_state()` (the `Snapshotable` protocol)
+  - [ ] Wall-clock fields (`last_scan_duration`, jitter) are deliberately *not* restored — they measure the host, not the twin
+  - [ ] The historian and event log are deliberately *not* snapshotted: a rewind is a new branch in the audit trail, not a hole in it
+- [x] Time-travel: snapshot every N scans, restore + branch — `SnapshotRecorder(every=, keep=)` on the executive, with `at()` / `rewind()` to the nearest kept point
+- [x] Recorded-I/O replay (`digitwin/replay.py`) — `RecordingTransport` wraps any transport and stores the per-scan input frame *and* the outputs; `ReplayTransport` feeds them back into a `NullPlant` run (`build_replay`); `diff_outputs` reports every disagreement, the same comparison Phase 6's divergence detector will run live
+  - [x] `RecordingTransport(plc=...)` also captures discrete inputs driven outside the bus (field-wired buttons, HMI, tests) — without it a replay silently loses them
+  - [ ] Frames are keyed by tag name, so replay inherits the tag-name wiring gap below
+- [x] **Validate:** run 100 scans, snapshot at 50, restore, run 50 more, diff tag table vs uninterrupted run (`tests/test_snapshot.py`)
 
 ## Phase 4 — Config-driven definition
 
@@ -112,6 +128,6 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [ ] Fault library — sensor stuck/drift/noise, actuator stuck/slow/reversed, wire break, comms dropout (injected via I/O bus)
 - [ ] Golden historian traces for demo scenarios; CI diffs them in free-run
 - [x] Add `pytest` to dev deps (`pyproject.toml`), create `tests/`
-- [x] Unit tests for current engine: scan phasing, seal-in latch, edge detection, hardware profiles (`test_engine.py`, `test_start_stop_tank.py`, `test_instructions.py`, `test_plant.py`, `test_executive.py`, `test_hardware.py` — 60 tests)
+- [x] Unit tests for current engine: scan phasing, seal-in latch, edge detection, hardware profiles, observability (`test_engine.py`, `test_start_stop_tank.py`, `test_instructions.py`, `test_plant.py`, `test_executive.py`, `test_hardware.py`, `test_historian.py`, `test_snapshot.py`, `test_replay.py` — 104 tests)
 - [x] `mypy --strict` covers `tests/` as well as `src/` (`pyproject.toml`), so test-side type claims are checked too
 - [ ] **Validate:** `uv run pytest` green; tank scenario passes; flipping seal-in logic fails exactly one scenario

@@ -9,6 +9,7 @@ phases swap it for OPC UA / Modbus without touching either side.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Protocol
 
@@ -45,6 +46,11 @@ class IOBus:
     def snapshot(self) -> dict[str, IOValue]:
         """A copy of every signal — for the historian / debugging."""
         return dict(self._signals)
+
+    def load(self, signals: Mapping[str, IOValue]) -> None:
+        """Replace every signal with a previously taken :meth:`snapshot` —
+        used by snapshot restore, which must rewind the bus with the plant."""
+        self._signals = dict(signals)
 
 
 class IOTransport(Protocol):

@@ -18,9 +18,12 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 
+from digitwin.events import EventCategory, EventLog, EventSeverity
+from digitwin.historian import Historian
 from digitwin.io import IOBus, IOTransport
 from digitwin.plant.base import PlantModel
 from digitwin.plc import PLC, TagType, TagValue
+from digitwin.snapshot import SnapshotRecorder
 
 
 class ExecutiveMode(Enum):
@@ -39,6 +42,11 @@ class Executive:
     mode: ExecutiveMode = ExecutiveMode.FREE_RUN
     scale: float = 1.0
 
+    # Observers (Phase 3). All optional: a twin without them behaves the same.
+    historian: Historian | None = None
+    events: EventLog | None = None
+    snapshots: SnapshotRecorder | None = None
+
     scan_count: int = 0
     elapsed: float = 0.0
     last_scan_s: float = 0.0
@@ -46,6 +54,7 @@ class Executive:
     worst_jitter_s: float = 0.0
 
     _deadline: float | None = field(default=None, repr=False)
+    _watchdog_seen: bool = field(default=False, repr=False)
 
     def tick(self) -> None:
         self.plant.step(self.dt, self.bus)
@@ -56,6 +65,7 @@ class Executive:
         self.scan_count += 1
         self.elapsed += self.dt
         self.last_scan_s = self.plc.last_scan_duration
+        self._observe()
         self._pace()
 
     def run(self, ticks: int) -> None:
@@ -76,6 +86,41 @@ class Executive:
             if tag.tag_type == TagType.DISCRETE_OUTPUT
         }
         self.transport.write_outputs(outputs)
+
+    def _observe(self) -> None:
+        """Feed the Phase 3 observers, after the tick's state has settled.
+
+        Timestamps are simulation seconds (``elapsed``), so a trace is
+        identical in every pacing mode.
+        """
+        if self.events is not None and self.plc.watchdog_tripped != self._watchdog_seen:
+            if self.plc.watchdog_tripped:
+                self.events.log(
+                    self.elapsed,
+                    EventCategory.WATCHDOG,
+                    f"scan overran the {self.plc.watchdog_s:.3f}s watchdog budget",
+                    severity=EventSeverity.ERROR,
+                    source=self.plc.name,
+                    scan=self.plc.scan_count,
+                    scan_duration_s=self.plc.last_scan_duration,
+                )
+            self._watchdog_seen = self.plc.watchdog_tripped
+
+        if self.historian is not None:
+            self.historian.record(
+                self.elapsed,
+                {name: tag.value for name, tag in self.plc.tags.items()},
+            )
+
+        if self.snapshots is not None:
+            self.snapshots.maybe_capture(self)
+
+    def reset_pacing(self) -> None:
+        """Forget the wall-clock cadence origin, so the next tick re-establishes
+        it. Snapshot restore calls this: rewinding simulated time says nothing
+        about wall time, and a stale deadline would burn the difference in one
+        long sleep."""
+        self._deadline = None
 
     def _wall_interval(self) -> float:
         if self.mode is ExecutiveMode.REAL_TIME:
