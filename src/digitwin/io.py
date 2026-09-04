@@ -101,11 +101,12 @@ class InProcessTransport:
     output channel to the bus signal it drives. Wiring is by address, not tag
     name: a terminal's wiring shouldn't have to change just because a program
     renames the tag sitting on it. ``plc`` resolves each address to its
-    owning tag via :meth:`~digitwin.plc.PLC.tag_at`; a channel with no tag
-    claiming it is simply ignored.
+    owning tag via :meth:`~digitwin.plc.PLC.tag_at`.
 
     ``plc`` is only required when ``inputs`` or ``outputs`` is non-empty —
-    there is nothing to resolve otherwise.
+    there is nothing to resolve otherwise. A wired channel with no tag
+    claiming it is a wiring/program mismatch, not something to silently
+    drop — it raises ``ValueError``.
     """
 
     bus: IOBus
@@ -120,19 +121,22 @@ class InProcessTransport:
     def read_inputs(self) -> dict[str, TagValue]:
         values: dict[str, TagValue] = {}
         for address, signal in self.inputs.items():
-            tag_name = self._resolve(address)
-            if tag_name is None:
-                continue
+            tag_name = self._resolve(address, signal)
             raw = self.bus.get(signal)
             values[tag_name] = bool(raw) if isinstance(raw, bool) else int(raw)
         return values
 
     def write_outputs(self, outputs: dict[str, TagValue]) -> None:
         for address, signal in self.outputs.items():
-            tag_name = self._resolve(address)
-            if tag_name is not None and tag_name in outputs:
-                self.bus.set(signal, outputs[tag_name])
+            tag_name = self._resolve(address, signal)
+            self.bus.set(signal, outputs[tag_name])
 
-    def _resolve(self, address: str) -> str | None:
+    def _resolve(self, address: str, signal: str) -> str:
         assert self.plc is not None  # guaranteed by __post_init__ once wired
-        return self.plc.tag_at(address)
+        tag_name = self.plc.tag_at(address)
+        if tag_name is None:
+            raise ValueError(
+                f"terminal {address!r} is wired to bus signal {signal!r} but "
+                f"no tag on {type(self.plc).__name__} claims that address"
+            )
+        return tag_name

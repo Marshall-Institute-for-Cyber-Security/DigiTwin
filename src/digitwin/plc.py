@@ -37,6 +37,13 @@ _PHYSICAL_INPUT_TYPES = (TagType.DISCRETE_INPUT, TagType.ANALOG_INPUT)
 
 TagValue = int | bool
 
+# Tag types that name a real hardware terminal. A tag of one of these types
+# with no native_address would claim to be physical I/O wired to nothing, so
+# define_tag requires an address for them; INTERNAL_BIT / WORD stay optional.
+_PHYSICAL_TAG_TYPES = frozenset(
+    {TagType.DISCRETE_INPUT, TagType.DISCRETE_OUTPUT, TagType.ANALOG_INPUT, TagType.ANALOG_OUTPUT}
+)
+
 # System tags PLC auto-populates from its HardwareProfile (see
 # PLC._define_system_tags). Programs read them like any other tag, e.g.
 # plc.read(FIRST_SCAN_TAG).
@@ -140,6 +147,10 @@ class PLC(ABC):
         address, since on real hardware retention is a property of the memory
         area, not of the tag. Pass it explicitly to override that; a tag with no
         native address defaults to non-retentive.
+
+        A physical tag type (``DISCRETE_INPUT`` / ``DISCRETE_OUTPUT`` /
+        ``ANALOG_INPUT`` / ``ANALOG_OUTPUT``) always requires a native address —
+        there's no such thing as an unwired physical terminal.
         """
         # Imported here, not at module scope: hardware.py imports TagType from
         # this module, so a top-level import would be circular.
@@ -147,6 +158,11 @@ class PLC(ABC):
 
         if tag_name in self.tags:
             raise ValueError(f"Tag {tag_name!r} already exists")
+        if native_address is None and tag_type in _PHYSICAL_TAG_TYPES:
+            raise ValueError(
+                f"Tag {tag_name!r} is a {tag_type.value} tag and needs a "
+                "native_address — physical I/O can't be wired to nothing"
+            )
         if native_address is not None:
             parsed = self.profile.validate_address(native_address, tag_type)
             canonical = self.profile.address_syntax.format(parsed)
@@ -178,7 +194,10 @@ class PLC(ABC):
         This is address -> channel resolution: it lets a transport wire to a
         physical terminal (e.g. ``"%IW0.0"``) in its own config and find out
         which tag currently sits on it, instead of the transport's config
-        naming the tag directly.
+        naming the tag directly. Raises AddressError if ``native_address``
+        isn't valid syntax for this model. A transport wired to a terminal
+        with no tag claiming it should treat that as a config error, not
+        silently drop the value — see InProcessTransport / ModbusSlaveServer.
         """
         parsed = self.profile.address_syntax.parse(native_address)
         canonical = self.profile.address_syntax.format(parsed)

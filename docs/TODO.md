@@ -36,24 +36,31 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [x] Timer / counter instruction objects: `TON`, `TOF`, `CTU`, `ONS` (`digitwin/instructions.py`)
 - [x] **Validate:** `SCALED` 50× matches `FREE_RUN` trajectory; `TON` 2 s preset fires on the 20th 0.1 s scan
 
-## Phase 2b — PLC hardware abstraction (vendor/model classes)  _(in progress)_
+## Phase 2b — PLC hardware abstraction (vendor/model classes)  _(mostly landed; remainder deferred)_
+
+**Deferred pending a PoC** — `instruction_set`, `output_type`/comms-port fields, and the
+remaining address-syntax strategies (`IEC_IX`/`AB_TAG`/`SIEMENS`/`MODICON`) are parked. None
+have a consumer yet (capability gating and per-model fidelity knobs are themselves `(later)`),
+and populating them for a real vendor without a verified reference would repeat the same
+unverified-guess mistake this phase already had to correct once (see the TM221 verification
+item below). Revisit once a concrete second-vendor PoC needs one of them. Proceeding to Phase 4.
 
 - [x] `HardwareProfile` dataclass (`digitwin/hardware.py`) — I/O counts, memory + retentive ranges, `address_syntax`, system bits, `default_watchdog_ms` / `min_scan_ms`
-  - [ ] `instruction_set` field still unadded (feeds the _(later)_ capability gating below)
-  - [ ] `min_scan_ms` is catalog data only — nothing reads it; the executive never clamps `dt` against it
-  - [ ] no `output_type` (relay vs transistor) or comms-port fields yet — the roadmap's profile sketch lists both
+  - [ ] `instruction_set` field still unadded (feeds the _(later)_ capability gating below) — _deferred pending a PoC, see note above_
+  - [x] `min_scan_ms` is now enforced — `Executive.__post_init__` raises `ValueError` if `dt` is faster than `plc.profile.min_scan_ms`, rather than silently accepting an unrealistic scan rate
+  - [ ] no `output_type` (relay vs transistor) or comms-port fields yet — the roadmap's profile sketch lists both — _deferred pending a PoC, see note above_
 - [x] Split `PLC` into abstract base — scan engine + firmware only, `ClassVar profile`, `watchdog_s` defaults from `profile.default_watchdog_ms`. Note: `PLC` declares no abstract *members*, so `ABC` isn't what stops instantiation — the runtime `TypeError` in `__init__` is (mypy does not see `PLC` as abstract)
 - [x] `define_tag()` validates `native_address` against the profile — syntax, area vs tag type, index range; raises `AddressError`
-  - [ ] validation is opt-in: a tag with `native_address=None` is never checked, so profile limits are bypassable
-  - [ ] `%S` / `%SW` indices are not range-checked (`hardware.py::_range_check` ends before them)
+  - [x] Physical tag types (`DISCRETE_INPUT`/`DISCRETE_OUTPUT`/`ANALOG_INPUT`/`ANALOG_OUTPUT`) now require a `native_address` — `define_tag` raises `ValueError` if one is omitted. `INTERNAL_BIT`/`WORD` stay optional (not every internal signal needs a physical placement)
+  - [x] `%S` / `%SW` indices are now range-checkable — `HardwareProfile.system_bits` / `system_words` (optional, default `None` = unchecked, matching prior behavior). No shipped profile populates them yet: the M221 reference (EIO0000003297.04) documents bits up to `%S123` and words up to `%SW212` but states no hard maximum, so inventing a cap would be exactly the kind of unverified guess this project avoids. Mechanism is proven directly against a standalone profile in `tests/test_hardware.py`
 - [x] One tag per address — a second tag claiming an address already in use raises `AddressError`; unaddressed tags never collide
 - [x] Retentive ranges are applied — `define_tag`'s `retentive` defaults to `profile.is_retentive(native_address)`, so `%M5` on the TM221 survives a cold start with no caller involvement; pass `retentive=` to override. `PLC_Generic` deliberately declares no retain range
 - [x] `AddressArea` / `ParsedAddress` — address string → `(area, linear index)`
-- [x] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — `PLC.tag_at(address)` resolves a native address to its owning tag; `InProcessTransport.inputs` / `.outputs` map address -> bus signal (was tag name -> bus signal) and take a `plc` to resolve through
+- [x] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — `PLC.tag_at(address)` resolves a native address to its owning tag (reusing the `_addressed` map `define_tag` already built for collision detection). `InProcessTransport.inputs`/`.outputs` and `ModbusClientTransport.inputs`/`.outputs` are keyed by native address, not tag name, and both resolve through `tag_at`. Renaming a tag no longer requires touching `demo.py`'s wiring dicts. A wired/mapped address with no tag claiming it raises `ValueError` in **both** transports — a wiring/program mismatch, not something to silently drop. Covered in `tests/test_io.py`
 - [x] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word) — `PLC._define_system_tags()` reads `profile.first_scan_bit` / `always_on_bit` / `always_off_bit` / `scan_time_word` and defines+syncs them each scan (`FIRST_SCAN_TAG`, `ALWAYS_ON_TAG`, `ALWAYS_OFF_TAG`, `SCAN_TIME_MS_TAG` in `plc.py`); `plc.first_scan` bare bool kept for internal engine use, tag mirrors it for programs
-- [x] Analog I/O crosses the scan boundary — `TagType.ANALOG_INPUT` / `ANALOG_OUTPUT` are distinct from `WORD`; `PLC.scan()` freezes `ANALOG_INPUT` into `input_image` alongside `DISCRETE_INPUT`, and `Executive._transfer_outputs` ships `ANALOG_OUTPUT` alongside `DISCRETE_OUTPUT`. The demo's `tank_level` moved from `%MW0` to a real `%IW0.0` and the control program reads it with `plc.read_input()`, not `plc.read()`
+- [x] Analog I/O crosses the scan boundary — `TagType.ANALOG_INPUT` / `ANALOG_OUTPUT` are distinct from `WORD`; `PLC.scan()` freezes `ANALOG_INPUT` into `input_image` alongside `DISCRETE_INPUT`, and `Executive._transfer_outputs` ships `ANALOG_OUTPUT` alongside `DISCRETE_OUTPUT`. `WORD` no longer claims `%IW`/`%QW` addresses — only the analog types can. The demo's `tank_level` moved from `%MW0` to a real `%IW0.0` and the control program reads it with `plc.read_input()`, not `plc.read()`
   - [ ] no analog quantization / scaling knobs per channel yet (raw engineering-unit int in, int out) — see the Phase 2b fidelity-knob item above
-- [ ] Address-syntax strategies — _partial:_ `AddressSyntax` protocol + `IEC_DOTTED` done; `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON` not started
+- [ ] Address-syntax strategies — _partial:_ `AddressSyntax` protocol + `IEC_DOTTED` done; `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON` not started — _deferred pending a PoC, see note above_
 - [x] `digitwin/models/generic.py` — `PLC_Generic` (permissive; demo + engine tests now run on it)
 - [x] `digitwin/models/schneider_tm221.py` — `PLC_Schneider_TM221CE16T` (9 DI, 7 DO, 2 AI, `%M0..511`, `%MW0..7999`)
 - [x] Model registry + `plc_from_model("TM221CE16T", program)` factory (`digitwin/models/__init__.py`)
@@ -61,7 +68,7 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [ ] _(later)_ per-model fidelity knobs — relay vs transistor switching delay, analog quantization, jitter band
 - [x] **Validate:** `PLC_Schneider_TM221CE16T` accepts `%I0.8` / `%Q0.6`, raises on `%I0.9` / `%Q0.7` / `%QX0.0` — covered in `tests/test_hardware.py` (60 tests total)
 - [ ] **Validate:** demo rebuilt on `PLC_Generic` gives identical historian output to Phase 2 — demo runs on `PLC_Generic` and the suite is green; the historian now exists and `tests/test_historian.py` proves the trace is pacing-mode-invariant, but there is no stored Phase 2 baseline to diff against. Folds into the Phase 7 golden-trace item
-- [ ] **Verify the TM221 profile against the M221 system-object reference** — `always_on_bit="%S20"`, `always_off_bit="%S21"`, `scan_time_word="%SW10"` and `retentive_words=(0, 1999)` were filled in to exercise the mechanism and are marked UNVERIFIED in the module. `tests/test_hardware.py` now asserts them, so fix profile and assertions in one commit
+- [x] **Verify the TM221 profile against the M221 system-object reference** — checked against Schneider's Modicon M221 Logic Controller Programming Guide (EIO0000003297.04), System Objects chapter. `first_scan_bit="%S13"` confirmed correct ("First cycle in RUNNING state"). `scan_time_word` corrected `%SW10` → `%SW30` ("Last scan time"). `always_on_bit`/`always_off_bit` removed entirely — the full system-bit table (`%S0`..`%S123`) has no constant-TRUE/FALSE bit; `%S20`/`%S21` are real, unrelated bits ("Index overflow" / "Grafcet initialization"), not general-purpose constants. `retentive_words=(0, 1999)` stays as a documented approximation — the real M221 retains `%MW` via an explicit program-triggered backup/restore of a caller-chosen word count (`%S90`/`%S93`/`%S94` + `%SW148`), not a fixed hardware range; modeling that properly is separate future work, not a quick number fix. See `digitwin/models/schneider_tm221.py` docstring
 - [ ] Sanity-check `HardwareProfile` fields against a second-vendor datasheet (S7-1200 or Micro850)
 
 ## Phase 3 — Observability (historian, events, snapshots)  _(landed)_

@@ -110,6 +110,12 @@ class HardwareProfile:
     memory_words: tuple[int, int] = (0, 0)     # inclusive %MW range
     retentive_bits: tuple[int, int] | None = None
     retentive_words: tuple[int, int] | None = None
+    # Inclusive %S / %SW ranges. Optional — a model that doesn't populate
+    # these simply skips range-checking that area, same as before this field
+    # existed; see the Phase 2b item in docs/TODO.md for why the TM221
+    # leaves them unset rather than guessing a boundary.
+    system_bits: tuple[int, int] | None = None
+    system_words: tuple[int, int] | None = None
     address_syntax: AddressSyntax = IEC_DOTTED
     first_scan_bit: str = "%S13"
     always_on_bit: str | None = None
@@ -154,6 +160,10 @@ class HardwareProfile:
             AddressArea.MEMORY_BIT: self.memory_bits,
             AddressArea.MEMORY_WORD: self.memory_words,
         }
+        if self.system_bits is not None:
+            ranges[AddressArea.SYSTEM_BIT] = self.system_bits
+        if self.system_words is not None:
+            ranges[AddressArea.SYSTEM_WORD] = self.system_words
         if parsed.area in counts:
             limit = counts[parsed.area]
             if not 0 <= parsed.index < limit:
@@ -166,4 +176,5 @@ class HardwareProfile:
                 raise AddressError(
                     f"{parsed.raw!r} is outside {parsed.area.value}s %{lo}..%{hi}"
                 )
-        # SYSTEM_BIT / SYSTEM_WORD: not range-checked in the minimal cut
+        # SYSTEM_BIT / SYSTEM_WORD with no declared range (system_bits /
+        # system_words left None): not checked, same as an unset memory range.

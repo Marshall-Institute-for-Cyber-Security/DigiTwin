@@ -12,7 +12,7 @@ import time
 
 import pytest
 
-from digitwin.hardware import IEC_DOTTED, AddressArea, AddressError
+from digitwin.hardware import IEC_DOTTED, AddressArea, AddressError, HardwareProfile
 from digitwin.models import PLC_Generic, PLC_Schneider_TM221CE16T, plc_from_model
 from digitwin.plc import (
     ALWAYS_OFF_TAG,
@@ -72,6 +72,12 @@ def test_address_area_must_match_the_tag_type() -> None:
     with pytest.raises(AddressError, match="can't address a discrete_input tag"):
         plc.define_tag("wrong_area", TagType.DISCRETE_INPUT, False, "%Q0.0")
 
+def test_analog_tag_types_require_their_own_area() -> None:
+    plc = _plc()
+    plc.define_tag("ai0", TagType.ANALOG_INPUT, 0, "%IW0.0")
+
+    with pytest.raises(AddressError, match="can't address a word tag"):
+        plc.define_tag("bad", TagType.WORD, 0, "%IW0.1")
 
 def test_tm221_accepts_both_analog_inputs_and_rejects_a_third() -> None:
     plc = _plc()
@@ -95,6 +101,35 @@ def test_memory_word_range_is_enforced() -> None:
     plc.define_tag("last_word", TagType.WORD, 0, "%MW7999")  # in range
     with pytest.raises(AddressError, match=r"outside memory words? %0\.\.%7999"):
         plc.define_tag("past_word", TagType.WORD, 0, "%MW8000")
+
+
+def test_system_bit_and_word_ranges_are_enforced_when_a_profile_declares_them() -> None:
+    # No shipped profile populates system_bits/system_words yet (see
+    # docs/TODO.md — the TM221 reference doesn't state a hard maximum), so
+    # this exercises the mechanism directly against a standalone profile.
+    profile = HardwareProfile(
+        vendor="Test",
+        model="T",
+        digital_inputs=1,
+        digital_outputs=1,
+        system_bits=(0, 127),
+        system_words=(0, 99),
+    )
+    profile.validate_address("%S127", TagType.INTERNAL_BIT)  # in range
+    with pytest.raises(AddressError, match=r"outside system bits? %0\.\.%127"):
+        profile.validate_address("%S128", TagType.INTERNAL_BIT)
+
+    profile.validate_address("%SW99", TagType.WORD)  # in range
+    with pytest.raises(AddressError, match=r"outside system words? %0\.\.%99"):
+        profile.validate_address("%SW100", TagType.WORD)
+
+
+def test_system_bit_and_word_ranges_are_unchecked_when_a_profile_leaves_them_unset() -> None:
+    # Matches every shipped profile today: an arbitrarily large %S / %SW
+    # index is accepted, same as before system_bits/system_words existed.
+    plc = _plc()
+    plc.define_tag("s", TagType.INTERNAL_BIT, False, "%S999")
+    plc.define_tag("sw", TagType.WORD, 0, "%SW999")
 
 
 def test_generic_profile_is_permissive_but_still_range_checked() -> None:
@@ -232,13 +267,30 @@ def test_first_scan_tag_mirrors_plc_first_scan() -> None:
 
 
 def test_always_on_and_always_off_bits_hold_constant() -> None:
-    plc = _plc()
+    # PLC_Generic, not the TM221: the real M221 has no constant-TRUE or
+    # constant-FALSE system bit (verified against the Schneider reference —
+    # see schneider_tm221.py), so its profile declares neither. PLC_Generic
+    # doesn't claim to model real hardware, so it's the honest place for this
+    # engine feature to live.
+    plc = PLC_Generic("t", lambda _plc: None)
     plc.scan()
 
     assert plc.read(ALWAYS_ON_TAG) is True
     assert plc.read(ALWAYS_OFF_TAG) is False
-    assert plc.tags[ALWAYS_ON_TAG].native_address == "%S20"
-    assert plc.tags[ALWAYS_OFF_TAG].native_address == "%S21"
+    assert plc.tags[ALWAYS_ON_TAG].native_address == "%S2"
+    assert plc.tags[ALWAYS_OFF_TAG].native_address == "%S3"
+
+
+def test_tm221_declares_no_always_on_or_always_off_bit() -> None:
+    # The full M221 system-bit table (%S0..%S123) has no constant-TRUE or
+    # constant-FALSE bit, so the profile leaves both unset rather than
+    # pointing at a real, unrelated bit (%S20 is "Index overflow", %S21 is
+    # "Grafcet initialization").
+    plc = _plc()
+    plc.scan()
+
+    assert ALWAYS_ON_TAG not in plc.tags
+    assert ALWAYS_OFF_TAG not in plc.tags
 
 
 def test_a_program_cannot_permanently_clobber_always_on() -> None:
@@ -248,7 +300,7 @@ def test_a_program_cannot_permanently_clobber_always_on() -> None:
         if p.scan_count == 0:
             p.write(ALWAYS_ON_TAG, False)
 
-    plc = _plc(clobber_once_then_behave)
+    plc = PLC_Generic("t", clobber_once_then_behave)
 
     plc.scan()
     assert plc.read(ALWAYS_ON_TAG) is False  # clobbered during scan 1...
@@ -261,4 +313,4 @@ def test_scan_time_word_reflects_the_last_scan_duration_in_ms() -> None:
     plc.scan()
 
     assert plc.read(SCAN_TIME_MS_TAG) >= 10
-    assert plc.tags[SCAN_TIME_MS_TAG].native_address == "%SW10"
+    assert plc.tags[SCAN_TIME_MS_TAG].native_address == "%SW30"

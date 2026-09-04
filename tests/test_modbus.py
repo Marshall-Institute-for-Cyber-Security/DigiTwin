@@ -188,7 +188,9 @@ def test_read_inputs_resolves_addresses_to_tag_names_in_one_round_trip_per_kind(
     assert client.calls[1][2] == 2
 
 
-def test_read_inputs_ignores_an_address_no_tag_claims() -> None:
+def test_read_inputs_raises_when_a_mapped_address_has_no_tag() -> None:
+    # A wiring/program mismatch, not something to silently drop -- same as
+    # InProcessTransport (see digitwin/io.py, digitwin/plc.py::PLC.tag_at).
     plc = PLC_Generic("unwired_plc", lambda plc: None)
     plc.define_tag("di_a", TagType.DISCRETE_INPUT, False, "%I0.0")
     # %I0.1 deliberately left undefined -> no tag claims it.
@@ -197,9 +199,8 @@ def test_read_inputs_ignores_an_address_no_tag_claims() -> None:
     client = FakeClient(discrete={0: True})
     transport = _wired(plc, client)
 
-    values = transport.read_inputs()
-
-    assert values == {"di_a": True, "ai_a": 0, "ai_b": 0}
+    with pytest.raises(ValueError, match="no tag on PLC_Generic claims"):
+        transport.read_inputs()
 
 
 def test_a_failed_block_raises_transporterror_with_partial_inputs_from_the_other_block() -> None:

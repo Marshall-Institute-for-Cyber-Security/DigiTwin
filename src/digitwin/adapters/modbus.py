@@ -136,8 +136,8 @@ class ModbusClientTransport:
     to its slot in the slave's map; ``outputs`` maps each address the PLC
     drives (``coil`` / ``holding_register``). ``plc`` resolves each address to
     its owning tag via :meth:`~digitwin.plc.PLC.tag_at`; an address with no
-    tag claiming it is dropped before the round trip, same as
-    ``InProcessTransport``.
+    tag claiming it is a wiring/program mismatch, not something to silently
+    drop before the round trip — same as ``InProcessTransport``.
     """
 
     host: str
@@ -193,17 +193,21 @@ class ModbusClientTransport:
     def _live_entries(
         self, channels: dict[str, RegisterMap], kind: RegisterKind
     ) -> list[tuple[str, RegisterMap]]:
-        """(tag name, map) for every channel of `kind` whose address is
-        currently claimed by a tag. Downstream code keys by tag name, like
-        every other transport; an unclaimed address is dropped here, same as
-        ``InProcessTransport``."""
+        """(tag name, map) for every channel of `kind`. Downstream code keys
+        by tag name, like every other transport. An address with no tag
+        claiming it is a wiring/program mismatch, not something to silently
+        drop — same as ``InProcessTransport``."""
         live = []
         for address, reg in channels.items():
             if reg.kind != kind:
                 continue
             tag_name = self.plc.tag_at(address)
-            if tag_name is not None:
-                live.append((tag_name, reg))
+            if tag_name is None:
+                raise ValueError(
+                    f"address {address!r} is mapped to Modbus {reg.kind!r} but "
+                    f"no tag on {type(self.plc).__name__} claims that address"
+                )
+            live.append((tag_name, reg))
         return live
 
     def _read_block(

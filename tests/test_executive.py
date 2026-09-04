@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import time
 
-from digitwin.demo import build_demo
+import pytest
+
+from digitwin.demo import build_demo, build_demo_plc
 from digitwin.events import EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
-from digitwin.io import IOBus, TransportError
+from digitwin.io import InProcessTransport, IOBus, TransportError
 from digitwin.models import PLC_Generic
 from digitwin.plant import CompositePlant, NullPlant, Tank
 from digitwin.plc import PLC, TagType, TagValue
@@ -18,6 +20,15 @@ def _tank(sim: Executive) -> Tank:
     plant = sim.plant
     assert isinstance(plant, CompositePlant)
     return next(c for c in plant.components if isinstance(c, Tank))
+
+
+def test_executive_rejects_a_dt_faster_than_the_plcs_min_scan_time() -> None:
+    plc = build_demo_plc()  # PLC_Generic, min_scan_ms=1
+    bus = IOBus()
+    transport = InProcessTransport(bus, plc)
+
+    with pytest.raises(ValueError, match="faster than"):
+        Executive(plc, CompositePlant([]), bus, transport, dt=0.0001)  # 0.1 ms
 
 
 def test_tank_fills_on_start_and_level_comes_from_the_plant() -> None:
@@ -115,8 +126,8 @@ def test_analog_output_reaches_the_transport_alongside_discrete_outputs() -> Non
         plc.write_output("ao", 77)
 
     plc = PLC_Generic("t", program)
-    plc.define_tag("do", TagType.DISCRETE_OUTPUT, False)
-    plc.define_tag("ao", TagType.ANALOG_OUTPUT, 0)
+    plc.define_tag("do", TagType.DISCRETE_OUTPUT, False, "%Q0.0")
+    plc.define_tag("ao", TagType.ANALOG_OUTPUT, 0, "%QW0.0")
 
     transport = _CapturingTransport()
     sim = Executive(plc, NullPlant(), IOBus(), transport)
@@ -150,8 +161,8 @@ class _ScriptedTransport:
 
 def test_read_failure_holds_last_value_and_applies_partial_inputs() -> None:
     plc = PLC_Generic("t", lambda plc: None)
-    plc.define_tag("di_a", TagType.DISCRETE_INPUT, False)
-    plc.define_tag("di_b", TagType.DISCRETE_INPUT, False)
+    plc.define_tag("di_a", TagType.DISCRETE_INPUT, False, "%I0.0")
+    plc.define_tag("di_b", TagType.DISCRETE_INPUT, False, "%I0.1")
 
     transport = _ScriptedTransport()
     transport.read_script = [
