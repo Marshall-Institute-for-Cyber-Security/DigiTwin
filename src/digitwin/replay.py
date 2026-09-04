@@ -110,7 +110,7 @@ class RecordingTransport:
                 {
                     name: tag.value
                     for name, tag in self.plc.tags.items()
-                    if tag.tag_type is TagType.DISCRETE_INPUT
+                    if tag.tag_type in (TagType.DISCRETE_INPUT, TagType.ANALOG_INPUT)
                 }
             )
         # The transport wins for the tags it drives: it is about to set them.

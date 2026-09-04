@@ -73,6 +73,23 @@ def test_address_area_must_match_the_tag_type() -> None:
         plc.define_tag("wrong_area", TagType.DISCRETE_INPUT, False, "%Q0.0")
 
 
+def test_tm221_accepts_both_analog_inputs_and_rejects_a_third() -> None:
+    plc = _plc()
+    plc.define_tag("ai0", TagType.ANALOG_INPUT, 0, "%IW0.0")
+    plc.define_tag("ai1", TagType.ANALOG_INPUT, 0, "%IW0.1")
+
+    with pytest.raises(AddressError, match="past the analog input count"):
+        plc.define_tag("ai2", TagType.ANALOG_INPUT, 0, "%IW0.2")
+
+
+def test_a_word_tag_can_no_longer_claim_an_analog_terminal() -> None:
+    # ANALOG_INPUT/ANALOG_OUTPUT are distinct tag types from WORD now that
+    # they cross the scan boundary — a WORD tag has no terminal to freeze.
+    plc = _plc()
+    with pytest.raises(AddressError, match="can't address a word tag"):
+        plc.define_tag("wrong_type", TagType.WORD, 0, "%IW0.0")
+
+
 def test_memory_word_range_is_enforced() -> None:
     plc = _plc()
     plc.define_tag("last_word", TagType.WORD, 0, "%MW7999")  # in range

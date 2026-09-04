@@ -15,7 +15,8 @@ class StartStopTankProgram:
     buttons (stop dominates), drives the indicator lights, and commands the
     fill valve while running / the drain valve while stopped. The tank level
     is produced by the plant model and read back from the ``tank_level``
-    sensor tag; the program only uses it for the high/low interlocks.
+    analog input tag (frozen into the input image like any other physical
+    input); the program only uses it for the high/low interlocks.
     """
 
     def __call__(self, plc: PLC) -> None:
@@ -37,7 +38,7 @@ class StartStopTankProgram:
         plc.write_output("red_light", running)
 
         # Interlocks from the level transmitter; the plant owns the real limits.
-        level = plc.read("tank_level")
+        level = plc.read_input("tank_level")
         fill_permitted = level < TANK_LEVEL_MAX
         drain_permitted = level > TANK_LEVEL_MIN
         plc.write("tank_fill_permitted", fill_permitted)

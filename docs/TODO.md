@@ -49,9 +49,10 @@ Order follows the roadmap's **Suggested sequencing** table.
 - [x] One tag per address — a second tag claiming an address already in use raises `AddressError`; unaddressed tags never collide
 - [x] Retentive ranges are applied — `define_tag`'s `retentive` defaults to `profile.is_retentive(native_address)`, so `%M5` on the TM221 survives a cold start with no caller involvement; pass `retentive=` to override. `PLC_Generic` deliberately declares no retain range
 - [x] `AddressArea` / `ParsedAddress` — address string → `(area, linear index)`
-- [ ] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — bus + `InProcessTransport` still wire by tag name
+- [x] Address → physical channel resolution (I/O bus wires to terminals, not tag names) — `PLC.tag_at(address)` resolves a native address to its owning tag; `InProcessTransport.inputs` / `.outputs` map address -> bus signal (was tag name -> bus signal) and take a `plc` to resolve through
 - [x] Auto-populate model-specific system tags (first-scan, always-on/off, scan-time word) — `PLC._define_system_tags()` reads `profile.first_scan_bit` / `always_on_bit` / `always_off_bit` / `scan_time_word` and defines+syncs them each scan (`FIRST_SCAN_TAG`, `ALWAYS_ON_TAG`, `ALWAYS_OFF_TAG`, `SCAN_TIME_MS_TAG` in `plc.py`); `plc.first_scan` bare bool kept for internal engine use, tag mirrors it for programs
-- [ ] Analog I/O never crosses the scan boundary — `ANALOG_INPUT` maps onto `TagType.WORD`, but the input image freezes only `DISCRETE_INPUT`, so a `%IW0.0` tag has to be read live with `plc.read()`; symmetrically `Executive._transfer_outputs` ships only `DISCRETE_OUTPUT`, so a `%QW` output never reaches the plant. The demo dodges this by putting `tank_level` at `%MW0`. Probably wants `TagType.ANALOG_INPUT` / `ANALOG_OUTPUT` rather than a patched freeze list
+- [x] Analog I/O crosses the scan boundary — `TagType.ANALOG_INPUT` / `ANALOG_OUTPUT` are distinct from `WORD`; `PLC.scan()` freezes `ANALOG_INPUT` into `input_image` alongside `DISCRETE_INPUT`, and `Executive._transfer_outputs` ships `ANALOG_OUTPUT` alongside `DISCRETE_OUTPUT`. The demo's `tank_level` moved from `%MW0` to a real `%IW0.0` and the control program reads it with `plc.read_input()`, not `plc.read()`
+  - [ ] no analog quantization / scaling knobs per channel yet (raw engineering-unit int in, int out) — see the Phase 2b fidelity-knob item above
 - [ ] Address-syntax strategies — _partial:_ `AddressSyntax` protocol + `IEC_DOTTED` done; `IEC_IX`, `AB_TAG`, `SIEMENS`, `MODICON` not started
 - [x] `digitwin/models/generic.py` — `PLC_Generic` (permissive; demo + engine tests now run on it)
 - [x] `digitwin/models/schneider_tm221.py` — `PLC_Schneider_TM221CE16T` (9 DI, 7 DO, 2 AI, `%M0..511`, `%MW0..7999`)
@@ -128,6 +129,6 @@ behaves the same.
 - [ ] Fault library — sensor stuck/drift/noise, actuator stuck/slow/reversed, wire break, comms dropout (injected via I/O bus)
 - [ ] Golden historian traces for demo scenarios; CI diffs them in free-run
 - [x] Add `pytest` to dev deps (`pyproject.toml`), create `tests/`
-- [x] Unit tests for current engine: scan phasing, seal-in latch, edge detection, hardware profiles, observability (`test_engine.py`, `test_start_stop_tank.py`, `test_instructions.py`, `test_plant.py`, `test_executive.py`, `test_hardware.py`, `test_historian.py`, `test_snapshot.py`, `test_replay.py` — 104 tests)
+- [x] Unit tests for current engine: scan phasing, seal-in latch, edge detection, hardware profiles, observability (`test_engine.py`, `test_start_stop_tank.py`, `test_instructions.py`, `test_plant.py`, `test_executive.py`, `test_hardware.py`, `test_historian.py`, `test_snapshot.py`, `test_replay.py` — 110 tests)
 - [x] `mypy --strict` covers `tests/` as well as `src/` (`pyproject.toml`), so test-side type claims are checked too
 - [ ] **Validate:** `uv run pytest` green; tank scenario passes; flipping seal-in logic fails exactly one scenario

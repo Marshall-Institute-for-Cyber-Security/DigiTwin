@@ -31,14 +31,16 @@ DEMO_TAGS: list[TagSpec] = [
     ("red_light", TagType.DISCRETE_OUTPUT, False, "%Q0.1"),
     ("fill_valve", TagType.DISCRETE_OUTPUT, False, "%Q0.2"),
     ("drain_valve", TagType.DISCRETE_OUTPUT, False, "%Q0.3"),
-    ("tank_level", TagType.WORD, 0, "%MW0"),
+    ("tank_level", TagType.ANALOG_INPUT, 0, "%IW0.0"),
     ("tank_fill_permitted", TagType.INTERNAL_BIT, True, "%M11"),
     ("tank_drain_permitted", TagType.INTERNAL_BIT, False, "%M10"),
 ]
 
-# PLC tag <-> bus signal wiring for the in-process transport.
-INPUT_WIRING = {"tank_level": "tank_level"}
-OUTPUT_WIRING = {"fill_valve": "fill_valve", "drain_valve": "drain_valve"}
+# Physical channel (native address) <-> bus signal wiring for the in-process
+# transport. Wiring is by address, not tag name — the terminal a channel is
+# wired to doesn't care what a program calls the tag sitting on it.
+INPUT_WIRING = {"%IW0.0": "tank_level"}
+OUTPUT_WIRING = {"%Q0.2": "fill_valve", "%Q0.3": "drain_valve"}
 
 
 # Retentive: the latch state should survive a power cycle like a real seal-in.
@@ -76,7 +78,7 @@ def build_demo(
     plant = CompositePlant([tank, transmitter])
 
     bus = IOBus()
-    transport = InProcessTransport(bus, inputs=INPUT_WIRING, outputs=OUTPUT_WIRING)
+    transport = InProcessTransport(bus, plc, inputs=INPUT_WIRING, outputs=OUTPUT_WIRING)
     return Executive(
         plc,
         plant,

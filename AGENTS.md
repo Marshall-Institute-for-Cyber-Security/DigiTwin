@@ -105,8 +105,9 @@ POSIX scripts.
 The PLC models the classic **three-phase scan cycle** (`PLC.scan()` in
 `plc.py`). Preserve the semantics:
 
-1. **Input scan** — physical inputs (`TagType.DISCRETE_INPUT`) are frozen into
-   `input_image` at the start of the scan.
+1. **Input scan** — physical inputs (`TagType.DISCRETE_INPUT`,
+   `TagType.ANALOG_INPUT`) are frozen into `input_image` at the start of the
+   scan.
 2. **Program scan** — the program runs against that frozen image (timed; a scan
    over `watchdog_s` latches `plc.watchdog_tripped`).
 3. **Output scan** — staged outputs in `output_image` are flushed to tags at the
@@ -125,9 +126,9 @@ tag — a second claim raises `AddressError`.
 Therefore, in program code:
 
 - Read physical inputs with `plc.read_input(name)` — **never** `plc.read()` for a
-  discrete input (that would bypass the frozen image).
+  discrete or analog input (that would bypass the frozen image).
 - Stage physical outputs with `plc.write_output(name, value)` — flushed at end of
-  scan, not immediately.
+  scan, not immediately. Works for `DISCRETE_OUTPUT` and `ANALOG_OUTPUT` alike.
 - Use `plc.read()` / `plc.write()` only for internal bits (`INTERNAL_BIT`) and
   words (`WORD`).
 - Programs are callables `(plc: PLC) -> None`. For edge detection or timing, hold

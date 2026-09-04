@@ -16,7 +16,7 @@ from digitwin.models import PLC_Generic
 from digitwin.plc import PLC, TagType, TagValue
 
 
-def test_input_image_contains_only_discrete_inputs() -> None:
+def test_input_image_contains_only_physical_inputs() -> None:
     frozen: dict[str, TagValue] = {}
 
     def program(plc: PLC) -> None:
@@ -24,13 +24,62 @@ def test_input_image_contains_only_discrete_inputs() -> None:
 
     plc = PLC_Generic("t", program)
     plc.define_tag("di", TagType.DISCRETE_INPUT, True)
+    plc.define_tag("ai", TagType.ANALOG_INPUT, 7)
     plc.define_tag("do", TagType.DISCRETE_OUTPUT, True)
+    plc.define_tag("ao", TagType.ANALOG_OUTPUT, 3)
     plc.define_tag("bit", TagType.INTERNAL_BIT, True)
     plc.define_tag("word", TagType.WORD, 5)
 
     plc.scan()
 
-    assert set(frozen) == {"di"}
+    assert set(frozen) == {"di", "ai"}
+
+
+def test_analog_input_is_frozen_for_the_whole_scan_like_a_discrete_input() -> None:
+    seen: list[TagValue] = []
+
+    def program(plc: PLC) -> None:
+        seen.append(plc.read_input("level"))
+        plc.tags["level"].value = 99  # field device changes mid-scan
+        seen.append(plc.read_input("level"))  # program still sees the frozen image
+
+    plc = PLC_Generic("t", program)
+    plc.define_tag("level", TagType.ANALOG_INPUT, 12)
+
+    plc.scan()
+    assert seen == [12, 12]
+
+    plc.scan()
+    assert seen[2:] == [99, 99]  # next scan re-freezes with the new value
+
+
+def test_analog_output_is_staged_and_flushed_only_at_end_of_scan() -> None:
+    during_scan: list[TagValue] = []
+
+    def program(plc: PLC) -> None:
+        plc.write_output("setpoint", 42)
+        during_scan.append(plc.read("setpoint"))  # tag not updated yet
+
+    plc = PLC_Generic("t", program)
+    plc.define_tag("setpoint", TagType.ANALOG_OUTPUT, 0)
+
+    plc.scan()
+
+    assert during_scan == [0]
+    assert plc.read("setpoint") == 42  # flushed after the program returns
+
+
+def test_full_cycle_reads_analog_input_and_drives_analog_output() -> None:
+    def passthrough(plc: PLC) -> None:
+        plc.write_output("out", plc.read_input("in"))
+
+    plc = PLC_Generic("t", passthrough)
+    plc.define_tag("in", TagType.ANALOG_INPUT, 0)
+    plc.define_tag("out", TagType.ANALOG_OUTPUT, 0)
+
+    plc.tags["in"].value = 55
+    plc.scan()
+    assert plc.read("out") == 55
 
 
 def test_discrete_input_is_frozen_for_the_whole_scan() -> None:

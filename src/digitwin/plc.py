@@ -24,8 +24,15 @@ if TYPE_CHECKING:
 class TagType(Enum):
     DISCRETE_INPUT = "discrete_input"
     DISCRETE_OUTPUT = "discrete_output"
+    ANALOG_INPUT = "analog_input"
+    ANALOG_OUTPUT = "analog_output"
     INTERNAL_BIT = "internal_bit"
     WORD = "word"
+
+
+# Tag types backed by a physical terminal: frozen into input_image / flushed
+# from output_image each scan, same as a discrete channel.
+_PHYSICAL_INPUT_TYPES = (TagType.DISCRETE_INPUT, TagType.ANALOG_INPUT)
 
 
 TagValue = int | bool
@@ -162,6 +169,21 @@ class PLC(ABC):
         self.tags[tag_name] = tag
         return tag
 
+    def tag_at(self, native_address: str) -> str | None:
+        """Resolve a physical address to the tag name occupying it, or None if
+        the terminal is unclaimed. Accepts any spelling the profile's address
+        syntax parses, canonicalizing before the lookup the same way
+        ``define_tag`` did when the tag claimed the address.
+
+        This is address -> channel resolution: it lets a transport wire to a
+        physical terminal (e.g. ``"%IW0.0"``) in its own config and find out
+        which tag currently sits on it, instead of the transport's config
+        naming the tag directly.
+        """
+        parsed = self.profile.address_syntax.parse(native_address)
+        canonical = self.profile.address_syntax.format(parsed)
+        return self._addressed.get(canonical)
+
     def read(self, tag_name: str) -> TagValue:
         """Live read — for internal bits and words, not physical inputs."""
         return self.tags[tag_name].value
@@ -187,11 +209,11 @@ class PLC(ABC):
         if ALWAYS_OFF_TAG in self.tags:
             self.tags[ALWAYS_OFF_TAG].value = False
 
-        # Phase 1: input scan — freeze physical inputs
+        # Phase 1: input scan — freeze physical inputs (discrete and analog)
         self.input_image = {
             name: tag.value
             for name, tag in self.tags.items()
-            if tag.tag_type == TagType.DISCRETE_INPUT
+            if tag.tag_type in _PHYSICAL_INPUT_TYPES
         }
 
         # Phase 2: program scan — timed for the watchdog

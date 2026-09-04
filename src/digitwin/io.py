@@ -13,7 +13,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Protocol
 
-from digitwin.plc import TagValue
+from digitwin.plc import PLC, TagValue
 
 # Bus signals carry the plant's continuous state too, so they are wider than a
 # tag value. The transport narrows floats back to ``TagValue`` at the boundary.
@@ -73,24 +73,43 @@ class IOTransport(Protocol):
 class InProcessTransport:
     """Couples a plant and a PLC that share one :class:`IOBus` in this process.
 
-    ``inputs`` maps each PLC input tag to the bus signal that feeds it;
-    ``outputs`` maps each PLC output tag to the bus signal it drives. Tags with
-    no mapping are simply ignored.
+    ``inputs`` maps each physical input channel — a native address, e.g.
+    ``"%IW0.0"`` — to the bus signal that feeds it; ``outputs`` maps each
+    output channel to the bus signal it drives. Wiring is by address, not tag
+    name: a terminal's wiring shouldn't have to change just because a program
+    renames the tag sitting on it. ``plc`` resolves each address to its
+    owning tag via :meth:`~digitwin.plc.PLC.tag_at`; a channel with no tag
+    claiming it is simply ignored.
+
+    ``plc`` is only required when ``inputs`` or ``outputs`` is non-empty —
+    there is nothing to resolve otherwise.
     """
 
     bus: IOBus
+    plc: PLC | None = None
     inputs: dict[str, str] = field(default_factory=dict)
     outputs: dict[str, str] = field(default_factory=dict)
 
+    def __post_init__(self) -> None:
+        if (self.inputs or self.outputs) and self.plc is None:
+            raise ValueError("InProcessTransport needs a plc to resolve addressed channels")
+
     def read_inputs(self) -> dict[str, TagValue]:
         values: dict[str, TagValue] = {}
-        for tag_name, signal in self.inputs.items():
+        for address, signal in self.inputs.items():
+            tag_name = self._resolve(address)
+            if tag_name is None:
+                continue
             raw = self.bus.get(signal)
             values[tag_name] = bool(raw) if isinstance(raw, bool) else int(raw)
         return values
 
     def write_outputs(self, outputs: dict[str, TagValue]) -> None:
-        for tag_name, value in outputs.items():
-            signal = self.outputs.get(tag_name)
-            if signal is not None:
-                self.bus.set(signal, value)
+        for address, signal in self.outputs.items():
+            tag_name = self._resolve(address)
+            if tag_name is not None and tag_name in outputs:
+                self.bus.set(signal, outputs[tag_name])
+
+    def _resolve(self, address: str) -> str | None:
+        assert self.plc is not None  # guaranteed by __post_init__ once wired
+        return self.plc.tag_at(address)

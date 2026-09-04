@@ -7,7 +7,10 @@ import time
 
 from digitwin.demo import build_demo
 from digitwin.executive import Executive, ExecutiveMode
-from digitwin.plant import CompositePlant, Tank
+from digitwin.io import IOBus
+from digitwin.models import PLC_Generic
+from digitwin.plant import CompositePlant, NullPlant, Tank
+from digitwin.plc import PLC, TagType, TagValue
 
 
 def _tank(sim: Executive) -> Tank:
@@ -90,3 +93,33 @@ def test_free_run_mode_does_not_sleep() -> None:
     sim.run(200)
 
     assert time.perf_counter() - started < 0.5  # 200 * 10 ms if it were paced
+
+
+class _CapturingTransport:
+    """Records exactly what the executive hands to write_outputs."""
+
+    def __init__(self) -> None:
+        self.received: dict[str, TagValue] = {}
+
+    def read_inputs(self) -> dict[str, TagValue]:
+        return {}
+
+    def write_outputs(self, outputs: dict[str, TagValue]) -> None:
+        self.received.update(outputs)
+
+
+def test_analog_output_reaches_the_transport_alongside_discrete_outputs() -> None:
+    def program(plc: PLC) -> None:
+        plc.write_output("do", True)
+        plc.write_output("ao", 77)
+
+    plc = PLC_Generic("t", program)
+    plc.define_tag("do", TagType.DISCRETE_OUTPUT, False)
+    plc.define_tag("ao", TagType.ANALOG_OUTPUT, 0)
+
+    transport = _CapturingTransport()
+    sim = Executive(plc, NullPlant(), IOBus(), transport)
+
+    sim.tick()
+
+    assert transport.received == {"do": True, "ao": 77}

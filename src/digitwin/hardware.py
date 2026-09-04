@@ -92,13 +92,10 @@ IEC_DOTTED: AddressSyntax = _IecDotted()
 _AREA_FOR_TYPE: dict[TagType, set[AddressArea]] = {
     TagType.DISCRETE_INPUT: {AddressArea.DISCRETE_INPUT},
     TagType.DISCRETE_OUTPUT: {AddressArea.DISCRETE_OUTPUT},
+    TagType.ANALOG_INPUT: {AddressArea.ANALOG_INPUT},
+    TagType.ANALOG_OUTPUT: {AddressArea.ANALOG_OUTPUT},
     TagType.INTERNAL_BIT: {AddressArea.MEMORY_BIT, AddressArea.SYSTEM_BIT},
-    TagType.WORD: {
-        AddressArea.MEMORY_WORD,
-        AddressArea.ANALOG_INPUT,
-        AddressArea.ANALOG_OUTPUT,
-        AddressArea.SYSTEM_WORD,
-    },
+    TagType.WORD: {AddressArea.MEMORY_WORD, AddressArea.SYSTEM_WORD},
 }
 
 @dataclass(frozen=True)
