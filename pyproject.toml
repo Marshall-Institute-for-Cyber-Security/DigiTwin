@@ -42,6 +42,9 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# So tests can `import examples.*` (the example twins under examples/ are not
+# an installed package). digitwin itself still resolves via the editable install.
+pythonpath = ["."]
 
 [tool.ruff]
 target-version = "py312"
