@@ -141,6 +141,27 @@ def test_bad_plant_component_parameter_is_rejected(tmp_path: Path) -> None:
         load_project(project)
 
 
+def test_invalid_component_value_is_rejected_with_a_located_message(tmp_path: Path) -> None:
+    project = _write(
+        tmp_path,
+        _MINIMAL + '\n[[plant.components]]\ntype = "AnalogSensor"\n'
+        'source = "s"\ndest = "d"\nresolution_bits = 0\n',
+    )
+    with pytest.raises(ConfigError, match="AnalogSensor.*resolution_bits"):
+        load_project(project)
+
+
+def test_tag_units_and_engineering_range_land_on_the_tag(tmp_path: Path) -> None:
+    project = _write(
+        tmp_path,
+        _MINIMAL + '\n[[tags]]\nname = "flow"\ntype = "analog_input"\n'
+        'address = "%IW0.0"\nunits = "m3/h"\neng_low = 0.0\neng_high = 250.0\n',
+    )
+    sim = load_project(project)
+    tag = sim.plc.tags["flow"]
+    assert (tag.units, tag.eng_low, tag.eng_high) == ("m3/h", 0.0, 250.0)
+
+
 def test_missing_plc_section_is_rejected(tmp_path: Path) -> None:
     project = _write(tmp_path, "version = 1\n[executive]\ndt = 0.1\n")
     with pytest.raises(ConfigError, match=r"missing required section \[plc\]"):

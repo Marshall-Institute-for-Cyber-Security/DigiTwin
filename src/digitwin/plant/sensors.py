@@ -12,10 +12,14 @@ from digitwin.io import IOBus
 class AnalogSensor:
     """Samples a continuous bus signal into a scaled integer word.
 
-    Reads ``source`` (engineering units), optionally applies a first-order
-    low-pass (``filter_tau`` seconds) and additive Gaussian noise
-    (``noise_sigma``, source units), linearly maps ``[in_lo, in_hi]`` onto
-    ``[out_lo, out_hi]``, clamps, rounds, and writes ``dest``.
+    Per step, in order: read ``source`` (engineering units); apply the
+    transmitter calibration ``value * scale + offset`` (identity by default —
+    set them to model a gain or zero error); optionally low-pass it
+    (``filter_tau`` seconds) and add Gaussian noise (``noise_sigma``, source
+    units); linearly map ``[in_lo, in_hi]`` onto ``[out_lo, out_hi]`` and clamp.
+    If ``resolution_bits`` is set the mapped position is snapped to one of
+    ``2**resolution_bits`` levels across the span (a real ADC's finite
+    resolution); otherwise it is rounded to the nearest count. Writes ``dest``.
 
     Deterministic unless ``noise_sigma`` is set; seed ``rng`` for repeatable
     noise.
@@ -27,13 +31,20 @@ class AnalogSensor:
     in_hi: float = 100.0
     out_lo: int = 0
     out_hi: int = 100
+    scale: float = 1.0
+    offset: float = 0.0
     noise_sigma: float = 0.0
     filter_tau: float = 0.0
+    resolution_bits: int | None = None
     rng: random.Random = field(default_factory=random.Random)
     _filtered: float | None = field(default=None, repr=False)
 
+    def __post_init__(self) -> None:
+        if self.resolution_bits is not None and self.resolution_bits < 1:
+            raise ValueError("AnalogSensor.resolution_bits must be >= 1")
+
     def step(self, dt: float, io: IOBus) -> None:
-        raw = float(io.get(self.source, 0.0))
+        raw = float(io.get(self.source, 0.0)) * self.scale + self.offset
 
         if self.filter_tau > 0.0:
             if self._filtered is None:
@@ -51,6 +62,9 @@ class AnalogSensor:
         span_in = self.in_hi - self.in_lo
         frac = 0.0 if span_in == 0.0 else (value - self.in_lo) / span_in
         frac = max(0.0, min(1.0, frac))
+        if self.resolution_bits is not None:
+            levels = (1 << self.resolution_bits) - 1
+            frac = round(frac * levels) / levels
         io.set(self.dest, self.out_lo + round(frac * (self.out_hi - self.out_lo)))
 
 

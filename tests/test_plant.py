@@ -73,6 +73,33 @@ def test_analog_sensor_clamps_out_of_range_input() -> None:
     assert bus.get("dst") == 0
 
 
+def test_analog_sensor_scale_and_offset_model_a_calibration_error() -> None:
+    bus = IOBus()
+    bus.set("src", 50.0)
+    # a +2% gain error and a -1.0-unit zero shift: 50 -> 50*1.02 - 1.0 = 50.0
+    sensor = AnalogSensor(
+        source="src", dest="dst", out_hi=1000, scale=1.02, offset=-1.0
+    )
+    sensor.step(0.1, bus)
+    assert bus.get("dst") == 500
+
+    bus.set("src", 100.0)          # 100*1.02 - 1.0 = 101.0 -> clamps to full scale
+    sensor.step(0.1, bus)
+    assert bus.get("dst") == 1000
+
+
+def test_analog_sensor_resolution_bits_quantise_to_discrete_levels() -> None:
+    bus = IOBus()
+    # 2-bit sensor over a 0..300 count span -> 4 levels: 0, 100, 200, 300
+    sensor = AnalogSensor(
+        source="src", dest="dst", in_hi=100.0, out_hi=300, resolution_bits=2
+    )
+    for value, expected in [(0.0, 0), (10.0, 0), (40.0, 100), (60.0, 200), (90.0, 300)]:
+        bus.set("src", value)
+        sensor.step(0.1, bus)
+        assert bus.get("dst") == expected
+
+
 def test_discrete_sensor_has_hysteresis() -> None:
     bus = IOBus()
     switch = DiscreteSensor(source="lvl", dest="hi", threshold=80.0, hysteresis=5.0)

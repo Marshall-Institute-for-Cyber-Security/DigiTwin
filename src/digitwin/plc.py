@@ -61,6 +61,11 @@ class Tag:
     native_address: str | None = None
     initial_value: TagValue = 0
     retentive: bool = False
+    # Advisory metadata for observability / HMI, not used by the scan: the
+    # engineering unit the raw value represents and the range it spans.
+    units: str | None = None
+    eng_low: float | None = None
+    eng_high: float | None = None
 
 
 class Program(Protocol):
@@ -137,6 +142,9 @@ class PLC(ABC):
         native_address: str | None = None,
         *,
         retentive: bool | None = None,
+        units: str | None = None,
+        eng_low: float | None = None,
+        eng_high: float | None = None,
     ) -> Tag:
         """Define a tag, validating any ``native_address`` against the profile.
 
@@ -181,6 +189,9 @@ class PLC(ABC):
             native_address=native_address,
             initial_value=initial_value,
             retentive=bool(retentive),
+            units=units,
+            eng_low=eng_low,
+            eng_high=eng_high,
         )
         self.tags[tag_name] = tag
         return tag

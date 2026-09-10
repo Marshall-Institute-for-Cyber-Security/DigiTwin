@@ -241,6 +241,9 @@ def _define_tags(plc: PLC, cfg: Mapping[str, Any]) -> None:
                 spec.get("initial", 0),
                 spec.get("address"),
                 retentive=spec.get("retentive"),
+                units=spec.get("units"),
+                eng_low=spec.get("eng_low"),
+                eng_high=spec.get("eng_high"),
             )
         except ValueError as exc:  # AddressError included
             raise ConfigError(f"[[tags]] {name!r}: {exc}") from exc
@@ -268,7 +271,7 @@ def _build_plant(cfg: Mapping[str, Any]) -> PlantModel:
             ) from None
         try:
             components.append(component_cls(**params))
-        except TypeError as exc:
+        except (TypeError, ValueError) as exc:
             raise ConfigError(
                 f"[[plant.components]] #{i} ({type_name}): {exc}"
             ) from exc
