@@ -11,8 +11,8 @@ import random
 from pathlib import Path
 
 import pytest
+from reference import build_demo
 
-from digitwin.demo import build_demo
 from digitwin.executive import Executive
 from digitwin.instructions import TON
 from digitwin.io import InProcessTransport, IOBus

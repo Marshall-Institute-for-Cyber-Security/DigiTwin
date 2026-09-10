@@ -10,8 +10,8 @@ import time
 from pathlib import Path
 
 import pytest
+from reference import build_demo, press
 
-from digitwin.demo import build_demo
 from digitwin.events import EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
 from digitwin.historian import (
@@ -279,8 +279,6 @@ def test_executive_logs_a_watchdog_trip_once_on_the_edge() -> None:
 
 
 def test_demo_press_logs_an_operator_action() -> None:
-    from digitwin.demo import press
-
     sim = build_demo()
     press(sim, "start_button", True)
 

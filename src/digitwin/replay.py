@@ -174,7 +174,7 @@ def build_replay(
 
     Run it for ``len(recording)`` ticks to reproduce the recorded run:
 
-        sim = build_replay(build_demo_plc(), recording)
+        sim = build_replay(plc, recording)   # plc built the same way as the original
         sim.run(len(recording))
     """
     # Imported here: the executive imports the observability modules, so a

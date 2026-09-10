@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from digitwin.demo import build_demo_plc
+from reference import build_demo_plc
+
 from digitwin.plc import PLC
 
 

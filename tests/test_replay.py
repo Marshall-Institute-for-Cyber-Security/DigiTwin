@@ -6,8 +6,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from reference import build_demo, build_demo_plc
 
-from digitwin.demo import build_demo, build_demo_plc
 from digitwin.events import EventCategory, EventLog, EventSeverity
 from digitwin.plant import NullPlant
 from digitwin.plc import PLC, Program, TagType

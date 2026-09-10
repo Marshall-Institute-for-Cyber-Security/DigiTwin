@@ -6,8 +6,8 @@ from __future__ import annotations
 import time
 
 import pytest
+from reference import build_demo, build_demo_plc
 
-from digitwin.demo import build_demo, build_demo_plc
 from digitwin.events import EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
 from digitwin.io import InProcessTransport, IOBus, TransportError
