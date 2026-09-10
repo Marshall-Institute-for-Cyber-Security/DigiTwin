@@ -1,0 +1,120 @@
+# The demo tank twin (src/digitwin/demo.py) expressed as a project file.
+# `digitwin.config.load_project` turns this into the same Executive that
+# `digitwin.demo.build_demo()` builds by hand.
+
+version = 1
+name = "tank_demo"
+
+[plc]
+model = "Generic"
+name = "demo_plc"
+program = "start_stop_tank"
+watchdog_s = 0.05
+
+[executive]
+dt = 0.1
+mode = "free_run"
+scale = 1.0
+
+[observability]
+historian = true
+events = true
+
+[[tags]]
+name = "start_button"
+type = "discrete_input"
+address = "%I0.0"
+initial = false
+
+[[tags]]
+name = "stop_button"
+type = "discrete_input"
+address = "%I0.1"
+initial = false
+
+[[tags]]
+name = "oit_start_button"
+type = "internal_bit"
+address = "%M3"
+initial = false
+
+[[tags]]
+name = "oit_stop_button"
+type = "internal_bit"
+address = "%M4"
+initial = false
+
+[[tags]]
+name = "start_bit"
+type = "internal_bit"
+address = "%M1"
+initial = false
+retentive = true
+
+[[tags]]
+name = "stop_bit"
+type = "internal_bit"
+address = "%M0"
+initial = true
+retentive = true
+
+[[tags]]
+name = "green_light"
+type = "discrete_output"
+address = "%Q0.0"
+initial = false
+
+[[tags]]
+name = "red_light"
+type = "discrete_output"
+address = "%Q0.1"
+initial = false
+
+[[tags]]
+name = "fill_valve"
+type = "discrete_output"
+address = "%Q0.2"
+initial = false
+
+[[tags]]
+name = "drain_valve"
+type = "discrete_output"
+address = "%Q0.3"
+initial = false
+
+[[tags]]
+name = "tank_level"
+type = "analog_input"
+address = "%IW0.0"
+initial = 0
+
+[[tags]]
+name = "tank_fill_permitted"
+type = "internal_bit"
+address = "%M11"
+initial = true
+
+[[tags]]
+name = "tank_drain_permitted"
+type = "internal_bit"
+address = "%M10"
+initial = false
+
+[[plant.components]]
+type = "Tank"
+area = 2.0
+fill_rate = 20.0
+drain_coeff = 3.0
+level_max = 100.0
+
+[[plant.components]]
+type = "AnalogSensor"
+source = "tank_level_true"
+dest = "tank_level"
+
+[wiring.inputs]
+"%IW0.0" = "tank_level"
+
+[wiring.outputs]
+"%Q0.2" = "fill_valve"
+"%Q0.3" = "drain_valve"

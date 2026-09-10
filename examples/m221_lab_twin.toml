@@ -1,0 +1,115 @@
+# The M221 lab twin (examples/m221_lab_twin.py) as a project file.
+#
+#   from digitwin.config import load_project
+#   sim = load_project("examples/m221_lab_twin.toml")
+#   sim.modbus_slave.start()          # open the Modbus TCP slave for the HMI
+#   while True: sim.tick()            # REAL_TIME pacing holds the scan period
+#
+# No plant and no field wiring: the physical pushbuttons are out of scope and
+# %MW0 ("tank level") is a pure ladder counter, not physics. The HMI drives
+# oit_start_button / oit_stop_button and reads start_bit / tank_level over the
+# Modbus slave window below.
+
+version = 1
+name = "m221_lab_twin"
+
+[plc]
+model = "TM221CE16T"
+name = "m221_lab_twin"
+program = "m221_tank_twin"
+watchdog_s = 0.05
+
+[executive]
+dt = 0.1
+mode = "real_time"
+
+[observability]
+historian = true
+events = true
+
+[[tags]]
+name = "start_button"
+type = "discrete_input"
+address = "%I0.0"
+initial = false
+
+[[tags]]
+name = "stop_button"
+type = "discrete_input"
+address = "%I0.1"
+initial = false
+
+[[tags]]
+name = "oit_start_button"
+type = "internal_bit"
+address = "%M3"
+initial = false
+
+[[tags]]
+name = "oit_stop_button"
+type = "internal_bit"
+address = "%M4"
+initial = false
+
+[[tags]]
+name = "tank_reset"
+type = "internal_bit"
+address = "%M5"
+initial = false
+
+[[tags]]
+name = "start_bit"
+type = "internal_bit"
+address = "%M1"
+initial = false
+
+[[tags]]
+name = "stop_bit"
+type = "internal_bit"
+address = "%M0"
+initial = true
+
+[[tags]]
+name = "tank_drain"
+type = "internal_bit"
+address = "%M10"
+initial = false
+
+[[tags]]
+name = "tank_fill"
+type = "internal_bit"
+address = "%M11"
+initial = true
+
+[[tags]]
+name = "green_light"
+type = "discrete_output"
+address = "%Q0.0"
+initial = false
+
+[[tags]]
+name = "red_light"
+type = "discrete_output"
+address = "%Q0.1"
+initial = false
+
+[[tags]]
+name = "tank_level"
+type = "word"
+address = "%MW0"
+initial = 0
+
+# Modbus TCP slave window — the four addresses the Maple Systems HMI polls,
+# at the M221's native register numbers (coil N = %MN, holding register N =
+# %MWN). `publish` is read-only to the HMI; `accept` lets the HMI write.
+[modbus.slave_server]
+host = "0.0.0.0"
+port = 502
+
+[modbus.slave_server.publish]
+start_bit = { kind = "coil", address = 1 }
+tank_level = { kind = "holding_register", address = 0 }
+
+[modbus.slave_server.accept]
+oit_start_button = { kind = "coil", address = 3 }
+oit_stop_button = { kind = "coil", address = 4 }

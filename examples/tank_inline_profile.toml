@@ -1,0 +1,139 @@
+# Same twin as tank.toml, but the controller is defined by an inline
+# [plc.profile] table instead of a models/ registry name. This is the
+# "device not yet catalogued" path: load_project builds an anonymous PLC
+# subclass around the profile and warns (ConfigWarning) that it is not
+# catalog-reviewed. The profile here mirrors models/generic.py:PLC_Generic.
+
+version = 1
+name = "tank_demo_inline_profile"
+
+[plc]
+name = "demo_plc"
+program = "start_stop_tank"
+watchdog_s = 0.05
+
+[plc.profile]
+vendor = "DigiTwin"
+model = "Generic"
+digital_inputs = 512
+digital_outputs = 512
+analog_inputs = 64
+analog_outputs = 64
+memory_bits = [0, 8191]
+memory_words = [0, 8191]
+address_syntax = "IEC_DOTTED"
+first_scan_bit = "%S1"
+always_on_bit = "%S2"
+always_off_bit = "%S3"
+scan_time_word = "%SW0"
+default_watchdog_ms = 1000
+min_scan_ms = 1
+verified = false
+
+[executive]
+dt = 0.1
+mode = "free_run"
+scale = 1.0
+
+[observability]
+historian = true
+events = true
+
+[[tags]]
+name = "start_button"
+type = "discrete_input"
+address = "%I0.0"
+initial = false
+
+[[tags]]
+name = "stop_button"
+type = "discrete_input"
+address = "%I0.1"
+initial = false
+
+[[tags]]
+name = "oit_start_button"
+type = "internal_bit"
+address = "%M3"
+initial = false
+
+[[tags]]
+name = "oit_stop_button"
+type = "internal_bit"
+address = "%M4"
+initial = false
+
+[[tags]]
+name = "start_bit"
+type = "internal_bit"
+address = "%M1"
+initial = false
+retentive = true
+
+[[tags]]
+name = "stop_bit"
+type = "internal_bit"
+address = "%M0"
+initial = true
+retentive = true
+
+[[tags]]
+name = "green_light"
+type = "discrete_output"
+address = "%Q0.0"
+initial = false
+
+[[tags]]
+name = "red_light"
+type = "discrete_output"
+address = "%Q0.1"
+initial = false
+
+[[tags]]
+name = "fill_valve"
+type = "discrete_output"
+address = "%Q0.2"
+initial = false
+
+[[tags]]
+name = "drain_valve"
+type = "discrete_output"
+address = "%Q0.3"
+initial = false
+
+[[tags]]
+name = "tank_level"
+type = "analog_input"
+address = "%IW0.0"
+initial = 0
+
+[[tags]]
+name = "tank_fill_permitted"
+type = "internal_bit"
+address = "%M11"
+initial = true
+
+[[tags]]
+name = "tank_drain_permitted"
+type = "internal_bit"
+address = "%M10"
+initial = false
+
+[[plant.components]]
+type = "Tank"
+area = 2.0
+fill_rate = 20.0
+drain_coeff = 3.0
+level_max = 100.0
+
+[[plant.components]]
+type = "AnalogSensor"
+source = "tank_level_true"
+dest = "tank_level"
+
+[wiring.inputs]
+"%IW0.0" = "tank_level"
+
+[wiring.outputs]
+"%Q0.2" = "fill_valve"
+"%Q0.3" = "drain_valve"

@@ -1,6 +1,7 @@
 """DigiTwin: a small soft-PLC engine and simulation harness."""
 
 from digitwin.adapters import ModbusClientTransport, ModbusSlaveServer, RegisterMap
+from digitwin.config import ConfigError, ConfigWarning, load_project
 from digitwin.events import Event, EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
 from digitwin.hardware import (
@@ -70,6 +71,8 @@ __all__ = [
     "AddressSyntax",
     "AnalogSensor",
     "CompositePlant",
+    "ConfigError",
+    "ConfigWarning",
     "CsvSink",
     "DiscreteSensor",
     "Event",
@@ -109,5 +112,6 @@ __all__ = [
     "TransportError",
     "build_replay",
     "diff_outputs",
+    "load_project",
     "plc_from_model",
 ]

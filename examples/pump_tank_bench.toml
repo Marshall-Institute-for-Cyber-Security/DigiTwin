@@ -1,0 +1,58 @@
+version = 1
+name = "pump_tank_bench"
+
+[plc]
+model = "Generic"
+program = "noop"
+
+[executive]
+dt = 0.1
+mode = "free_run"
+
+[observability]
+historian = true
+
+[[tags]]
+name = "pump_run"
+type = "discrete_output"
+address = "%Q0.0"
+initial = false
+
+[[tags]]
+name = "pump_proven"
+type = "discrete_input"
+address = "%I0.0"
+initial = false
+
+[[tags]]
+name = "tank_level"
+type = "analog_input"
+address = "%IW0.0"
+initial = 0
+
+[[plant.components]]           # order matters: pump writes the flow the tank reads
+type = "Pump"
+command_signal = "pump_run"
+flow_signal = "tank_inflow"
+speed_signal = "pump_speed"
+running_signal = "pump_proven"
+rated_flow = 15.0
+spin_up_s = 2.0
+
+[[plant.components]]
+type = "Tank"
+area = 2.0
+inflow_signal = "tank_inflow"    # <- the pump fills it
+level_signal = "tank_level_true"
+
+[[plant.components]]
+type = "AnalogSensor"
+source = "tank_level_true"
+dest = "tank_level"
+
+[wiring.outputs]
+"%Q0.0" = "pump_run"
+
+[wiring.inputs]
+"%I0.0" = "pump_proven"
+"%IW0.0" = "tank_level"
