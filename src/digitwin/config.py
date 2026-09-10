@@ -41,11 +41,16 @@ from digitwin.plant import (
     AnalogSensor,
     CompositePlant,
     DiscreteSensor,
+    Integrator,
     Motor,
     NullPlant,
+    PIDLoop,
+    PipeSegment,
     PlantModel,
     Pump,
     Tank,
+    ThermalMass,
+    TransportDelay,
     Valve,
 )
 from digitwin.plc import PLC, Program, TagType
@@ -71,6 +76,11 @@ _PLANT_COMPONENTS: dict[str, type] = {
     "Valve": Valve,
     "Motor": Motor,
     "Pump": Pump,
+    "Integrator": Integrator,
+    "TransportDelay": TransportDelay,
+    "PipeSegment": PipeSegment,
+    "ThermalMass": ThermalMass,
+    "PIDLoop": PIDLoop,
     "AnalogSensor": AnalogSensor,
     "DiscreteSensor": DiscreteSensor,
 }
