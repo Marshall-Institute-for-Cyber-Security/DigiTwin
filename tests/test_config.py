@@ -162,6 +162,16 @@ def test_tag_units_and_engineering_range_land_on_the_tag(tmp_path: Path) -> None
     assert (tag.units, tag.eng_low, tag.eng_high) == ("m3/h", 0.0, 250.0)
 
 
+def test_heated_tank_project_runs_entirely_from_library_components() -> None:
+    sim = load_project(EXAMPLES / "heated_tank.toml")
+    sim.run(3000)  # 300 s: pump spun up, level and temperature settled
+
+    assert abs(float(sim.bus.get("tank_temp_true")) - 60.0) < 0.5   # PID holds setpoint
+    assert abs(float(sim.bus.get("feed_flow")) - 8.0) < 1e-6        # pump proven up
+    assert float(sim.bus.get("tank_level_true")) > 5.0              # tank filled and balanced
+    assert sim.plc.read("tank_temp") == 600                         # 60 degC -> 600 counts
+
+
 def test_missing_plc_section_is_rejected(tmp_path: Path) -> None:
     project = _write(tmp_path, "version = 1\n[executive]\ndt = 0.1\n")
     with pytest.raises(ConfigError, match=r"missing required section \[plc\]"):

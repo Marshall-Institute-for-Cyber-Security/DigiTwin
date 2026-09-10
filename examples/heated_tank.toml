@@ -1,0 +1,131 @@
+# Heated, stirred tank — the P2 "assembly, not physics" milestone.
+#
+# Every dynamic element here is a stock component from digitwin.plant: a Pump
+# fills the tank, a always-open drain balances it (Torricelli), a PIDLoop
+# component closes the temperature loop against a fixed setpoint the PLC holds
+# on an analog output, a ThermalMass is the tank contents, and two AnalogSensors
+# digitise level and temperature for the controller. The PLC program is `noop`:
+# the point is that the process runs with no bespoke physics code at all.
+
+version = 1
+name = "heated_tank"
+
+[plc]
+model = "Generic"
+program = "noop"
+
+[executive]
+dt = 0.1
+mode = "free_run"
+
+[observability]
+historian = true
+
+# --- I/O -------------------------------------------------------------------
+
+[[tags]]
+name = "pump_run"
+type = "discrete_output"
+address = "%Q0.0"
+initial = true            # noop program never changes it: the pump just runs
+
+[[tags]]
+name = "drain_open"
+type = "discrete_output"
+address = "%Q0.1"
+initial = true
+
+[[tags]]
+name = "temp_setpoint"
+type = "analog_output"
+address = "%QW0.0"
+initial = 60              # degC the inner loop holds
+units = "degC"
+eng_low = 0.0
+eng_high = 100.0
+
+[[tags]]
+name = "tank_temp"
+type = "analog_input"
+address = "%IW0.0"
+initial = 0
+units = "0.1 degC"
+eng_low = 0.0
+eng_high = 100.0
+
+[[tags]]
+name = "tank_level"
+type = "analog_input"
+address = "%IW0.1"
+initial = 0
+units = "%"
+eng_low = 0.0
+eng_high = 100.0
+
+# --- plant: pump -> tank -> PID -> heater -> sensors ----------------------
+
+[[plant.components]]
+type = "Pump"
+command_signal = "pump_run"
+flow_signal = "feed_flow"
+running_signal = "pump_proven"
+rated_flow = 8.0
+spin_up_s = 3.0
+
+[[plant.components]]
+type = "Tank"
+area = 2.0
+drain_coeff = 1.6                 # steady level where 1.6*sqrt(L) == feed_flow
+drain_valve_signal = "drain_open"
+inflow_signal = "feed_flow"
+level_signal = "tank_level_true"
+
+[[plant.components]]
+type = "PIDLoop"
+setpoint_signal = "temp_setpoint"
+process_signal = "tank_temp_true"
+output_signal = "heater_drive"
+kp = 0.05
+ki = 0.02
+kd = 0.0
+out_min = 0.0
+out_max = 1.0
+
+[[plant.components]]
+type = "ThermalMass"
+temp_signal = "tank_temp_true"
+heater_signal = "heater_drive"
+heater_power = 2000.0
+heat_capacity = 1000.0
+time_constant_s = 40.0
+ambient = 20.0
+temp = 20.0
+
+[[plant.components]]
+type = "AnalogSensor"
+source = "tank_temp_true"
+dest = "tank_temp"
+in_lo = 0.0
+in_hi = 100.0
+out_lo = 0
+out_hi = 1000
+resolution_bits = 12             # a 12-bit analog input card
+
+[[plant.components]]
+type = "AnalogSensor"
+source = "tank_level_true"
+dest = "tank_level"
+in_lo = 0.0
+in_hi = 100.0
+out_lo = 0
+out_hi = 1000
+resolution_bits = 12
+
+[wiring.outputs]
+"%Q0.0" = "pump_run"
+"%Q0.1" = "drain_open"
+"%QW0.0" = "temp_setpoint"
+
+[wiring.inputs]
+"%IW0.0" = "tank_temp"
+"%IW0.1" = "tank_level"
