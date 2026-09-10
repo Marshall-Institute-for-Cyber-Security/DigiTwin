@@ -11,9 +11,10 @@ retain ranges below.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from collections.abc import Mapping
+from dataclasses import dataclass, fields
 from enum import Enum
-from typing import ClassVar, Protocol
+from typing import Any, ClassVar, Protocol
 
 from digitwin.plc import TagType
 
@@ -88,6 +89,24 @@ class _IecDotted:
         return self._FORMATS[parsed.area].format(i=parsed.index)
 
 IEC_DOTTED: AddressSyntax = _IecDotted()
+
+# Address-syntax strategies, by the name a HardwareProfile (or a config file)
+# uses to reference one. Only strategies implemented in code appear here; an
+# inline profile in a project file may not name one that is missing.
+ADDRESS_SYNTAXES: dict[str, AddressSyntax] = {IEC_DOTTED.name: IEC_DOTTED}
+
+
+def address_syntax_by_name(name: str) -> AddressSyntax:
+    """Resolve an ``address_syntax`` name to its strategy, or raise with the
+    list of what is implemented."""
+    try:
+        return ADDRESS_SYNTAXES[name]
+    except KeyError:
+        known = ", ".join(sorted(ADDRESS_SYNTAXES))
+        raise AddressError(
+            f"unknown address_syntax {name!r}; implemented: {known}"
+        ) from None
+
 
 _AREA_FOR_TYPE: dict[TagType, set[AddressArea]] = {
     TagType.DISCRETE_INPUT: {AddressArea.DISCRETE_INPUT},
@@ -178,3 +197,60 @@ class HardwareProfile:
                 )
         # SYSTEM_BIT / SYSTEM_WORD with no declared range (system_bits /
         # system_words left None): not checked, same as an unset memory range.
+
+    # --- (de)serialization for config-file profiles ----------------------
+
+    _TUPLE_FIELDS: ClassVar[tuple[str, ...]] = (
+        "memory_bits",
+        "memory_words",
+        "retentive_bits",
+        "retentive_words",
+        "system_bits",
+        "system_words",
+    )
+
+    @classmethod
+    def from_mapping(cls, data: Mapping[str, Any]) -> HardwareProfile:
+        """Build a profile from a plain mapping (a project file's ``profile:``
+        table). ``address_syntax`` is a strategy *name* resolved against
+        :data:`ADDRESS_SYNTAXES`; the inclusive-range fields accept a
+        ``[lo, hi]`` list. Unknown keys and missing required keys both raise
+        :class:`AddressError`, so a typo fails at load, not mid-run."""
+        known = {f.name for f in fields(cls)}
+        unknown = sorted(set(data) - known)
+        if unknown:
+            raise AddressError(
+                f"unknown profile field(s): {', '.join(unknown)}; "
+                f"known: {', '.join(sorted(known))}"
+            )
+        for required in ("vendor", "model", "digital_inputs", "digital_outputs"):
+            if required not in data:
+                raise AddressError(f"profile is missing required field {required!r}")
+
+        kwargs: dict[str, Any] = {}
+        for key, value in data.items():
+            if key == "address_syntax":
+                kwargs[key] = address_syntax_by_name(str(value))
+            elif key in cls._TUPLE_FIELDS and value is not None:
+                pair = tuple(value)
+                if len(pair) != 2:
+                    raise AddressError(f"{key} must be a [lo, hi] pair, got {value!r}")
+                kwargs[key] = pair
+            else:
+                kwargs[key] = value
+        return cls(**kwargs)
+
+    def to_mapping(self) -> dict[str, Any]:
+        """The inverse of :meth:`from_mapping` — tuples become lists and the
+        address syntax becomes its name, so the result is round-trippable
+        through TOML/JSON."""
+        out: dict[str, Any] = {}
+        for f in fields(self):
+            value = getattr(self, f.name)
+            if f.name == "address_syntax":
+                out[f.name] = value.name
+            elif f.name in self._TUPLE_FIELDS and value is not None:
+                out[f.name] = list(value)
+            else:
+                out[f.name] = value
+        return out
