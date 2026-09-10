@@ -81,3 +81,27 @@ def test_discrete_sensor_has_hysteresis() -> None:
         bus.set("lvl", value)
         switch.step(0.1, bus)
         assert bus.get("hi") is expected
+
+def test_tank_accepts_a_metered_inflow_signal() -> None:
+    bus = IOBus()
+    bus.set("fill_valve", False)          # no valve inflow
+    bus.set("drain_valve", False)
+    bus.set("pump_flow", 4.0)             # 4 units/s metered in
+    tank = Tank(area=2.0, level=0.0, inflow_signal="pump_flow")
+
+    for _ in range(10):                   # 1.0 s
+        tank.step(0.1, bus)
+
+    assert math.isclose(tank.level, (4.0 / 2.0) * 1.0, rel_tol=1e-9)
+
+
+def test_tank_inflow_signal_adds_to_the_fill_valve() -> None:
+    bus = IOBus()
+    bus.set("fill_valve", True)           # fill_rate contribution
+    bus.set("drain_valve", False)
+    bus.set("pump_flow", 4.0)
+    tank = Tank(area=1.0, fill_rate=6.0, level=0.0, inflow_signal="pump_flow")
+
+    tank.step(1.0, bus)                   # (6 + 4) / 1 * 1 s
+
+    assert math.isclose(tank.level, 10.0, rel_tol=1e-9)
