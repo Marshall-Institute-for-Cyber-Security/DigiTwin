@@ -33,32 +33,52 @@ src/digitwin/
                          for time-travel (snapshot every N scans, rewind, branch)
   replay.py              recorded-I/O: RecordingTransport / ReplayTransport /
                          diff_outputs — re-run a captured run with no plant
-  demo.py                runnable demo: tank plant wired to a PLC via the bus
+  config.py              load_project(path): build an Executive from a TOML
+                         project file (controller, tags, plant, wiring, Modbus,
+                         observers); ConfigError / ConfigWarning
+  cli.py                 `digitwin run PROJECT.toml` entry point
+  adapters/
+    modbus.py            ModbusClientTransport (master) + ModbusSlaveServer
+                         (slave window) + RegisterMap
   models/
     __init__.py          model registry + plc_from_model(name, program)
-    generic.py           PLC_Generic — permissive profile, used by demo + tests
+    generic.py           PLC_Generic — permissive profile, used by examples + tests
     schneider_tm221.py   PLC_Schneider_TM221CE16T — 9 DI / 7 DO / 2 AI
   programs/
-    __init__.py
+    __init__.py          program registry + program_from_name (noop / start_stop
+                         _tank / m221_tank_twin)
     start_stop_tank.py   example control program (seal-in start/stop, valves)
+    m221_tank_twin.py    1:1 translation of the real M221 lab ladder
   plant/
     __init__.py
     base.py              PlantModel protocol + CompositePlant + NullPlant
     tank.py              Tank: level integrates (q_in - q_out) / area
+    actuators.py         Valve / Motor / Pump — command -> motion with dynamics
     sensors.py           AnalogSensor (scaled word), DiscreteSensor (hysteresis)
 docs/
-  ROADMAP.md             concept roadmap: target architecture + phased design
-  TODO.md                phase-ordered build checklist
+  ROADMAP.md             roadmap: purpose, status ledger, P1–P5, deferred
+  TODO.md                build checklist, in ROADMAP priority order
+  BUILDING_A_TWIN.md     how to write a project file, section by section
+examples/
+  tank.toml              the reference twin as a project file
+  m221_lab_twin.{py,toml}  the M221 lab twin (Modbus slave for a real HMI)
 tests/
+  reference.py           hand-wired tank twin — regression anchor for config,
+                         NOT shipped (build_demo / build_demo_plc / press)
   test_engine.py         scan phasing, first-scan, retentive, restarts, watchdog
   test_hardware.py       address validation, retain ranges, system tags, registry
   test_instructions.py   TON / TOF / CTU / ONS
   test_plant.py          component dynamics / scaling / hysteresis
-  test_executive.py      demo integration + pacing modes
+  test_actuators.py      Valve / Motor / Pump dynamics
+  test_io.py             addressed wiring, transport resolution
+  test_executive.py      executive integration + pacing modes
   test_start_stop_tank.py  seal-in latch behaviour
   test_historian.py      sampling modes, query API, sinks, event log
   test_snapshot.py       capture/restore, JSON round-trip, time-travel
   test_replay.py         record + replay, divergence diff
+  test_modbus.py         RegisterMap codec + real-socket client/slave interop
+  test_config.py         project loading, byte-identical regression, error cases
+  test_m221_tank_twin.py  the M221 ladder translation vs the real values
 ```
 
 Phases 1, 2 and 3 are landed (plant/controller split; timed executive, firmware
@@ -73,15 +93,15 @@ inline under each landed item.
 ## Commands
 
 ```bash
-uv sync                 # create venv, install dev tools
-uv run digitwin         # run the demo simulation
-uv run pytest           # run the test suite
-uv run ruff check .     # lint
-uv run mypy             # type-check (strict, src/ + tests/)
+uv sync                                 # create venv, install dev tools
+uv run digitwin run examples/tank.toml  # load a twin from a project file and scan it
+uv run pytest                           # run the test suite
+uv run ruff check .                     # lint
+uv run mypy                             # type-check (strict, src/ + tests/)
 ```
 
-Plain-pip equivalent: `pip install -e ".[dev]"`, then `digitwin` / `ruff check .`
-/ `mypy`. Python 3.12+.
+Plain-pip equivalent: `pip install -e ".[dev]"`, then `digitwin run …` /
+`ruff check .` / `mypy`. Python 3.12+.
 
 Windows note: the shell here is PowerShell; the Bash tool is also available for
 POSIX scripts.

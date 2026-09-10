@@ -1,32 +1,26 @@
-# DigiTwin — Digital Twin Roadmap for PLCs
+# DigiTwin — Roadmap
 
-## Context
+## Purpose
 
-DigiTwin today is a competent **soft-PLC engine**, not yet a **digital twin**.
-`src/digitwin/plc.py` implements the classic three-phase scan (freeze inputs →
-run program → flush outputs) with a typed tag table and native-address metadata.
-`src/digitwin/programs/start_stop_tank.py` is one example program, and
-`src/digitwin/demo.py` wires tags and scans in a bare `for` loop.
+DigiTwin is a **framework for building digital twins of controlled systems**: a
+simulated controller (soft PLC) plus a simulated physical process, coupled
+through an I/O layer, advancing in synchronized time, observable, and able to
+stand in for real hardware over field protocols.
 
-The gap between "soft PLC" and "digital twin" is that a twin must also model the
-**physical process** the PLC controls, run in **synchronized time**, expose its
-**state for observation**, and be able to **mirror a real PLC**. Right now:
+The water/tank material in this repo is a **validation vehicle**, not the point.
+It proved the concept against physical lab devices (see *Validation history*
+below) and now serves as the reference example. The framework itself carries no
+water-specific assumptions.
 
-- `StartStopTankProgram` both runs control logic *and* simulates the tank
-  physics (level fills/drains inside `__call__`). There is no plant.
-- There is no clock — `scan()` is called five times as fast as the CPU allows.
-- Tag state is only observable by calling `plc.read()` between scans; no history,
-  no events, no snapshots.
-- Tags, wiring, and initial values are hardcoded in `demo.py`.
-- Nothing connects to, or compares against, a real controller.
-- There are no tests.
+Downstream research — dataset generation, attack-path analysis, pre-deployment
+test pipelines — builds *on* this framework and is **explicitly out of scope
+here**. This document is about one thing: making twin creation reliable and
+repeatable. Anything that only matters to a specific research application belongs
+in that application's repo, not this one.
 
-This document is a **concept roadmap** (design only — no code changes proposed
-yet). It is organized as phases; the plant/controller split (Phase 1) is the
-foundation everything else builds on, and the I/O layer is designed from the
-start so external protocol sync (Phase 6) drops in cleanly.
+---
 
-## Target architecture
+## Architecture
 
 ```
             ┌────────────────────────────────────────────────┐
@@ -37,366 +31,295 @@ start so external protocol sync (Phase 6) drops in cleanly.
                             │                 │
                    ┌────────▼───────┐   ┌─────▼──────────┐
                    │  Plant model   │   │      PLC       │
-                   │ tanks, valves, │   │ scan engine   │
-                   │ pumps, sensor  │   │ + control      │
-                   │ dynamics       │   │   program      │
+                   │ components +   │   │ scan engine +  │
+                   │ dynamics       │   │ control program│
                    └────────┬───────┘   └─────┬──────────┘
                             │                 │
                     ┌───────▼─────────────────▼────────┐
-                    │            I/O bus                │
-                    │  sensor tags ← plant, actuator    │
-                    │  tags → plant; noise/lag/faults   │
-                    │  pluggable transports:            │
-                    │  in-proc · OPC UA · Modbus · file │
+                    │            I/O bus               │
+                    │  sensor tags ← plant · actuator  │
+                    │  tags → plant · noise/lag/faults │
+                    │  transports: in-proc · Modbus ·  │
+                    │  OPC UA (later) · file replay     │
                     └───────┬──────────────────────────┘
                             │
-                    ┌───────▼────────┐   ┌───────────────┐
-                    │  Historian     │   │  Shadow/diff  │
-                    │ trends, events,│   │ compare twin  │
-                    │ snapshots      │   │ vs real PLC   │
-                    └───────┬────────┘   └───────────────┘
-                            │
                     ┌───────▼────────┐
-                    │   HMI / API    │  live web dashboard, REST/WS
+                    │  Observability │  historian · event log ·
+                    │                │  snapshot/restore · replay
                     └────────────────┘
 ```
 
-Package layout this implies (new modules alongside `plc.py`):
+### Layer invariants (see `AGENTS.md` for the full statement)
 
-- `digitwin/plant/` — base `PlantModel` protocol + component models
-- `digitwin/io.py` — the I/O bus / coupling layer and transport protocol
-- `digitwin/hardware.py` — `HardwareProfile`, address-syntax strategies, model registry
-- `digitwin/models/` — concrete `PLC` subclasses (`schneider_tm221.py`, `generic.py`)
-- `digitwin/executive.py` — the real-time / scaled-time scan loop
-- `digitwin/historian.py` — tag trends, event log, snapshot/restore
-- `digitwin/scenario.py` — scripted stimulus + assertions
-- `digitwin/adapters/` — `opcua.py`, `modbus.py` transports (Phase 6)
-- `digitwin/hmi/` — dashboard (Phase 5)
-- `digitwin/config.py` — load tags/wiring/plant from YAML
+- **Control logic** lives only in `programs/` — reads sensor tags, commands
+  actuator tags, holds `instructions` blocks for timing. Nothing else.
+- **Physical behaviour** lives only in `plant/`, behind `PlantModel.step(dt, io)`.
+- **Time** belongs to the executive. Instructions and the plant receive `dt`;
+  they never sleep or read the wall clock.
+- **Observation is passive.** Attaching a historian / event log / recorder must
+  not change the simulation. Timestamps are simulation seconds.
+- **Control and plant communicate only through the I/O bus** (`io.py`).
+- **Hardware identity lives in `models/`.** Add a controller by adding a
+  `HardwareProfile`, not by widening the engine.
 
----
+### Package layout
 
-## Phase 1 — Split the plant from the controller (foundation)
-
-**Goal:** the PLC program contains only control logic; all physical behavior
-moves into a plant model that the PLC can only influence through I/O.
-
-- Define `PlantModel` protocol: `step(dt: float, io: IOBus) -> None`. It reads
-  actuator commands from the bus and writes sensor readings back.
-- Build small composable component models with real (if simple) dynamics:
-  - `Tank(area, inflow_valve, outflow_valve)` — level integrates
-    `dLevel/dt = (q_in - q_out) / area`; `q` depends on valve position and
-    (for outflow) `sqrt(level)`.
-  - `Motor`/`Pump` — start/stop with spin-up ramp, running feedback contact.
-  - `DiscreteSensor(threshold, hysteresis)` — e.g. level switch → discrete input.
-  - `AnalogSensor(range, noise_sigma, filter_tau)` — scaled word value.
-- Rewrite `StartStopTankProgram` to be pure control: latch start/stop, drive
-  lights, command the fill/drain valves based on level *read from a sensor tag*.
-  Delete the `_prev_fill_condition` physics bookkeeping — level now lives in the
-  plant. (Keep edge-detection only where it is genuinely control logic.)
-- The demo becomes: `TankPlant` (one `Tank` + two valves + a level transmitter)
-  wired to the PLC through the I/O bus, stepped by the executive.
-- `digitwin/io.py` — the I/O bus plus an `IOTransport` protocol
-  (`read_inputs()` / `write_outputs()`) and an in-process transport. Lock the
-  protocol signature down now against the Phase 6 adapters so it never has to
-  change:
-  - **Keep it synchronous.** The executive is a synchronous loop, so the
-    protocol methods are plain `def`. `pymodbus` ships a synchronous
-    `ModbusTcpClient` / `ModbusTcpServer` that fits directly; `asyncua` is
-    async-only, so *its* adapter owns an event loop and exposes a sync facade.
-    Do not make `IOTransport` async for one adapter's convenience.
-  - **Reads can fail.** A networked transport read is a round-trip that can time
-    out. `read_inputs()` returns the input image plus a freshness flag (or raises
-    a typed `TransportError`); the executive chooses hold-last-value vs. fault the
-    input. Phase 7's "comms dropout" fault is then just a transport that stops
-    responding — no special case.
-
-**Why this is the backbone:** without it, the "twin" is just a program talking to
-itself. With it, you can swap in a higher-fidelity tank, inject a stuck valve, or
-replace the simulated plant with a real one, and the control program is unchanged.
-
-**Validate:** run the demo; the tank should fill on start and drain on stop as
-before, but the level is now produced by `Tank.step()`, not the program. Add a
-unit test that steps the plant with a fixed valve command and checks the level
-trajectory against the analytic solution.
-
----
-
-## Phase 2 — Real-time executive & scan-semantics fidelity
-
-**Goal:** the twin advances in controlled time and behaves like real PLC firmware.
-
-- `Executive(plc, plant, io, scan_ms, mode)` with modes:
-  - `real_time` — sleep to hold the wall-clock scan interval
-  - `scaled` — N× faster/slower than real time (for long runs / demos)
-  - `free_run` — as fast as possible, for batch scenarios and CI
-- Per-tick order: `plant.step(dt)` → `io.transfer_inputs()` → `plc.scan()` →
-  `io.transfer_outputs()`. Record actual scan duration and jitter.
-- Add PLC firmware realism to `plc.py`:
-  - **First-scan bit** (`S1`/`FIRST_SCAN`) set only on scan 1.
-  - **Retentive vs non-retentive tags** — non-retentive reset to initial value
-    on cold start; retentive survive. Add a `retentive: bool` field to `Tag`.
-  - **Cold start / warm start / power cycle** entry points.
-  - **Watchdog** — flag if a program scan exceeds a configured budget.
-  - **Timers & counters as first-class instruction objects** (`TON`, `TOF`,
-    `CTU`, one-shot `ONS`) driven by `dt`, instead of hand-rolled `_prev_*`
-    flags in every program.
-
-**Validate:** run the demo in `scaled` mode at 50× and confirm level trajectory
-matches `real_time`. Test that a `TON` with a 2 s preset fires after the right
-number of 100 ms scans.
-
----
-
-## Phase 2b — PLC hardware abstraction (vendor/model classes)
-
-**Goal:** `PLC` becomes an abstract base holding only the universal scan engine;
-concrete controllers are subclasses that carry a real hardware profile, e.g.:
-
-```python
-class PLC_Schneider_TM221CE16T(PLC):
-    profile = HardwareProfile(
-        vendor="Schneider Electric",
-        model="TM221CE16T",
-        digital_inputs=9,      # %I0.0 .. %I0.8
-        digital_outputs=7,     # %Q0.0 .. %Q0.6 (transistor, sink)
-        analog_inputs=2,       # 0-10 V, %IW0.0 .. %IW0.1
-        memory_bits=(0, 511),          # %M0..%M511
-        memory_words=(0, 7999),        # %MW0..%MW7999
-        retentive_bits=(0, 511),       # configurable retain range
-        address_syntax=IEC_DOTTED,     # %I0.0 / %Q0.1 / %M12 / %MW3
-        first_scan_bit="%S13",
-        default_watchdog_ms=250,
-        min_scan_ms=1,
-    )
+```
+digitwin/
+  plc.py          landed  abstract PLC, three-phase scan, firmware realism
+  hardware.py     landed  HardwareProfile, address-syntax strategy, IEC_DOTTED
+  instructions.py landed  TON / TOF / CTU / ONS
+  io.py           landed  IOBus, IOTransport, in-process transport
+  executive.py    landed  timed loop, FREE_RUN / REAL_TIME / SCALED
+  historian.py    landed  trend store + CSV/SQLite/JSONL sinks
+  events.py       landed  structured event log
+  snapshot.py     landed  capture/restore, SnapshotRecorder (time-travel)
+  replay.py       landed  recorded-I/O capture + replay + diff
+  models/         landed  PLC_Generic, PLC_Schneider_TM221CE16T, registry
+  plant/          landed  PlantModel, CompositePlant, Tank, Valve, Motor, Pump,
+                          AnalogSensor, DiscreteSensor  — expanding (P2)
+  programs/       landed  registry + example control programs
+  adapters/
+    modbus.py     landed  Modbus TCP master transport + slave server
+    opcua.py      deferred
+  config.py       landed  (P1)  load a twin from a TOML project file
+  cli.py          landed  (P1)  `digitwin run PROJECT.toml`
+  faults.py       PLANNED (P4)  bus-level signal perturbation
 ```
 
-Design:
-
-- **`HardwareProfile` dataclass** (`digitwin/hardware.py`) — pure catalog data:
-  I/O channel counts and electrical type, addressable memory ranges, retentive
-  ranges, address syntax, system-bit names, watchdog/scan limits, supported
-  instruction set, comms ports. No behavior.
-- **`PLC` base** gains, driven by `self.profile`:
-  - `define_tag()` validates `native_address` against the profile — rejects
-    `%I0.9` on a 9-input model, `%MW9000` past the word range, wrong syntax.
-  - Address → physical channel resolution: `%I0.3` → digital input terminal 3,
-    so the I/O bus wires the plant to *terminals*, not tag names.
-  - Auto-populates system tags (first-scan bit, always-on/always-off, scan-time
-    word) with the names this model actually uses.
-  - Applies the model's default watchdog and retentive ranges unless overridden.
-- **Address-syntax strategies** — small parser/formatter objects
-  (`IEC_DOTTED`, `IEC_IX` `%IX0.0`, `AB_TAG` `Local:1:I.Data.0`, `SIEMENS` `I0.0`
-  / `DB1.DBX0.0`, `MODICON` `%M` / `4xxxx`). A model names its strategy; the
-  parser turns an address string into `(area, byte, bit)` or `(area, index)`.
-- **Model registry** — `plc_from_model("TM221CE16T", program)` factory so Phase 4
-  YAML can just say `plc: {model: TM221CE16T}`. Register via decorator or a dict.
-- **Capability gating (optional, later)** — `profile.instruction_set` lets a
-  program (or a future ladder loader) be checked against what the target
-  actually supports; flag use of an instruction the model lacks.
-- **Fidelity knobs per model** — e.g. output type (relay vs transistor →
-  switching delay in the plant coupling), analog resolution/quantization, scan
-  jitter band. These feed the executive and I/O bus, not the program.
-
-Start minimal: `HardwareProfile` + address validation + the `PLC` base split +
-two concrete classes (the TM221CE16T and one generic `PLC_Generic` matching
-today's demo). Everything else (registry, syntax strategies, capability gating)
-layers on without touching control programs.
-
-**Why now (2b, not later):** the base/subclass split and `define_tag` validation
-are cheap to do right after Phase 2's firmware work and expensive to retrofit
-once programs, config, and adapters all assume the flat `PLC`. The vendor
-*catalog* can then grow one model at a time forever.
-
-**Validate:** instantiate `PLC_Schneider_TM221CE16T`, assert `define_tag` accepts
-`%I0.8` and `%Q0.6` but raises on `%I0.9`, `%Q0.7`, and `%QX0.0`. The demo,
-rebuilt on `PLC_Generic`, produces identical historian output to Phase 2.
+The tank twin lives as data (`examples/tank.toml`); its hand-wired Python
+builder is `tests/reference.py`, a regression anchor that the framework never
+imports or ships.
 
 ---
 
-## Phase 3 — Observability (historian, events, snapshots)
+## Status ledger — what is landed
 
-**Goal:** you can see what the twin did, replay it, and branch from any point.
-
-- **Historian** — ring buffer (and optional Parquet/CSV/SQLite sink) of
-  `(timestamp, tag, value)` on change or at a sample rate. Query API for trends.
-- **Event log** — structured events: mode changes, alarms, watchdog trips, faults
-  injected, operator actions. This is the twin's audit trail.
-- **Snapshot / restore** — serialize the full twin state (all tag values, plant
-  internal state, timer accumulators, scan count) to JSON; reload to resume or to
-  fork a what-if run. Enables "time-travel": snapshot every N scans, restore to
-  scan 4000, change one input, run forward.
-- **Recorded-I/O replay** — persist the input image each scan; replay it into the
-  twin later with no plant, to reproduce a field incident bit-for-bit.
-
-**Validate:** run 100 scans, snapshot at 50, restore, run 50 more, diff the tag
-table against the uninterrupted run — should be identical.
-
----
-
-## Phase 4 — Config-driven definition
-
-**Goal:** a twin is described by data files, not by editing `demo.py`.
-
-- `config.py` loads a YAML/TOML project:
-  - `tags:` — name, type, native address, initial value, retentive, units,
-    scaling, engineering range
-  - `wiring:` — which sensor tag each plant output drives, which plant input each
-    actuator tag drives
-  - `plant:` — component tree with parameters
-  - `executive:` — scan_ms, mode, scale
-- `build_demo_plc()` becomes `load_project(path)`. Ship `examples/tank.yaml`.
-
-**Validate:** the existing demo, expressed as `tank.yaml`, produces byte-identical
-historian output to the hardcoded version.
-
----
-
-## Phase 4.5 - Real-world testing and validation.
-
-**Goal:** validate that the twin PLC is an effective replacement for (1) a virtual PLC over modbus and (2) an actual PLC over modbus, replacing a hardware PLC with our twin.
-
-- Use FactoryIO to validate modbus server, registers, coils, writing programs, etc.
-- Use Cyberhive ICS Wall M221 PLC program and compare against the real PLC hardware in a side-by-side test.
-
-**Important:** do not continue past this point until proper hardware PLC is virtualized!!!
+- **Plant / controller / time / observation are separated** and enforced by the
+  invariants above. A program is a pure callable `(PLC) -> None`.
+- **Controller engine**: three-phase scan, first-scan bit, retentive tags,
+  cold/warm/power-cycle restarts, program-scan watchdog, `TON/TOF/CTU/ONS`.
+- **Hardware abstraction**: `PLC` is abstract; a concrete model carries a
+  `HardwareProfile` (I/O counts, memory map, retain ranges, address syntax,
+  system bits, watchdog / scan limits). `define_tag` validates every
+  `native_address` against the profile and claims its terminal exclusively;
+  retention defaults from the profile. `tag_at()` resolves an address to its
+  tag, so transports wire by terminal, not tag name. Model registry +
+  `plc_from_model(name, program)`. Two profiles: `PLC_Generic`, `TM221CE16T`.
+- **Analog I/O crosses the scan boundary** as its own tag types, frozen /
+  flushed alongside discrete channels.
+- **Timed executive**: FREE_RUN / REAL_TIME / SCALED, jitter tracking,
+  `min_scan_ms` enforced, hold-last + fault events on transport failure.
+- **Observability**: historian (on-change / periodic / every-scan, query API,
+  persistent sinks), structured event log, full snapshot/restore (reflective
+  state walk, `Snapshotable` override), `SnapshotRecorder` time-travel,
+  recorded-I/O replay with `diff_outputs`.
+- **Modbus TCP**: `ModbusClientTransport` (twin as master, wired by address,
+  block-batched, partial-read recovery) and `ModbusSlaveServer` (twin as slave,
+  side window on the tag table, synced once per tick). `RegisterMap` with
+  16/32-bit, word/byte order, scale/offset. Tested against a real `pymodbus`
+  install over an actual socket.
+- **Config / authoring layer** (P1, landed 2026-09-09): `load_project(path)`
+  reads a TOML project — controller (`model:` or inline `profile:`), tags,
+  plant component tree, in-process or Modbus coupling, Modbus slave window,
+  executive, observers — into an `Executive`. `ConfigError` locates every
+  structural fault at load time. `examples/tank.toml` and
+  `examples/m221_lab_twin.toml` reproduce their hand-wired builders exactly.
+  See `docs/BUILDING_A_TWIN.md`.
+- **Engineering baseline**: `mypy --strict` over `src/` + `tests/`, ruff
+  (`E,F,I,UP,B,SIM`), ~180 tests, zero runtime dependencies, Python 3.12+.
 
 ---
 
-## Phase 5 — HMI / visualization
+## The work, in priority order
 
-**Goal:** a live operator-style view, because a twin you can't watch isn't much
-of a twin.
+Each priority has a validation step that runs without the priorities after it.
 
-- Small ASGI app (FastAPI + WebSocket, or stdlib `http.server` + SSE to stay
-  dependency-free) exposing:
-  - live tag values, pushed each scan
-  - trend charts from the historian
-  - buttons that write to `oit_*` internal bits (operator actions → event log)
-  - fault-injection controls (Phase 7)
-- A schematic view of the demo: tank with animated level, valve states, lights.
-- Reuse: the HMI is a pure historian/IO consumer — no engine changes.
+### P1 — Config / authoring layer  *(substantially landed 2026-09-09)*
 
-**Validate:** open the dashboard, press the on-screen Start, watch the tank fill
-in real time and the trend update.
+Landed: `digitwin/config.py`, the two-path controller, all sections through
+`[modbus.slave_server]` and `[observability]` sinks, both example twins as
+project files with byte-identical regression tests, `docs/BUILDING_A_TWIN.md`.
+Remaining: engineering units on `Tag` (moved to P2), an `opcua` transport
+option (with the adapter), and a fresh-eyes build-from-doc check. Detail in
+`docs/TODO.md`.
+
+**Goal:** a twin is a project file plus a documented procedure, not a bespoke
+Python module. Before this, every twin was hand-wired in Python with tag lists,
+wiring dicts, plant assembly and register maps as literals — nothing stopped a
+mistake and nothing was reusable.
+
+**Scope**
+
+- `digitwin/config.py` — `load_project(path) -> Executive`. One file describes:
+  - `plc:` — the controller, by **either** path:
+    - `model:` — a name from the `models/` registry. The normal path for a
+      catalogued device: curated, datasheet-cited, reviewed, reused across
+      twins.
+    - inline `profile:` table (or `profile_file:`) — for a device **not yet
+      catalogued**. The loader builds a `HardwareProfile` and an anonymous
+      `PLC` subclass around it. An inline profile carries a provenance field
+      (`verified = false` or a datasheet reference) and the loader notes at
+      load time that it is not catalogue-reviewed. It may only name an
+      `address_syntax` that is already implemented in code. **Promotion
+      path:** once stable and datasheet-checked, an inline profile graduates
+      to a `models/` subclass and the project switches to `model:`. Backed by
+      `HardwareProfile.from_mapping()` / `to_mapping()`.
+  - `tags:` — name, type, native address, initial value, retentive override,
+    units / engineering range / scaling.
+  - `plant:` — component tree with parameters (references the P2 library).
+  - `wiring:` — which sensor tag each plant signal drives, which plant signal
+    each actuator tag drives — keyed by native address, matching the transport
+    convention already in place.
+  - `executive:` — `dt`, mode, scale.
+  - `modbus:` (optional) — client-transport and/or slave-server register maps,
+    replacing hand-built `RegisterMap` objects.
+- **Format:** prefer `tomllib` (stdlib, read-only load is all a project file
+  needs) to keep the zero-dependency runtime. Fall back to YAML only if nesting
+  ergonomics genuinely require it, and then as an optional extra.
+- **Validation with clear errors** — unknown model, bad address, dangling
+  wiring reference, plant component / parameter mismatch all fail at load with a
+  located message, not a stack trace mid-run. Schema is versioned.
+- Re-express the tank twin and the M221 lab twin as project files; keep the
+  Python builders as thin wrappers or delete them.
+- `docs/BUILDING_A_TWIN.md` — the repeatable procedure end to end.
+
+**Done when:** the tank and M221 twins loaded from their project files produce
+**byte-identical historian output** to the current hardcoded versions, a twin
+whose controller is an inline `profile:` (no `models/` entry) loads and runs,
+and a malformed field in each section produces a clear load-time error (tested).
+
+### P2 — Plant component library  *(so a new plant is assembly, not physics)*
+
+**Goal:** enough composable, tested primitives that standing up a new process is
+wiring components together, not deriving dynamics from scratch. Today: `Tank`,
+`AnalogSensor`, `DiscreteSensor` — a level process and nothing else.
+
+**Scope**
+
+- **Actuators:** `Motor` / `Pump` (start/stop with spin-up ramp, running-feedback
+  contact), `Valve` (finite travel time; relay-vs-transistor switching delay as
+  a model-driven knob), a generic first-order actuator.
+- **Process elements:** `PipeSegment` / simple flow link, `ThermalMass`
+  (heating/cooling toward ambient with a time constant), generic `Integrator`,
+  `TransportDelay` (dead time), a `PIDLoop` element for cascaded control.
+- **Signal conditioning:** per-channel analog quantisation / resolution and
+  scale/offset on `AnalogSensor` (currently raw engineering-unit ints).
+- **Contract:** each component is a dataclass with `step(dt, io)`, is snapshot-
+  safe (plain fields or a `Snapshotable` override), and ships a unit test
+  against an analytic or reference trajectory where one exists.
+- `docs/WRITING_A_COMPONENT.md` — the `PlantModel` contract and bus-signal
+  conventions for contributors.
+
+**Done when:** a non-trivial process (e.g. a heated, stirred tank with a pump
+and a PID loop) is built entirely from library components with no new physics
+code, and each component's dynamics are covered by a test.
+
+### P3 — Second twin as proof of generality
+
+**Goal:** exercise the abstraction on a device **materially different from the
+tank**. Generality is currently asserted by design discipline, not demonstrated
+— one plant lineage, one real vendor profile, one address syntax.
+
+**Scope**
+
+- A second real vendor `HardwareProfile` — Siemens S7-1200 or AB Micro850 —
+  with each field sanity-checked against a datasheet. Fields that can't be
+  sourced are marked `UNVERIFIED` in the module (as `schneider_tm221.py` does).
+- The **one** address-syntax strategy that vendor needs (`SIEMENS` `I0.0` /
+  `DB1.DBX0.0`, or `AB_TAG` `Local:1:I.Data.0`) implemented against the existing
+  `AddressSyntax` protocol. Not all four stubs — just the one with a consumer.
+- A second plant that is **not** a level process (thermal or motor/conveyor),
+  assembled from the P2 library.
+- Its project file expressed in the P1 schema.
+- **Write down every place the framework had to change** to accommodate it.
+  Those changes are the real abstraction gaps; catching them now is the point.
+
+**Done when:** the second twin runs from a project file, its profile is
+datasheet-checked, and the list of required framework changes is captured in the
+PR description (ideally empty beyond the new profile + syntax + components).
+
+### P4 — Framework-level fault injection  *(primitive only)*
+
+**Goal:** the platform can perturb any signal, because a reliable twin framework
+should be able to inject a fault regardless of what the fault is *for*. This is
+infrastructure, not the research-facing fault catalogue.
+
+**Scope**
+
+- `digitwin/faults.py` — bus-level hooks: `stuck` (hold a value), `offset`,
+  `drift` (ramp), `noise`, `frozen` (input never updates), `dropout` (comms
+  gap, reusing the existing `TransportError` path).
+- Injected through the I/O bus so neither the plant nor the program is aware.
+- Snapshot-safe, so a faulted run can be captured and replayed.
+- **Not** in scope: a timed scenario DSL, a curated library of application-
+  specific fault scenarios, assertion tooling. Those belong to whatever
+  consumes the framework.
+
+**Done when:** each fault type is a one-liner to attach to a running twin, is
+covered by a test, and a snapshot taken during a fault restores to the same
+faulted state.
+
+### P5 — Regression / golden-trace harness
+
+**Goal:** behaviour is locked, so refactors and new twins can't drift silently.
+The current roadmap admits it never stored the "identical output" baselines it
+keeps promising.
+
+**Scope**
+
+- Golden historian traces for every shipped example twin, run in `FREE_RUN` and
+  diffed in CI.
+- Stand the harness up early (once P1 lands) and add a trace per twin as it
+  arrives.
+- Backfill the two open validation items: demo-on-`PLC_Generic` identical-output
+  baseline, and the second-vendor datasheet sanity check (folds into P3).
+
+**Done when:** `uv run pytest` includes a golden-trace diff for each example
+twin, and deliberately changing a program's logic fails exactly the traces that
+touch it.
 
 ---
 
-## Phase 6 — External synchronization (the "twin" of a real PLC)
+## Deferred (not on the reliability path)
 
-**Goal:** the simulated controller and/or plant can be replaced by, or compared
-against, real equipment over standard protocols.
-
-- **Transport abstraction in `io.py`** (designed for in Phase 1): an `IOTransport`
-  protocol with `read_inputs()` / `write_outputs()`. In-process transport couples
-  plant↔PLC; other transports move the boundary.
-- **Adapters** (`digitwin/adapters/`), each a thin translation between the tag
-  table and a wire protocol. Optional extras in `pyproject.toml`
-  (`[project.optional-dependencies]`, installed as `digitwin[modbus]` /
-  `digitwin[opcua]`); import the third-party lib **lazily inside the adapter
-  module** so the base install stays stdlib-only.
-  - `opcua` — map tags to OPC UA nodes (client and/or server). `asyncua` lib
-    (async-only; the adapter owns its event loop and presents a sync facade to
-    the executive).
-  - `modbus` — `pymodbus` lib. Two distinct roles; do not conflate them:
-    - **Client transport** — `ModbusClientTransport(IOTransport)`. The twin is
-      the Modbus *master*, polling a slave that owns the real I/O (or an external
-      plant sim). `read_inputs()` reads discrete inputs / input registers;
-      `write_outputs()` writes coils / holding registers. Sits on the plant↔PLC
-      boundary exactly like the in-process transport. Use the synchronous
-      `ModbusTcpClient` to match the executive.
-    - **Server adapter** — `ModbusSlaveServer`. The twin is a Modbus *slave* so
-      an external SCADA/HMI (or a real master) can read/write twin tags. This is
-      a side window onto the tag table, *not* in the scan path — it belongs with
-      the historian / HMI branch, not `IOTransport`. Back it with `pymodbus`'s
-      datastore, synced to the tag table once per scan.
-  - **Register mapping** (both Modbus roles): a declared tag→register table
-    (`%I0.3` → discrete input 3; a `WORD` tag → holding register N). Modbus
-    registers are 16-bit and zero-based; a float or 32-bit int spans two
-    registers with **configurable word/byte order** (the endianness question that
-    bites every Modbus integration). Analog values carry a scale/offset.
-  - These are optional extras in `pyproject.toml` (`[project.optional-dependencies]`).
-- **Three connection topologies**, all just transport swaps:
-  1. *Virtual commissioning* — real PLC runs the logic, DigiTwin is the plant:
-     real PLC outputs → plant actuators, plant sensors → real PLC inputs.
-  2. *Shadow mode* — real PLC and DigiTwin both receive the same field inputs;
-     compare their outputs.
-  3. *Predictive* — DigiTwin fed live field inputs, runs faster-than-real-time to
-     forecast state ahead of the real process.
-- **Divergence detector** — when a real reference is connected, log any tag where
-  twin and real disagree beyond tolerance for longer than one scan. This is the
-  payoff: it catches model drift, logic-download mismatches, and sensor faults.
-
-**Validate:** point the OPC UA adapter at a free soft-PLC (OpenPLC) running the
-same ladder; run shadow mode; confirm zero divergence, then introduce a
-deliberate logic difference and confirm the detector flags exactly that tag.
+| Item | Why deferred |
+|---|---|
+| HMI / live dashboard | Real demo value, but watching a twin is not what makes twin *creation* reliable. Revisit after P1–P3. |
+| Scenario DSL + curated fault library | Belongs with the research that consumes the framework, not in it. P4 ships only the injection primitive. |
+| OPC UA adapter (`adapters/opcua.py`) | Modbus TCP covers the current need. Build when a target twin actually speaks OPC UA. Keep checking the sync `IOTransport` signature stays adapter-ready. |
+| Connection-topology framing (virtual commissioning / shadow / predictive) and a live divergence detector | Application patterns, not framework mechanism — the transport swaps that enable them already exist. `diff_outputs` covers the offline case today. |
+| Deferred `HardwareProfile` catalogue fields (`instruction_set`, `output_type`, comms ports) and the other three address syntaxes | No consumer yet. Add one when P3's second vendor forces it — not speculatively. |
+| TM221 `retentive_words` exact model | Documented approximation; the real M221 uses explicit program-triggered backup. Only worth doing if a twin depends on that mechanism. |
 
 ---
 
-## Phase 7 — Scenario harness, fault injection, and testing
+## Validation history
 
-**Goal:** the twin is used to *prove things*, not just to run.
+- **2026-09-04 — hardware replacement, physical M221.** `examples/m221_lab_twin.py`
+  serving `ModbusSlaveServer` at the M221's native addresses was swapped in for
+  the physical Cyberhive ICS Wall M221, with the real Maple Systems HMI
+  connected against it unmodified. The twin matched the physical PLC's behaviour
+  exactly.
+- **Modbus server / register / coil behaviour** was checked with FactoryIO
+  before the hardware test.
 
-- `scenario.py` — a script of timed steps and assertions:
-  ```
-  at 0s     press start
-  at 0s     assert red_light == on within 1 scan
-  at 10s    assert tank_level >= 40
-  at 12s    inject fault: fill_valve stuck_open
-  at 20s    assert alarm "high_level" active
-  ```
-  Runs in `free_run` mode; usable directly as pytest cases.
-- **Fault library** — sensor stuck / drift / noise burst, actuator stuck / slow /
-  reversed, wire break (input frozen), comms dropout. Injected via the I/O bus so
-  neither plant nor program needs to know.
-- **Regression suite** — golden historian traces for the demo scenarios; CI runs
-  them in free-run and diffs.
-- Backfill unit tests for the current engine (scan phasing, seal-in latch, edge
-  detection) as the first PRs — there are none today.
-
-**Validate:** `uv run pytest` green; a scenario file for the tank demo passes,
-and flipping the seal-in logic in the program makes exactly one scenario fail.
+This is the evidence that the concept works. P3 extends it from "one twin
+matched one real device" to "the framework builds a second, different twin
+without structural change."
 
 ---
 
-## Suggested sequencing
+## Roadmap self-check
 
-| Order | Phase | Rationale |
-|------|-------|-----------|
-| 1 | Phase 1 plant split + Phase 7 baseline tests | Nothing else is meaningful without a plant; tests lock current behavior first. |
-| 2 | Phase 2 executive + firmware realism | Gives time-based behavior; unblocks timers/counters. |
-| 2b | Phase 2b PLC base/subclass split + `HardwareProfile` | Cheap now, expensive to retrofit; do it before config/adapters assume a flat `PLC`. Vendor catalog grows later. |
-| 3 | Phase 3 historian + snapshots | Needed to debug everything after. |
-| 4 | Phase 4 config | Quality-of-life; makes multiple twins practical. |
-| 5 | Phase 5 HMI | High-visibility demo value once there's something to watch. |
-| 6 | Phase 6 external sync | The headline "twin" capability; rests on the Phase 1 I/O abstraction. |
-| 7 | Phase 7 full scenario/fault harness | Continuous, but matures last. |
-
-## Files this roadmap would touch first (Phase 1, when implemented)
-
-- `src/digitwin/plant/__init__.py`, `src/digitwin/plant/base.py`,
-  `src/digitwin/plant/tank.py` — new
-- `src/digitwin/io.py` — new (I/O bus + `IOTransport` protocol, in-process impl)
-- `src/digitwin/executive.py` — new (minimal fixed-`dt` loop to start)
-- `src/digitwin/programs/start_stop_tank.py` — strip physics, keep control only
-- `src/digitwin/demo.py` — assemble plant + PLC + executive
-- `src/digitwin/plc.py` — add `retentive` to `Tag`, first-scan bit, cold-start
-- `tests/` — new; engine + plant unit tests
-- `pyproject.toml` — add `pytest` to dev deps; later `opcua`/`modbus` extras
-
-## Verification of the roadmap itself
-
-This is a design document, so "verification" means the phasing holds together:
-
-1. Each phase lists a concrete validation step that can run without the later
-   phases — check that dependency direction is respected.
-2. Phase 1's `IOTransport` protocol must be expressive enough for Phase 6's
-   adapters — sanity-check the signature against both `asyncua` (async, node
-   model) and `pymodbus` (sync, register model) before committing to it, and keep
-   it synchronous so the `pymodbus` client transport drops in without a bridge.
-3. The demo must stay runnable (`uv run digitwin`) and produce equivalent output
-   after Phase 1, Phase 2 (scaled mode), Phase 2b (rebuilt on `PLC_Generic`), and
-   Phase 4 (from YAML).
-4. The `HardwareProfile` fields must be sufficient to describe a second real model
-   from a different vendor (e.g. a Siemens S7-1200 or AB Micro850) without schema
-   changes — sanity-check against one datasheet before finalizing the dataclass.
+1. Each priority's validation step runs without the priorities after it — check
+   that dependency direction holds (P2 needs P1's loader only for its final
+   check; P3 needs P1 + P2; P5 needs P1).
+2. The P1 schema must express P3's second-vendor profile reference and a
+   non-level plant **without a schema change**. Sanity-check the schema against
+   both before calling P1 done.
+3. The example twins stay runnable (`uv run digitwin`) and produce identical
+   historian traces before and after P1 (from file) and P5 (golden diff).
+4. Adding the second vendor in P3 must not touch `plc.py`, `executive.py`,
+   `io.py`, `historian.py`, or `events.py`. If it does, that file was not as
+   generic as this document claims — fix the abstraction, don't special-case.

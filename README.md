@@ -7,8 +7,8 @@ A small soft-PLC engine and simulation harness.
 With [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv sync            # create the venv and install dev tools
-uv run digitwin    # run the demo simulation
+uv sync                                # create the venv and install dev tools
+uv run digitwin run examples/tank.toml # load a twin from a project file and scan it
 ```
 
 With plain pip:
@@ -16,7 +16,7 @@ With plain pip:
 ```bash
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"                             # editable install + dev tools
-digitwin                                            # run the demo simulation
+digitwin run examples/tank.toml                     # load and scan a twin
 ```
 
 This is a standard PEP 621 project, so `pip install .` (or from a built wheel)
@@ -90,7 +90,9 @@ for a worked example.
 The program contains **only control logic**. Physical behaviour lives in a
 plant model (`digitwin.plant`) that the PLC reaches only through the I/O bus
 (`digitwin.io`); the `Executive` steps the plant and the PLC together each
-tick. `digitwin.demo` wires a tank plant to the start/stop program.
+tick. A whole twin — controller, tags, plant, wiring, observers — is described
+by one TOML project file and loaded with `digitwin.config.load_project`; see
+[docs/BUILDING_A_TWIN.md](docs/BUILDING_A_TWIN.md) and `examples/tank.toml`.
 
 For edge detection or timing, hold an instruction block from
 `digitwin.instructions` (`TON`, `TOF`, `CTU`, `ONS`) and call it each scan. The
