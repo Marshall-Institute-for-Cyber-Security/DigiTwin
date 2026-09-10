@@ -75,26 +75,31 @@ is next, in that document's priority order (P1–P5).
       (`digitwin/cli.py`); the hand-wired tank builder moved to
       `tests/reference.py` (not shipped, not imported by the framework); the
       shipped package is framework-only
-- [ ] Engineering units / range on `Tag` — **moved to P2** (needs an engine
-      field; folds into per-channel analog scaling)
+- [x] Engineering units / range on `Tag` — landed in P2 (`Tag.units` /
+      `eng_low` / `eng_high`, advisory metadata; `[[tags]]` keys)
 - [ ] `opcua` transport option in `[transport]` — deferred with the adapter
 - [ ] **Validate:** a second reviewer builds an unfamiliar twin from
       `BUILDING_A_TWIN.md` alone
 
-## P2 — Plant component library
+## P2 — Plant component library  *(landed 2026-09-10)*
 
-- [ ] Actuators — `Motor` / `Pump` (spin-up ramp + running feedback), `Valve`
-      (travel time; relay-vs-transistor delay knob), generic first-order actuator
-- [ ] Process elements — `PipeSegment` / flow link, `ThermalMass`,
-      `Integrator`, `TransportDelay`, `PIDLoop`
-- [ ] Per-channel analog quantisation / resolution + scale/offset on
-      `AnalogSensor` (subsumes the P1 tag-units item)
-- [ ] Each component: dataclass, `step(dt, io)`, snapshot-safe, unit test vs an
-      analytic / reference trajectory
-- [ ] Register every component in `digitwin.config._PLANT_COMPONENTS`
-- [ ] `docs/WRITING_A_COMPONENT.md`
-- [ ] **Validate:** a heated stirred tank + pump + PID loop built entirely from
-      library components, no new physics code
+- [x] Actuators — `Motor` / `Pump` (spin-up ramp + running feedback), `Valve`
+      (travel time + `switch_delay_s` relay-vs-transistor dead time),
+      `FirstOrderActuator` (generic lag + rate limit) — `plant/actuators.py`
+- [x] Process elements — `PipeSegment` / flow link, `ThermalMass`,
+      `Integrator`, `TransportDelay`, `PIDLoop` (`plant/process.py`, registered
+      in `_PLANT_COMPONENTS`, analytic-trajectory tests in `test_process.py`)
+- [x] Per-channel analog quantisation / resolution (`resolution_bits`) +
+      `scale` / `offset` calibration on `AnalogSensor`; `Tag.units` / `eng_low`
+      / `eng_high` metadata (subsumes the P1 tag-units item)
+- [x] Each component: dataclass, `step(dt, io)`, snapshot-safe, unit test vs an
+      analytic / reference trajectory (incl. a snapshot round-trip test)
+- [x] Register every component in `digitwin.config._PLANT_COMPONENTS`
+- [x] `docs/WRITING_A_COMPONENT.md`
+- [x] **Validate:** `examples/heated_tank.toml` — a heated, stirred tank
+      (Pump + Tank + PIDLoop + ThermalMass + 2×AnalogSensor, `noop` program)
+      settles level and temperature with no new physics code; covered by
+      `test_config.py::test_heated_tank_project_runs_entirely_from_library_components`
 
 ## P3 — Second twin as proof of generality
 

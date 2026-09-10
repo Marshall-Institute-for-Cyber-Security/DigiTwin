@@ -53,14 +53,22 @@ src/digitwin/
     __init__.py
     base.py              PlantModel protocol + CompositePlant + NullPlant
     tank.py              Tank: level integrates (q_in - q_out) / area
-    actuators.py         Valve / Motor / Pump — command -> motion with dynamics
-    sensors.py           AnalogSensor (scaled word), DiscreteSensor (hysteresis)
+    actuators.py         Valve (travel + switch-delay) / Motor / Pump /
+                         FirstOrderActuator — command -> motion with dynamics
+    process.py           Integrator / TransportDelay / PipeSegment / ThermalMass
+                         / PIDLoop — generic dynamics wired between components
+    sensors.py           AnalogSensor (scale/offset, resolution_bits, filter,
+                         noise), DiscreteSensor (hysteresis)
 docs/
   ROADMAP.md             roadmap: purpose, status ledger, P1–P5, deferred
   TODO.md                build checklist, in ROADMAP priority order
   BUILDING_A_TWIN.md     how to write a project file, section by section
+  WRITING_A_COMPONENT.md the PlantModel contract + bus conventions for new
+                         plant components
 examples/
   tank.toml              the reference twin as a project file
+  heated_tank.toml       heated stirred tank — pump + tank + PID + thermal mass,
+                         all library components (the P2 assembly milestone)
   m221_lab_twin.{py,toml}  the M221 lab twin (Modbus slave for a real HMI)
 tests/
   reference.py           hand-wired tank twin — regression anchor for config,
@@ -69,7 +77,9 @@ tests/
   test_hardware.py       address validation, retain ranges, system tags, registry
   test_instructions.py   TON / TOF / CTU / ONS
   test_plant.py          component dynamics / scaling / hysteresis
-  test_actuators.py      Valve / Motor / Pump dynamics
+  test_actuators.py      Valve / Motor / Pump / FirstOrderActuator dynamics
+  test_process.py        Integrator / TransportDelay / PipeSegment / ThermalMass
+                         / PIDLoop vs analytic trajectories + snapshot round-trip
   test_io.py             addressed wiring, transport resolution
   test_executive.py      executive integration + pacing modes
   test_start_stop_tank.py  seal-in latch behaviour

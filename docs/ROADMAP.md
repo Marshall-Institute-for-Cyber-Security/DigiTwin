@@ -126,8 +126,16 @@ imports or ships.
   structural fault at load time. `examples/tank.toml` and
   `examples/m221_lab_twin.toml` reproduce their hand-wired builders exactly.
   See `docs/BUILDING_A_TWIN.md`.
+- **Plant component library** (P2, landed 2026-09-10): the actuator set
+  (`Motor`, `Pump`, `Valve` + `switch_delay_s`, `FirstOrderActuator`), process
+  elements (`Integrator`, `TransportDelay`, `PipeSegment`, `ThermalMass`,
+  `PIDLoop`), `AnalogSensor` `scale`/`offset`/`resolution_bits`, `Tag`
+  engineering-units metadata. All registered in `_PLANT_COMPONENTS`, each with
+  an analytic-trajectory test plus a snapshot round-trip. `examples/heated_
+  tank.toml` builds a heated stirred tank from library parts only.
+  See `docs/WRITING_A_COMPONENT.md`.
 - **Engineering baseline**: `mypy --strict` over `src/` + `tests/`, ruff
-  (`E,F,I,UP,B,SIM`), ~180 tests, zero runtime dependencies, Python 3.12+.
+  (`E,F,I,UP,B,SIM`), ~205 tests, zero runtime dependencies, Python 3.12+.
 
 ---
 
@@ -189,13 +197,24 @@ mistake and nothing was reusable.
 whose controller is an inline `profile:` (no `models/` entry) loads and runs,
 and a malformed field in each section produces a clear load-time error (tested).
 
-### P2 — Plant component library  *(so a new plant is assembly, not physics)*
+### P2 — Plant component library  *(landed 2026-09-10)*
 
 **Goal:** enough composable, tested primitives that standing up a new process is
-wiring components together, not deriving dynamics from scratch. Today: `Tank`,
-`AnalogSensor`, `DiscreteSensor` — a level process and nothing else.
+wiring components together, not deriving dynamics from scratch.
 
-**Scope**
+Landed: the actuator set (`Motor`, `Pump`, `Valve` with a `switch_delay_s`
+relay/transistor dead time, `FirstOrderActuator`), the process elements
+(`Integrator`, `TransportDelay`, `PipeSegment`, `ThermalMass`, `PIDLoop`),
+`AnalogSensor` signal conditioning (`scale`/`offset` calibration,
+`resolution_bits` quantisation) and `Tag.units` / `eng_low` / `eng_high`
+metadata. Each is registered in `_PLANT_COMPONENTS` and tested against an
+analytic trajectory; there is a snapshot round-trip test. `docs/WRITING_A_
+COMPONENT.md` documents the contract. `examples/heated_tank.toml` is the
+validation twin — a heated, stirred tank (pump + tank + PID + thermal mass +
+two sensors, `noop` program) that settles level and temperature with no bespoke
+physics code.
+
+**Scope (as delivered)**
 
 - **Actuators:** `Motor` / `Pump` (start/stop with spin-up ramp, running-feedback
   contact), `Valve` (finite travel time; relay-vs-transistor switching delay as
