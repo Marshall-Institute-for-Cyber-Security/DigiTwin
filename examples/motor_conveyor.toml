@@ -1,0 +1,111 @@
+# A conveyor motor — DigiTwin's P3 "not a level process" twin, on a real
+# second vendor profile (Siemens S7-1200 CPU 1214C). Everything here is
+# stock digitwin.plant (Motor + AnalogSensor); no new physics code, same
+# "assembly, not physics" bar heated_tank.toml set for P2.
+#
+# Control is a classic motor-start pattern: seal-in start/stop, plus a
+# run-proving timer (TON) that trips a latched fault if the motor's
+# running-feedback contact never seals in within prove_time_s of being
+# commanded — a different control shape from the tank twins' fill/drain
+# interlock.
+#
+# belt_speed is scaled 0-27648 with 10-bit resolution: Siemens' real
+# "S7 normalized" convention for a 0-10V onboard analog input (the S7-1200's
+# onboard AI is a genuine 10-bit ADC, TIA Portal always reports it over the
+# 0..27648 span regardless of the physical channel's engineering range).
+
+version = 1
+name = "motor_conveyor"
+
+[plc]
+model = "S7-1200_CPU1214C"
+program = "motor_conveyor"
+
+[executive]
+dt = 0.1
+mode = "free_run"
+
+[observability]
+historian = true
+events = true
+
+# --- I/O --------------------------------------------------------------
+
+[[tags]]
+name = "start_button"
+type = "discrete_input"
+address = "%I0.0"
+initial = false
+
+[[tags]]
+name = "stop_button"
+type = "discrete_input"
+address = "%I0.1"
+initial = false
+
+[[tags]]
+name = "running_feedback"
+type = "discrete_input"
+address = "%I0.2"
+initial = false
+
+[[tags]]
+name = "motor_run"
+type = "discrete_output"
+address = "%Q0.0"
+initial = false
+
+[[tags]]
+name = "fault_lamp"
+type = "discrete_output"
+address = "%Q0.1"
+initial = false
+
+[[tags]]
+name = "belt_speed"
+type = "analog_input"
+address = "%IW64"
+initial = 0
+units = "S7 normalized (0-10V equiv.)"
+eng_low = 0.0
+eng_high = 27648.0
+
+[[tags]]
+name = "run_latch"
+type = "internal_bit"
+address = "%M0.0"
+initial = false
+
+[[tags]]
+name = "fault_latch"
+type = "internal_bit"
+address = "%M0.1"
+initial = false
+
+# --- plant: motor -> speed sensor --------------------------------------
+
+[[plant.components]]
+type = "Motor"
+command_signal = "motor_cmd"
+speed_signal = "belt_speed_true"
+running_signal = "belt_running_true"
+spin_up_s = 4.0
+coast_s = 3.0
+running_threshold = 0.9
+
+[[plant.components]]
+type = "AnalogSensor"
+source = "belt_speed_true"
+dest = "belt_speed"
+in_lo = 0.0
+in_hi = 1.0
+out_lo = 0
+out_hi = 27648
+resolution_bits = 10
+
+[wiring.outputs]
+"%Q0.0" = "motor_cmd"
+
+[wiring.inputs]
+"%I0.2" = "belt_running_true"
+"%IW64" = "belt_speed"

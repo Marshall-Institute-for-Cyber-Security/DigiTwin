@@ -105,7 +105,8 @@ imports or ships.
   `native_address` against the profile and claims its terminal exclusively;
   retention defaults from the profile. `tag_at()` resolves an address to its
   tag, so transports wire by terminal, not tag name. Model registry +
-  `plc_from_model(name, program)`. Two profiles: `PLC_Generic`, `TM221CE16T`.
+  `plc_from_model(name, program)`. Three profiles: `PLC_Generic`,
+  `TM221CE16T`, `S7-1200_CPU1214C`.
 - **Analog I/O crosses the scan boundary** as its own tag types, frozen /
   flushed alongside discrete channels.
 - **Timed executive**: FREE_RUN / REAL_TIME / SCALED, jitter tracking,
@@ -134,8 +135,16 @@ imports or ships.
   an analytic-trajectory test plus a snapshot round-trip. `examples/heated_
   tank.toml` builds a heated stirred tank from library parts only.
   See `docs/WRITING_A_COMPONENT.md`.
+- **Second vendor, proof of generality** (P3, landed 2026-09-21): Siemens
+  S7-1200 CPU 1214C (`models/siemens_s7_1200.py`) + its `SIEMENS` address
+  syntax, and a conveyor-motor twin (`examples/motor_conveyor.toml`,
+  `programs/motor_conveyor.py`) that is not a level process, assembled
+  entirely from the P2 library. Required zero changes to `plc.py` /
+  `executive.py` / `io.py` / `historian.py` / `events.py`. See the P3
+  section below for detail.
 - **Engineering baseline**: `mypy --strict` over `src/` + `tests/`, ruff
-  (`E,F,I,UP,B,SIM`), ~205 tests, zero runtime dependencies, Python 3.12+.
+  (`E,F,I,UP,B,SIM`), 231 tests (3 skipped, unrelated), zero runtime
+  dependencies, Python 3.12+.
 
 ---
 
@@ -234,29 +243,54 @@ physics code.
 and a PID loop) is built entirely from library components with no new physics
 code, and each component's dynamics are covered by a test.
 
-### P3 — Second twin as proof of generality
+### P3 — Second twin as proof of generality *(landed 2026-09-21)*
 
 **Goal:** exercise the abstraction on a device **materially different from the
-tank**. Generality is currently asserted by design discipline, not demonstrated
-— one plant lineage, one real vendor profile, one address syntax.
+tank**. Generality was asserted by design discipline before this; now
+demonstrated.
 
-**Scope**
+**Landed:**
 
-- A second real vendor `HardwareProfile` — Siemens S7-1200 or AB Micro850 —
-  with each field sanity-checked against a datasheet. Fields that can't be
-  sourced are marked `UNVERIFIED` in the module (as `schneider_tm221.py` does).
-- The **one** address-syntax strategy that vendor needs (`SIEMENS` `I0.0` /
-  `DB1.DBX0.0`, or `AB_TAG` `Local:1:I.Data.0`) implemented against the existing
-  `AddressSyntax` protocol. Not all four stubs — just the one with a consumer.
-- A second plant that is **not** a level process (thermal or motor/conveyor),
-  assembled from the P2 library.
-- Its project file expressed in the P1 schema.
-- **Write down every place the framework had to change** to accommodate it.
-  Those changes are the real abstraction gaps; catching them now is the point.
+- A second real vendor `HardwareProfile` — **Siemens S7-1200 CPU 1214C**
+  (`models/siemens_s7_1200.py`), fields checked against the official part
+  datasheet (6ES7214-1AG40-0XB0) and the S7-1200 System Manual. Two facts
+  left deliberately unset rather than approximated — `retentive_bits` /
+  `retentive_words` (S7-1200 retention is a per-project TIA Portal
+  configuration, not a fixed hardware range the way the M221 happens to
+  have one) and `scan_time_word` (no fixed address exposes it on this CPU,
+  unlike the M221's `%SW30`) — each with the reasoning written into the
+  module docstring, per this document's own "an obvious gap beats a
+  plausible-looking invented fact" standard.
+- The **one** address-syntax strategy this vendor needs — `SIEMENS`
+  (`hardware.py::_Siemens`) — `%I`/`%Q`/`%M` (byte.bit), `%MW` (byte
+  offset), `%IW` (onboard analog, based at the TIA-Portal-default `%IW64`).
+  `%QW` and DB access intentionally not implemented — no profile needs them
+  yet. One known, documented engine-model limitation surfaced by this
+  vendor: `%M`/`%MW` physically overlap on real Siemens hardware (unlike
+  the M221), which this engine's non-overlapping `AddressArea` model can't
+  represent without touching `plc.py`'s address-claim mechanism — flagged
+  in `_Siemens`'s docstring and locked in by a test
+  (`test_s7_1200_does_not_detect_real_byte_overlap_between_m_and_mw`)
+  rather than left as a silent gap.
+- A second plant that is **not** a level process — a conveyor motor
+  (`programs/motor_conveyor.py::MotorConveyorProgram`), assembled entirely
+  from the P2 library (`Motor` + `AnalogSensor`, no new physics code).
+  Control shape is a classic industrial motor-start pattern (seal-in
+  start/stop plus a `TON` run-proving timer that latches a fault if the
+  running-feedback contact never seals in) — genuinely different from the
+  tank twins' fill/drain interlock, and the first shipped program to
+  exercise a timer block on new hardware.
+- Its project file in the P1 schema — `examples/motor_conveyor.toml`, on
+  the real `S7-1200_CPU1214C` model.
+- **Framework changes required: none beyond `hardware.py`, `models/`, and
+  `programs/`** — `plc.py` / `executive.py` / `io.py` / `historian.py` /
+  `events.py` are all untouched, confirmed by diff. The abstraction held.
 
 **Done when:** the second twin runs from a project file, its profile is
 datasheet-checked, and the list of required framework changes is captured in the
-PR description (ideally empty beyond the new profile + syntax + components).
+PR description. **Met** — see `docs/TODO.md`'s P3 section for the full
+verification (231 tests passed, `mypy --strict` and `ruff` clean, the CLI
+running the new example directly).
 
 ### P4 — Framework-level fault injection  *(primitive only)*
 

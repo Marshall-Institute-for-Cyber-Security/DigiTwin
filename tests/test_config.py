@@ -172,6 +172,26 @@ def test_heated_tank_project_runs_entirely_from_library_components() -> None:
     assert sim.plc.read("tank_temp") == 600                         # 60 degC -> 600 counts
 
 
+def test_motor_conveyor_project_runs_entirely_from_library_components() -> None:
+    sim = load_project(EXAMPLES / "motor_conveyor.toml")
+    sim.plc.write("start_button", True)
+    sim.run(45)
+    sim.plc.write("start_button", False)
+    sim.run(20)
+
+    assert sim.plc.read("fault_latch") is False
+    assert sim.plc.tags["motor_run"].value is True
+    assert sim.plc.read("belt_speed") == 27648             # full speed, full-scale counts
+    assert abs(float(sim.bus.get("belt_speed_true")) - 1.0) < 1e-9
+
+    sim.plc.write("stop_button", True)
+    sim.run(1)
+    sim.plc.write("stop_button", False)
+    sim.run(40)
+    assert sim.plc.tags["motor_run"].value is False
+    assert sim.plc.read("belt_speed") == 0
+
+
 def test_missing_plc_section_is_rejected(tmp_path: Path) -> None:
     project = _write(tmp_path, "version = 1\n[executive]\ndt = 0.1\n")
     with pytest.raises(ConfigError, match=r"missing required section \[plc\]"):

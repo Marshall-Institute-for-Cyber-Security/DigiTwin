@@ -126,12 +126,37 @@ is next, in that document's priority order (P1–P5).
       which locks the current (documented) behavior in on purpose.
       17 new tests in `test_hardware.py` (`test_s7_1200_*`), full suite green,
       `mypy --strict` and `ruff` clean.
-- [ ] A second plant that is not a level process (thermal or motor/conveyor)
-- [ ] Its project file in the P1 schema
-- [ ] PR description lists every framework change the twin forced (target: only
-      the new profile + syntax + components)
-- [ ] **Validate:** the twin runs from its file; `plc.py` / `executive.py` /
-      `io.py` / `historian.py` / `events.py` are untouched
+- [x] A second plant that is not a level process — a conveyor motor
+      (`programs/motor_conveyor.py::MotorConveyorProgram`): seal-in
+      start/stop plus a `TON` run-proving timer that latches a fault (and
+      drops the run command) if the motor's running-feedback contact never
+      seals in within `prove_time_s` — a different control shape from the
+      tank twins' fill/drain interlock, and the first shipped program to
+      exercise a timer block on new hardware. Built entirely from stock
+      `digitwin.plant` (`Motor` + `AnalogSensor`), no new physics code, same
+      "assembly, not physics" bar `heated_tank.toml` set for P2.
+- [x] Its project file in the P1 schema — `examples/motor_conveyor.toml`,
+      on the real `S7-1200_CPU1214C` model (not an inline profile). Belt
+      speed is reported 0-27648 at 10-bit resolution — Siemens' real "S7
+      normalized" convention for the onboard analog input, not an arbitrary
+      scale. `test_motor_conveyor_project_runs_entirely_from_library_
+      components` in `test_config.py` loads it through `load_project` and
+      confirms it settles (full speed, no fault) and stops cleanly; 7 more
+      tests in `test_motor_conveyor.py` cover the program in isolation
+      (latch/seal-in, stop-dominates, proving-within-time, proving-timeout,
+      fault-clears-only-on-stop, feedback-loss-while-running). Every timing
+      assertion was verified against a scratch run before being written
+      down, not derived by inspection alone.
+- [x] PR description lists every framework change the twin forced: **none**
+      beyond `hardware.py` (the new `SIEMENS` syntax), `models/` (the new
+      profile), and `programs/` (the new program) — target met.
+- [x] **Validate:** the twin runs from its file (`uv run digitwin run
+      examples/motor_conveyor.toml` — 100 scans, 10.0s simulated, historian
+      recording); `plc.py` / `executive.py` / `io.py` / `historian.py` /
+      `events.py` are untouched (confirmed by diff, not just assertion).
+
+**P3 is complete.** Full suite: 231 passed, 3 skipped (unrelated, pre-existing);
+`mypy --strict` and `ruff check .` both clean.
 
 ## P4 — Framework-level fault injection (primitive only)
 

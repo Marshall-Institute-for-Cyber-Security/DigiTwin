@@ -7,6 +7,7 @@ from collections.abc import Callable
 
 from digitwin.plc import PLC, Program
 from digitwin.programs.m221_tank_twin import M221TankTwinProgram
+from digitwin.programs.motor_conveyor import MotorConveyorProgram
 from digitwin.programs.start_stop_tank import StartStopTankProgram
 
 
@@ -21,6 +22,7 @@ _REGISTRY: dict[str, Callable[[float], Program]] = {
     "noop": lambda _dt: _noop,
     "start_stop_tank": lambda _dt: StartStopTankProgram(),
     "m221_tank_twin": lambda dt: M221TankTwinProgram(dt),
+    "motor_conveyor": lambda dt: MotorConveyorProgram(dt),
 }
 
 
@@ -35,6 +37,7 @@ def program_from_name(name: str, *, dt: float) -> Program:
 
 __all__ = [
     "M221TankTwinProgram",
+    "MotorConveyorProgram",
     "StartStopTankProgram",
     "program_from_name",
 ]
