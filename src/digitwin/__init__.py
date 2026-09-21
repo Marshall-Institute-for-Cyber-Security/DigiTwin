@@ -4,6 +4,15 @@ from digitwin.adapters import ModbusClientTransport, ModbusSlaveServer, Register
 from digitwin.config import ConfigError, ConfigWarning, load_project
 from digitwin.events import Event, EventCategory, EventLog, EventSeverity
 from digitwin.executive import Executive, ExecutiveMode
+from digitwin.faults import (
+    DriftFault,
+    DropoutFault,
+    FaultModel,
+    FrozenFault,
+    NoiseFault,
+    OffsetFault,
+    StuckFault,
+)
 from digitwin.hardware import (
     IEC_DOTTED,
     AddressArea,
@@ -81,13 +90,17 @@ __all__ = [
     "ConfigWarning",
     "CsvSink",
     "DiscreteSensor",
+    "DriftFault",
+    "DropoutFault",
     "Event",
     "EventCategory",
     "EventLog",
     "EventSeverity",
     "Executive",
     "ExecutiveMode",
+    "FaultModel",
     "FirstOrderActuator",
+    "FrozenFault",
     "HardwareProfile",
     "Historian",
     "IOBus",
@@ -99,7 +112,9 @@ __all__ = [
     "JsonlSink",
     "ModbusClientTransport",
     "ModbusSlaveServer",
+    "NoiseFault",
     "NullPlant",
+    "OffsetFault",
     "PIDLoop",
     "ParsedAddress",
     "PipeSegment",
@@ -115,6 +130,7 @@ __all__ = [
     "SnapshotRecorder",
     "SqliteSink",
     "StartStopTankProgram",
+    "StuckFault",
     "Tag",
     "Tank",
     "TagType",

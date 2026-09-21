@@ -21,6 +21,7 @@ from enum import Enum
 
 from digitwin.adapters.modbus import ModbusSlaveServer
 from digitwin.events import EventCategory, EventLog, EventSeverity
+from digitwin.faults import FaultModel
 from digitwin.historian import Historian
 from digitwin.io import IOBus, IOTransport, TransportError
 from digitwin.plant.base import PlantModel
@@ -52,6 +53,14 @@ class Executive:
     # `accept` map writes into tags — but it's synced from the same once-per-
     # tick hook, never mid-scan. See digitwin.adapters.modbus.
     modbus_slave: ModbusSlaveServer | None = None
+
+    # Phase 4: bus-level fault injection (digitwin.faults). Ticked after the
+    # plant and before the input transfer, so a fault can perturb a signal
+    # the plant just wrote before the PLC ever sees it. Empty by default — a
+    # twin with no faults attached behaves exactly as before this field
+    # existed. (DropoutFault is not here: it wraps `transport` instead — see
+    # digitwin.faults's module docstring.)
+    faults: list[FaultModel] = field(default_factory=list)
 
     scan_count: int = 0
     elapsed: float = 0.0
@@ -85,6 +94,7 @@ class Executive:
 
     def tick(self) -> None:
         self.plant.step(self.dt, self.bus)
+        self._apply_faults()
         self._transfer_inputs()
         self.plc.scan()
         self._transfer_outputs()
@@ -101,6 +111,10 @@ class Executive:
 
     def run_for(self, sim_seconds: float) -> None:
         self.run(round(sim_seconds / self.dt))
+
+    def _apply_faults(self) -> None:
+        for fault in self.faults:
+            fault.step(self.dt, self.bus)
 
     def _transfer_inputs(self) -> None:
         try:

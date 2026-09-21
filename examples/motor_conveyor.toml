@@ -109,3 +109,18 @@ resolution_bits = 10
 [wiring.inputs]
 "%I0.2" = "belt_running_true"
 "%IW64" = "belt_speed"
+
+# --- P4 fault injection demo (inactive by default) ---------------------
+#
+# Flip `active = true` to see MotorConveyorProgram's proving-timer fault
+# trip entirely from this file — no code changes. StuckFault holds
+# `belt_running_true` false regardless of what the Motor actually does, so
+# the running-feedback contact never seals in and the 5s proving timer
+# always times out. Framework infrastructure only (digitwin/faults.py) —
+# this is the "what fault, on what signal" primitive, not a scenario.
+
+[[faults]]
+type = "Stuck"
+signal = "belt_running_true"
+value = false
+active = false

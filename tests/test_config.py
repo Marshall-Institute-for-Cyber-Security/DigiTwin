@@ -192,6 +192,87 @@ def test_motor_conveyor_project_runs_entirely_from_library_components() -> None:
     assert sim.plc.read("belt_speed") == 0
 
 
+def test_faults_section_builds_signal_faults_and_wraps_the_transport_for_dropout(
+    tmp_path: Path,
+) -> None:
+    from digitwin.faults import DropoutFault, StuckFault
+
+    project = _write(
+        tmp_path,
+        """
+        version = 1
+        name = "t"
+
+        [plc]
+        model = "Generic"
+        program = "noop"
+
+        [executive]
+        dt = 0.1
+
+        [[faults]]
+        type = "Stuck"
+        signal = "x"
+        value = 5
+
+        [[faults]]
+        type = "Dropout"
+        """,
+    )
+    sim = load_project(project)
+
+    assert len(sim.faults) == 1
+    assert isinstance(sim.faults[0], StuckFault)
+    assert (sim.faults[0].signal, sim.faults[0].value) == ("x", 5)
+    assert isinstance(sim.transport, DropoutFault)
+    assert sim.transport.active is False  # Dropout defaults dormant
+
+
+def test_an_unknown_fault_type_is_rejected(tmp_path: Path) -> None:
+    project = _write(
+        tmp_path,
+        """
+        version = 1
+        name = "t"
+
+        [plc]
+        model = "Generic"
+        program = "noop"
+
+        [executive]
+        dt = 0.1
+
+        [[faults]]
+        type = "Bogus"
+        signal = "x"
+        """,
+    )
+    with pytest.raises(ConfigError, match="unknown fault 'Bogus'"):
+        load_project(project)
+
+
+def test_a_fault_missing_its_type_is_rejected(tmp_path: Path) -> None:
+    project = _write(
+        tmp_path,
+        """
+        version = 1
+        name = "t"
+
+        [plc]
+        model = "Generic"
+        program = "noop"
+
+        [executive]
+        dt = 0.1
+
+        [[faults]]
+        signal = "x"
+        """,
+    )
+    with pytest.raises(ConfigError, match=r"needs a 'type'"):
+        load_project(project)
+
+
 def test_missing_plc_section_is_rejected(tmp_path: Path) -> None:
     project = _write(tmp_path, "version = 1\n[executive]\ndt = 0.1\n")
     with pytest.raises(ConfigError, match=r"missing required section \[plc\]"):

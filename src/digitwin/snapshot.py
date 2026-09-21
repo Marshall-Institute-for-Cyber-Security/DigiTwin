@@ -210,6 +210,11 @@ class Snapshot:
     bus: dict[str, IOValue] = field(default_factory=dict)
     program: StateValue = None
     plant: StateValue = None
+    # Phase 4 fault objects (digitwin.faults) — plain dataclasses, captured
+    # the same reflective way as `plant`/`program`. Not included:
+    # DropoutFault, which lives on `Executive.transport`, never part of a
+    # snapshot's scope (see faults.py's module docstring).
+    faults: StateValue = None
     version: int = SNAPSHOT_VERSION
 
     @classmethod
@@ -226,6 +231,7 @@ class Snapshot:
             bus=sim.bus.snapshot(),
             program=capture_state(plc.program),
             plant=capture_state(sim.plant),
+            faults=capture_state(sim.faults),
         )
 
     def restore(self, sim: Executive) -> None:
@@ -250,6 +256,7 @@ class Snapshot:
 
         restore_state(plc.program, self.program)
         restore_state(sim.plant, self.plant)
+        restore_state(sim.faults, self.faults)
         sim.bus.load(self.bus)
 
         sim.elapsed = self.elapsed
@@ -270,6 +277,7 @@ class Snapshot:
             "bus": dict(self.bus),
             "program": self.program,
             "plant": self.plant,
+            "faults": self.faults,
         }
 
     @classmethod
@@ -289,6 +297,7 @@ class Snapshot:
             bus=dict(data.get("bus", {})),
             program=data.get("program"),
             plant=data.get("plant"),
+            faults=data.get("faults"),
             version=version,
         )
 

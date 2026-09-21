@@ -160,14 +160,47 @@ is next, in that document's priority order (P1–P5).
 
 ## P4 — Framework-level fault injection (primitive only)
 
-- [ ] `digitwin/faults.py` — bus-level `stuck` / `offset` / `drift` / `noise` /
-      `frozen` / `dropout` (dropout reuses the `TransportError` path)
-- [ ] Injected via the I/O bus; plant and program unaware
-- [ ] Snapshot-safe (a faulted run captures and replays)
-- [ ] `[faults]` section in the project schema
-- [ ] **Not** here: scenario DSL, curated fault scenarios, assertion tooling
-- [ ] **Validate:** each fault is a one-liner to attach; snapshot during a fault
-      restores to the faulted state
+- [x] `digitwin/faults.py` — `StuckFault` / `OffsetFault` / `DriftFault` /
+      `NoiseFault` / `FrozenFault` (bus-level, same `step(dt, io)` shape as a
+      `PlantModel` component) + `DropoutFault` (wraps an `IOTransport`,
+      raises `TransportError` while active — reuses the executive's existing
+      hold-last / fault-event handling instead of a second failure path).
+      `FaultModel` protocol for the five signal-level faults.
+- [x] Injected via the I/O bus: `Executive.faults: list[FaultModel]`, ticked
+      in `tick()` after `plant.step()` and before `_transfer_inputs()` — the
+      plant and program never see a fault, only the perturbed signal.
+      `DropoutFault` attaches by replacing `Executive.transport` instead
+      (documented in `faults.py`'s module docstring — it has no signal to
+      perturb, it makes the exchange itself fail).
+- [x] Snapshot-safe: `Snapshot` gained a `faults` field, captured/restored
+      through the same reflective `capture_state`/`restore_state` machinery
+      already used for `plant`/`program` — no bespoke serialization needed,
+      since every signal fault is a plain dataclass. `DropoutFault` is
+      deliberately *not* snapshotted (it lives on `Executive.transport`,
+      never part of a snapshot's scope, same as the executive's own
+      transport-failure counters).
+- [x] `[[faults]]` array-of-tables in the project schema (`config.py`'s
+      `_build_faults`), same shape as `[[plant.components]]`. A
+      `type = "Dropout"` entry wraps the just-built transport instead of
+      joining the list — one uniform syntax, two attachment points under
+      the hood, documented rather than papered over.
+      `examples/motor_conveyor.toml` ships a real (inactive-by-default)
+      `[[faults]]` entry demonstrating it: flip `active = true` and
+      `MotorConveyorProgram`'s proving-timer fault trips from config alone,
+      no code changes — verified for real, not just asserted in a test.
+- [x] **Not** here: scenario DSL, curated fault scenarios, assertion tooling —
+      none added.
+- [x] **Validate:** each fault is a one-liner to attach
+      (`sim.faults.append(StuckFault(...))` / `sim.transport =
+      DropoutFault(sim.transport)`); `test_faults.py`'s
+      `test_a_drift_faults_state_survives_a_snapshot_round_trip` proves a
+      snapshot taken mid-fault (a `DriftFault`'s accumulated bias) restores
+      to the same faulted trajectory as an uninterrupted run, the same
+      pattern `test_snapshot.py`'s own headline case already uses.
+
+**P4 is complete.** 15 new tests (`test_faults.py` + 3 in `test_config.py`);
+full suite 246 passed, 3 skipped (unrelated, pre-existing); `mypy --strict`
+and `ruff check .` both clean.
 
 ## P5 — Regression / golden-trace harness
 

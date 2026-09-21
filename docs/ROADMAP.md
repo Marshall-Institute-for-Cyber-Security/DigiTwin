@@ -142,8 +142,14 @@ imports or ships.
   entirely from the P2 library. Required zero changes to `plc.py` /
   `executive.py` / `io.py` / `historian.py` / `events.py`. See the P3
   section below for detail.
+- **Fault injection** (P4, landed 2026-09-21): `digitwin/faults.py` — five
+  bus-level signal faults (`StuckFault`/`OffsetFault`/`DriftFault`/
+  `NoiseFault`/`FrozenFault`) plus `DropoutFault` (transport-level, reuses
+  `TransportError`). `Executive.faults`, ticked between the plant and the
+  input transfer; snapshot-safe via the existing reflective capture/restore;
+  `[[faults]]` in the project schema. See the P4 section below for detail.
 - **Engineering baseline**: `mypy --strict` over `src/` + `tests/`, ruff
-  (`E,F,I,UP,B,SIM`), 231 tests (3 skipped, unrelated), zero runtime
+  (`E,F,I,UP,B,SIM`), 246 tests (3 skipped, unrelated), zero runtime
   dependencies, Python 3.12+.
 
 ---
@@ -292,26 +298,43 @@ PR description. **Met** — see `docs/TODO.md`'s P3 section for the full
 verification (231 tests passed, `mypy --strict` and `ruff` clean, the CLI
 running the new example directly).
 
-### P4 — Framework-level fault injection  *(primitive only)*
+### P4 — Framework-level fault injection  *(primitive only, landed 2026-09-21)*
 
 **Goal:** the platform can perturb any signal, because a reliable twin framework
 should be able to inject a fault regardless of what the fault is *for*. This is
 infrastructure, not the research-facing fault catalogue.
 
-**Scope**
+**Landed**
 
-- `digitwin/faults.py` — bus-level hooks: `stuck` (hold a value), `offset`,
-  `drift` (ramp), `noise`, `frozen` (input never updates), `dropout` (comms
-  gap, reusing the existing `TransportError` path).
-- Injected through the I/O bus so neither the plant nor the program is aware.
-- Snapshot-safe, so a faulted run can be captured and replayed.
-- **Not** in scope: a timed scenario DSL, a curated library of application-
-  specific fault scenarios, assertion tooling. Those belong to whatever
-  consumes the framework.
+- `digitwin/faults.py` — bus-level hooks: `StuckFault` (hold a value),
+  `OffsetFault`, `DriftFault` (ramp, holds its accumulation while inactive
+  and resumes rather than resetting), `NoiseFault`, `FrozenFault` (captures
+  and holds whatever the signal read at activation — an input that never
+  updates again). `DropoutFault` is the sixth (comms gap) but architecturally
+  different: it wraps an `IOTransport` and raises `TransportError` while
+  active, reusing the executive's existing hold-last / fault-event handling
+  rather than a second failure path — attached by replacing
+  `Executive.transport`, not by joining the fault list.
+- Injected through the I/O bus: a new `Executive.faults` list, ticked once
+  per tick after `plant.step()` and before the input transfer — so neither
+  the plant nor the program is aware, they only ever see the (possibly
+  perturbed) bus signal.
+- Snapshot-safe: every signal fault is a plain dataclass, so `Snapshot`'s
+  existing reflective `capture_state`/`restore_state` machinery (already used
+  for `plant`/`program`) captures and restores fault state with no
+  fault-specific serialization code.
+- `[[faults]]` in the project schema, same array-of-tables shape as
+  `[[plant.components]]`; `examples/motor_conveyor.toml` ships a real,
+  inactive-by-default entry as a working demonstration.
+- **Not** in scope, and nothing added: a timed scenario DSL, a curated
+  library of application-specific fault scenarios, assertion tooling. Those
+  belong to whatever consumes the framework.
 
 **Done when:** each fault type is a one-liner to attach to a running twin, is
 covered by a test, and a snapshot taken during a fault restores to the same
-faulted state.
+faulted state. **Met** — see `docs/TODO.md`'s P4 section for the full
+verification (15 new tests, full suite 246 passed / 3 skipped, `mypy --strict`
+and `ruff` clean).
 
 ### P5 — Regression / golden-trace harness
 

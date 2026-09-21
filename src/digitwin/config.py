@@ -33,6 +33,15 @@ from typing import Any
 from digitwin.adapters.modbus import ModbusClientTransport, ModbusSlaveServer, RegisterMap
 from digitwin.events import EventLog
 from digitwin.executive import Executive, ExecutiveMode
+from digitwin.faults import (
+    DriftFault,
+    DropoutFault,
+    FaultModel,
+    FrozenFault,
+    NoiseFault,
+    OffsetFault,
+    StuckFault,
+)
 from digitwin.hardware import HardwareProfile
 from digitwin.historian import CsvSink, Historian, JsonlSink, RecordSink, SampleMode, SqliteSink
 from digitwin.io import InProcessTransport, IOBus, IOTransport
@@ -89,6 +98,17 @@ _PLANT_COMPONENTS: dict[str, type] = {
 
 _SINKS: dict[str, type] = {"csv": CsvSink, "sqlite": SqliteSink, "jsonl": JsonlSink}
 
+# [[faults]] type name -> class, for the five signal-level faults. "Dropout"
+# is handled separately in _build_faults: it wraps the transport instead of
+# joining the Executive.faults list (see digitwin.faults's module docstring).
+_FAULTS: dict[str, type] = {
+    "Stuck": StuckFault,
+    "Offset": OffsetFault,
+    "Drift": DriftFault,
+    "Noise": NoiseFault,
+    "Frozen": FrozenFault,
+}
+
 
 def load_project(path: str | Path) -> Executive:
     """Build an :class:`Executive` from the TOML project at ``path``."""
@@ -120,6 +140,7 @@ def load_project(path: str | Path) -> Executive:
 
     bus = IOBus()
     transport = _build_transport(cfg, plc=plc, bus=bus)
+    faults, transport = _build_faults(cfg, transport=transport)
 
     obs = _table(cfg, "observability")
     return Executive(
@@ -133,6 +154,7 @@ def load_project(path: str | Path) -> Executive:
         historian=_historian_from(obs.get("historian"), project_dir=project_dir),
         events=_events_from(obs.get("events"), project_dir=project_dir),
         modbus_slave=_build_modbus_slave(cfg, plc=plc),
+        faults=faults,
     )
 
 
@@ -311,6 +333,39 @@ def _build_transport(cfg: Mapping[str, Any], *, plc: PLC, bus: IOBus) -> IOTrans
     raise ConfigError(
         f"[transport] unknown type {kind!r}; known: in_process, modbus_client"
     )
+
+
+def _build_faults(
+    cfg: Mapping[str, Any], *, transport: IOTransport
+) -> tuple[list[FaultModel], IOTransport]:
+    """Build the ``[[faults]]`` list. A ``type = "Dropout"`` entry wraps
+    ``transport`` instead of joining the returned list — see
+    ``digitwin.faults``'s module docstring for why dropout is a different
+    attachment point from the other five fault types."""
+    faults: list[FaultModel] = []
+    for i, spec in enumerate(_array(cfg, "faults")):
+        params = dict(spec)
+        type_name = params.pop("type", None)
+        if not type_name:
+            raise ConfigError(f"[[faults]] #{i} needs a 'type'")
+        if str(type_name) == "Dropout":
+            try:
+                transport = DropoutFault(transport, **params)
+            except (TypeError, ValueError) as exc:
+                raise ConfigError(f"[[faults]] #{i} (Dropout): {exc}") from exc
+            continue
+        try:
+            fault_cls = _FAULTS[str(type_name)]
+        except KeyError:
+            known = ", ".join(sorted((*_FAULTS, "Dropout")))
+            raise ConfigError(
+                f"[[faults]] #{i}: unknown fault {type_name!r}; known: {known}"
+            ) from None
+        try:
+            faults.append(fault_cls(**params))
+        except (TypeError, ValueError) as exc:
+            raise ConfigError(f"[[faults]] #{i} ({type_name}): {exc}") from exc
+    return faults, transport
 
 
 def _build_modbus_slave(cfg: Mapping[str, Any], *, plc: PLC) -> ModbusSlaveServer | None:
