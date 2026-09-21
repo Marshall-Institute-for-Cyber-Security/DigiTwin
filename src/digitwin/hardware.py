@@ -90,10 +90,117 @@ class _IecDotted:
 
 IEC_DOTTED: AddressSyntax = _IecDotted()
 
+class _Siemens:
+    """Siemens S7-1200 style addressing, as TIA Portal's graphical (LAD/FBD)
+    editors display it: %I0.0 %Q0.0 %M1.0-style IEC direct addressing for
+    bit access, %IW / %MW for word access.
+
+    Digital channels are byte.bit addressed directly (%I0.0..%I1.5 for 14
+    inputs, %Q0.0..%Q1.1 for 10 outputs) — channel index = byte*8 + bit,
+    same numbering TIA Portal uses, no offset needed since digital I/O
+    starts at byte 0.
+
+    Analog channels are word-addressed starting at %IW64 — the TIA Portal
+    *default* address for a CPU 1214C's two onboard analog inputs with no
+    signal boards or expansion modules installed. That "64" is a hardware
+    configuration default baked into this syntax, not a universal rule of
+    Siemens addressing (a different module configuration shifts it in a
+    real project) — the same embedded-only simplification IEC_DOTTED
+    already makes for the M221 ("module 0" only). %QW (analog outputs) has
+    no pattern here — no profile using this syntax has an onboard AO yet;
+    add one against a real CPU that does (1215C/1217C) when there's a
+    consumer, per the same "not all four stubs" guidance as the address
+    syntaxes this replaces.
+
+    %M (bit memory) is byte.bit addressed like %I/%Q. %MW (word memory) is
+    a literal byte offset — e.g. %MW4 spans bytes 4-5.
+
+    Known simplification: on real hardware %M and %MW physically overlap
+    (%MW0 is bytes 0-1, i.e. %M0.* and %M1.* land inside it). This engine's
+    AddressArea model has no concept of that overlap — MEMORY_BIT and
+    MEMORY_WORD are separate, non-colliding index spaces, same as for the
+    M221 — so two tags claiming genuinely overlapping real memory (e.g.
+    "%M0.0" and "%MW0") would both be accepted here without either the
+    engine or this profile detecting the collision. Modeling true
+    byte-overlap would mean changing plc.py's address-claim mechanism
+    (`_addressed`, keyed by canonical string), which P3 must not touch —
+    a documented limitation, not an oversight.
+
+    There is no Siemens equivalent of the M221's separate %S / %SW
+    system-bit address space — "system memory byte" and "clock memory
+    byte" on real S7-1200 hardware are just ordinary, user-designated
+    %M-area bytes (contrast schneider_tm221.py's %S13, a real distinct
+    address). So this syntax defines no SYSTEM_BIT / SYSTEM_WORD patterns
+    at all; a profile's first_scan_bit / always_on_bit / always_off_bit
+    point at ordinary %M addresses instead, which validates fine since
+    TagType.INTERNAL_BIT / WORD both accept MEMORY_BIT / MEMORY_WORD (see
+    plc.py's _AREA_FOR_TYPE).
+    """
+
+    name = "SIEMENS"
+
+    _ANALOG_INPUT_BASE = 64  # TIA Portal default for CPU 1214C onboard AI
+
+    _BIT_PATTERNS: ClassVar[list[tuple[re.Pattern[str], AddressArea]]] = [
+        (re.compile(r"%I(\d+)\.(\d+)$"), AddressArea.DISCRETE_INPUT),
+        (re.compile(r"%Q(\d+)\.(\d+)$"), AddressArea.DISCRETE_OUTPUT),
+        (re.compile(r"%M(\d+)\.(\d+)$"), AddressArea.MEMORY_BIT),
+    ]
+    _WORD_PATTERN = re.compile(r"%MW(\d+)$")
+    _ANALOG_INPUT_PATTERN = re.compile(r"%IW(\d+)$")
+
+    _BIT_FORMATS: ClassVar[dict[AddressArea, str]] = {
+        AddressArea.DISCRETE_INPUT: "%I{byte}.{bit}",
+        AddressArea.DISCRETE_OUTPUT: "%Q{byte}.{bit}",
+        AddressArea.MEMORY_BIT: "%M{byte}.{bit}",
+    }
+
+    def parse(self, address: str) -> ParsedAddress:
+        for pattern, area in self._BIT_PATTERNS:
+            match = pattern.fullmatch(address)
+            if match is not None:
+                byte, bit = int(match.group(1)), int(match.group(2))
+                if not 0 <= bit <= 7:
+                    raise AddressError(f"{address!r}: bit index must be 0-7")
+                return ParsedAddress(area=area, index=byte * 8 + bit, raw=address)
+        match = self._WORD_PATTERN.fullmatch(address)
+        if match is not None:
+            return ParsedAddress(
+                area=AddressArea.MEMORY_WORD, index=int(match.group(1)), raw=address
+            )
+        match = self._ANALOG_INPUT_PATTERN.fullmatch(address)
+        if match is not None:
+            word = int(match.group(1))
+            offset = word - self._ANALOG_INPUT_BASE
+            if offset < 0 or offset % 2 != 0:
+                raise AddressError(
+                    f"{address!r}: onboard analog inputs are word-aligned "
+                    f"from %IW{self._ANALOG_INPUT_BASE}"
+                )
+            return ParsedAddress(area=AddressArea.ANALOG_INPUT, index=offset // 2, raw=address)
+        raise AddressError(f"{address!r} is not valid SIEMENS syntax")
+
+    def format(self, parsed: ParsedAddress) -> str:
+        if parsed.area is AddressArea.ANALOG_INPUT:
+            return f"%IW{self._ANALOG_INPUT_BASE + parsed.index * 2}"
+        if parsed.area is AddressArea.MEMORY_WORD:
+            return f"%MW{parsed.index}"
+        try:
+            template = self._BIT_FORMATS[parsed.area]
+        except KeyError:
+            raise AddressError(f"SIEMENS syntax has no format for {parsed.area}") from None
+        return template.format(byte=parsed.index // 8, bit=parsed.index % 8)
+
+SIEMENS: AddressSyntax = _Siemens()
+
+
 # Address-syntax strategies, by the name a HardwareProfile (or a config file)
 # uses to reference one. Only strategies implemented in code appear here; an
 # inline profile in a project file may not name one that is missing.
-ADDRESS_SYNTAXES: dict[str, AddressSyntax] = {IEC_DOTTED.name: IEC_DOTTED}
+ADDRESS_SYNTAXES: dict[str, AddressSyntax] = {
+    IEC_DOTTED.name: IEC_DOTTED,
+    SIEMENS.name: SIEMENS,
+}
 
 
 def address_syntax_by_name(name: str) -> AddressSyntax:

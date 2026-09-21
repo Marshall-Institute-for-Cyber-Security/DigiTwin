@@ -3,10 +3,11 @@ from __future__ import annotations
 
 from digitwin.models.generic import PLC_Generic
 from digitwin.models.schneider_tm221 import PLC_Schneider_TM221CE16T
+from digitwin.models.siemens_s7_1200 import PLC_Siemens_S7_1200_CPU1214C
 from digitwin.plc import PLC, Program
 
 _REGISTRY: dict[str, type[PLC]] = {
-    cls.profile.model: cls for cls in (PLC_Generic, PLC_Schneider_TM221CE16T)
+    cls.profile.model: cls for cls in (PLC_Generic, PLC_Schneider_TM221CE16T, PLC_Siemens_S7_1200_CPU1214C)
 }
 
 def plc_from_model(
@@ -27,5 +28,6 @@ def plc_from_model(
 __all__ = [
     "PLC_Generic",
     "PLC_Schneider_TM221CE16T",
+    "PLC_Siemens_S7_1200_CPU1214C"
     "plc_from_model",
 ]
