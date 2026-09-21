@@ -148,9 +148,14 @@ imports or ships.
   `TransportError`). `Executive.faults`, ticked between the plant and the
   input transfer; snapshot-safe via the existing reflective capture/restore;
   `[[faults]]` in the project schema. See the P4 section below for detail.
+- **Golden-trace regression harness** (P5, landed 2026-09-21): every
+  shipped example twin has a checked-in historian trace
+  (`tests/golden/*.json`) diffed against a fresh `FREE_RUN`, in a new CI
+  workflow as well as locally. See the P5 section below for detail.
 - **Engineering baseline**: `mypy --strict` over `src/` + `tests/`, ruff
-  (`E,F,I,UP,B,SIM`), 246 tests (3 skipped, unrelated), zero runtime
-  dependencies, Python 3.12+.
+  (`E,F,I,UP,B,SIM`), 254 tests with the `modbus` extra installed (251 + 3
+  skipped without it), zero runtime dependencies, Python 3.12+, CI on every
+  push/PR.
 
 ---
 
@@ -336,24 +341,37 @@ faulted state. **Met** — see `docs/TODO.md`'s P4 section for the full
 verification (15 new tests, full suite 246 passed / 3 skipped, `mypy --strict`
 and `ruff` clean).
 
-### P5 — Regression / golden-trace harness
+### P5 — Regression / golden-trace harness *(landed 2026-09-21)*
 
 **Goal:** behaviour is locked, so refactors and new twins can't drift silently.
-The current roadmap admits it never stored the "identical output" baselines it
-keeps promising.
+The roadmap used to admit it never stored the "identical output" baselines it
+kept promising — it does now.
 
-**Scope**
+**Landed**
 
-- Golden historian traces for every shipped example twin, run in `FREE_RUN` and
-  diffed in CI.
-- Stand the harness up early (once P1 lands) and add a trace per twin as it
-  arrives.
-- Backfill the two open validation items: demo-on-`PLC_Generic` identical-output
-  baseline, and the second-vendor datasheet sanity check (folds into P3).
+- Golden historian traces for every shipped, documented example twin —
+  `tank`, `tank_inline_profile`, `heated_tank`, `m221_lab_twin`,
+  `motor_conveyor` (`tests/test_golden_traces.py` + `tests/golden/*.json`) —
+  run in `FREE_RUN` through each twin's own established stimulus script, with
+  a fresh `Historian(mode=EVERY_SCAN)` attached uniformly regardless of what
+  the project file itself declares.
+  `examples/pump_tank_bench.toml` is deliberately not covered: it predates
+  the documented example set (not in `AGENTS.md`'s file listing) and belongs
+  to `examples/tester.py`, itself still a scratch script.
+- Diffed in CI, not just locally: `.github/workflows/ci.yml` (new) runs
+  ruff, `mypy --strict`, and the full suite (with the `modbus` extra, so the
+  real-`pymodbus` tests run too) on every push/PR.
+- Backfilled both open validation items: the demo-on-`PLC_Generic`
+  identical-output baseline (the `tank` / `tank_inline_profile` traces), and
+  the second-vendor datasheet sanity check (P3's Siemens profile, exercised
+  by the `motor_conveyor` trace).
 
 **Done when:** `uv run pytest` includes a golden-trace diff for each example
 twin, and deliberately changing a program's logic fails exactly the traces that
-touch it.
+touch it. **Met** — verified for real: a one-line logic inversion in
+`MotorConveyorProgram` failed exactly its own golden trace and no other,
+reverted cleanly (empty `git diff`) before being committed. See
+`docs/TODO.md`'s P5 section for the full account.
 
 ---
 

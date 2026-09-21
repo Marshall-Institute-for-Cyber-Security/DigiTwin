@@ -204,13 +204,46 @@ and `ruff check .` both clean.
 
 ## P5 — Regression / golden-trace harness
 
-- [ ] Golden historian traces for every shipped example twin, diffed in
-      `FREE_RUN` in CI
-- [ ] Stand the harness up once P1 lands; add a trace per twin as it arrives
-- [ ] Backfill: demo-on-`PLC_Generic` identical-output baseline; second-vendor
-      datasheet sanity check (folds into P3)
-- [ ] **Validate:** changing a program's logic fails exactly the traces that
-      touch it
+- [x] Golden historian traces for every shipped example twin
+      (`tests/test_golden_traces.py` + `tests/golden/*.json`), run in
+      `FREE_RUN`. Each twin gets a fresh, uniform `Historian(mode=
+      EVERY_SCAN)` attached regardless of what its own project file
+      declares, run through its own established stimulus (the same scripts
+      `test_config.py`'s hardcoded-vs-config regression tests already use,
+      where one exists — `tank`/`tank_inline_profile` share the fill/drain
+      script, `m221_lab_twin` its own, `motor_conveyor` its start/stop
+      script; `heated_tank` has no controller, so it's `sim.run(3000)`
+      settling on its own), and diffed against the checked-in JSON.
+      Deliberately excludes `scan_time_ms` (wall-clock derived), same as
+      the existing hardcoded-vs-config regression tests.
+      Diffed in CI too, not just locally: **`.github/workflows/ci.yml`**
+      (new) runs ruff, `mypy --strict`, and the full test suite (with the
+      `modbus` extra installed, so the real-`pymodbus` socket tests run
+      too — verified locally first: 254 passed, 0 skipped, vs. 251 passed
+      / 3 skipped without the extra) on every push/PR.
+- [x] Stand the harness up once P1 lands; add a trace per twin as it
+      arrives — landed after P3 (`motor_conveyor`), so all five shipped,
+      documented example twins are covered. `examples/pump_tank_bench.toml`
+      is deliberately **not** covered: it isn't in `AGENTS.md`'s documented
+      example list and belongs to `examples/tester.py`, itself still a
+      scratch script — add its trace if/when it's promoted to a real,
+      documented example.
+- [x] Backfill: demo-on-`PLC_Generic` identical-output baseline — covered
+      by the `tank` / `tank_inline_profile` golden traces (both `Generic`,
+      one inline-profile); second-vendor datasheet sanity check — covered
+      by P3 (Siemens S7-1200) plus the new `motor_conveyor` golden trace.
+- [x] **Validate:** changing a program's logic fails exactly the traces
+      that touch it. Verified for real, not just claimed: introduced a
+      one-line logic inversion into `MotorConveyorProgram` (`if not
+      timed_out:` instead of `if timed_out:`), ran the golden-trace suite,
+      confirmed **exactly** `test_motor_conveyor_golden_trace` failed (at
+      the first tick `motor_run` diverges) while the other four traces
+      stayed green, then reverted — `git diff` on the file came back empty,
+      confirming a clean revert before anything was committed.
+
+**P5 is complete.** 5 new tests (`test_golden_traces.py`) + a new CI
+workflow; full suite (with `modbus` installed) 254 passed, 0 skipped;
+`mypy --strict` and `ruff check .` both clean.
 
 ---
 

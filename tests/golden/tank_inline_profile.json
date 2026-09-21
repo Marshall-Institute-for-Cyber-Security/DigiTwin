@@ -1,0 +1,10082 @@
+[
+{
+"timestamp": 0.1,
+"tag": "first_scan",
+"value": true
+},
+{
+"timestamp": 0.1,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.1,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.1,
+"tag": "start_button",
+"value": true
+},
+{
+"timestamp": 0.1,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.1,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.1,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.1,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.1,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.1,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.1,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.1,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.1,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.1,
+"tag": "tank_level",
+"value": 0
+},
+{
+"timestamp": 0.1,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.1,
+"tag": "tank_drain_permitted",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.2,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "start_button",
+"value": true
+},
+{
+"timestamp": 0.2,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.2,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.2,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.2,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.2,
+"tag": "tank_level",
+"value": 1
+},
+{
+"timestamp": 0.2,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.2,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "start_button",
+"value": true
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "tank_level",
+"value": 2
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.30000000000000004,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.4,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.4,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "start_button",
+"value": true
+},
+{
+"timestamp": 0.4,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.4,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.4,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.4,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.4,
+"tag": "tank_level",
+"value": 3
+},
+{
+"timestamp": 0.4,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.4,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.5,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.5,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "start_button",
+"value": true
+},
+{
+"timestamp": 0.5,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.5,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.5,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.5,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.5,
+"tag": "tank_level",
+"value": 4
+},
+{
+"timestamp": 0.5,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.5,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.6,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.6,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.6,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.6,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.6,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.6,
+"tag": "tank_level",
+"value": 5
+},
+{
+"timestamp": 0.6,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.6,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.7,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.7,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.7,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.7,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.7,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.7,
+"tag": "tank_level",
+"value": 6
+},
+{
+"timestamp": 0.7,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.7,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "tank_level",
+"value": 7
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.7999999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "tank_level",
+"value": 8
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.8999999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "tank_level",
+"value": 9
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 0.9999999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "tank_level",
+"value": 10
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.0999999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.2,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.2,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.2,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.2,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.2,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.2,
+"tag": "tank_level",
+"value": 11
+},
+{
+"timestamp": 1.2,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.2,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.3,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.3,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.3,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.3,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.3,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.3,
+"tag": "tank_level",
+"value": 12
+},
+{
+"timestamp": 1.3,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.3,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "tank_level",
+"value": 13
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.4000000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "tank_level",
+"value": 14
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.5000000000000002,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "tank_level",
+"value": 15
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.6000000000000003,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "tank_level",
+"value": 16
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.7000000000000004,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "tank_level",
+"value": 17
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.8000000000000005,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "tank_level",
+"value": 18
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 1.9000000000000006,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "tank_level",
+"value": 19
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.0000000000000004,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "tank_level",
+"value": 20
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.1000000000000005,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "tank_level",
+"value": 21
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.2000000000000006,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "tank_level",
+"value": 22
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.3000000000000007,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "tank_level",
+"value": 23
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.400000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "tank_level",
+"value": 24
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.500000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "tank_level",
+"value": 25
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.600000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "tank_level",
+"value": 26
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.700000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "tank_level",
+"value": 27
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.800000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "tank_level",
+"value": 28
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 2.9000000000000012,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "tank_level",
+"value": 29
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.0000000000000013,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "tank_level",
+"value": 30
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.1000000000000014,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "tank_level",
+"value": 31
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.2000000000000015,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "tank_level",
+"value": 32
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.3000000000000016,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "tank_level",
+"value": 33
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.4000000000000017,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "tank_level",
+"value": 34
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.5000000000000018,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "tank_level",
+"value": 35
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.600000000000002,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "tank_level",
+"value": 36
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.700000000000002,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "tank_level",
+"value": 37
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.800000000000002,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "tank_level",
+"value": 38
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 3.900000000000002,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "tank_level",
+"value": 39
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.000000000000002,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "tank_level",
+"value": 40
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.100000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "tank_level",
+"value": 41
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.200000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "tank_level",
+"value": 42
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.300000000000001,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.4,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.4,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.4,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.4,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.4,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.4,
+"tag": "tank_level",
+"value": 43
+},
+{
+"timestamp": 4.4,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.4,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.5,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.5,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.5,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.5,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.5,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.5,
+"tag": "tank_level",
+"value": 44
+},
+{
+"timestamp": 4.5,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.5,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.6,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.6,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.6,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.6,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.6,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.6,
+"tag": "tank_level",
+"value": 45
+},
+{
+"timestamp": 4.6,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.6,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "tank_level",
+"value": 46
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.699999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "tank_level",
+"value": 47
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.799999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "tank_level",
+"value": 48
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.899999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "tank_level",
+"value": 49
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 4.999999999999998,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "tank_level",
+"value": 50
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.099999999999998,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "tank_level",
+"value": 51
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.1999999999999975,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "tank_level",
+"value": 52
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.299999999999997,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "tank_level",
+"value": 53
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.399999999999997,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "tank_level",
+"value": 54
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.4999999999999964,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "tank_level",
+"value": 55
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.599999999999996,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "tank_level",
+"value": 56
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.699999999999996,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "tank_level",
+"value": 57
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.799999999999995,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "tank_level",
+"value": 58
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.899999999999995,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "tank_level",
+"value": 59
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 5.999999999999995,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "tank_level",
+"value": 60
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.099999999999994,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "tank_level",
+"value": 61
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.199999999999994,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "tank_level",
+"value": 62
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.299999999999994,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "tank_level",
+"value": 63
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.399999999999993,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "start_bit",
+"value": true
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "stop_bit",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "green_light",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "red_light",
+"value": true
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "fill_valve",
+"value": true
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "drain_valve",
+"value": false
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "tank_level",
+"value": 64
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.499999999999993,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "stop_button",
+"value": true
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "tank_level",
+"value": 65
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.5999999999999925,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "tank_level",
+"value": 64
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.699999999999992,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "tank_level",
+"value": 63
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.799999999999992,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "tank_level",
+"value": 61
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.8999999999999915,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "tank_level",
+"value": 60
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 6.999999999999991,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "tank_level",
+"value": 59
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.099999999999991,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "tank_level",
+"value": 58
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.19999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "tank_level",
+"value": 57
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.29999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "tank_level",
+"value": 56
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.39999999999999,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "tank_level",
+"value": 55
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.499999999999989,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "tank_level",
+"value": 53
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.599999999999989,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "tank_level",
+"value": 52
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.699999999999989,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "tank_level",
+"value": 51
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.799999999999988,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "tank_level",
+"value": 50
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.899999999999988,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "tank_level",
+"value": 49
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 7.999999999999988,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "tank_level",
+"value": 48
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.099999999999987,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "tank_level",
+"value": 47
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.199999999999987,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "tank_level",
+"value": 46
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.299999999999986,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "tank_level",
+"value": 45
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.399999999999986,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "tank_level",
+"value": 44
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.499999999999986,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "tank_level",
+"value": 43
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.599999999999985,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "tank_level",
+"value": 42
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.699999999999985,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "tank_level",
+"value": 41
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.799999999999985,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "tank_level",
+"value": 40
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.899999999999984,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "tank_level",
+"value": 39
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 8.999999999999984,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "tank_level",
+"value": 38
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.099999999999984,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "tank_level",
+"value": 37
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.199999999999983,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "tank_level",
+"value": 36
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.299999999999983,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "tank_level",
+"value": 35
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.399999999999983,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "tank_level",
+"value": 35
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.499999999999982,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "tank_level",
+"value": 34
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.599999999999982,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "tank_level",
+"value": 33
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.699999999999982,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "tank_level",
+"value": 32
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.799999999999981,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "tank_level",
+"value": 31
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.89999999999998,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "tank_level",
+"value": 30
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 9.99999999999998,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "tank_level",
+"value": 29
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.09999999999998,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "tank_level",
+"value": 29
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.19999999999998,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "tank_level",
+"value": 28
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.29999999999998,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "tank_level",
+"value": 27
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.399999999999979,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "tank_level",
+"value": 26
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.499999999999979,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "tank_level",
+"value": 25
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.599999999999978,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "tank_level",
+"value": 25
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.699999999999978,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "tank_level",
+"value": 24
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.799999999999978,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "tank_level",
+"value": 23
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.899999999999977,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "tank_level",
+"value": 22
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 10.999999999999977,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "tank_level",
+"value": 22
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.099999999999977,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "tank_level",
+"value": 21
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.199999999999976,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "tank_level",
+"value": 20
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.299999999999976,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "tank_level",
+"value": 20
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.399999999999975,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "tank_level",
+"value": 19
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.499999999999975,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "tank_level",
+"value": 18
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.599999999999975,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "tank_level",
+"value": 18
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.699999999999974,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "tank_level",
+"value": 17
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.799999999999974,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "tank_level",
+"value": 16
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.899999999999974,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "tank_level",
+"value": 16
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 11.999999999999973,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "tank_level",
+"value": 15
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 12.099999999999973,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "tank_level",
+"value": 15
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 12.199999999999973,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "tank_level",
+"value": 14
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 12.299999999999972,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "tank_level",
+"value": 14
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 12.399999999999972,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "tank_level",
+"value": 13
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 12.499999999999972,
+"tag": "tank_drain_permitted",
+"value": true
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "first_scan",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "always_on",
+"value": true
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "always_off",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "start_button",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "stop_button",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "oit_start_button",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "oit_stop_button",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "start_bit",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "stop_bit",
+"value": true
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "green_light",
+"value": true
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "red_light",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "fill_valve",
+"value": false
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "drain_valve",
+"value": true
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "tank_level",
+"value": 12
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "tank_fill_permitted",
+"value": true
+},
+{
+"timestamp": 12.599999999999971,
+"tag": "tank_drain_permitted",
+"value": true
+}
+]
