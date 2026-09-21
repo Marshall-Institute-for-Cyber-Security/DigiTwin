@@ -103,10 +103,29 @@ is next, in that document's priority order (P1–P5).
 
 ## P3 — Second twin as proof of generality
 
-- [ ] Second real vendor `HardwareProfile` (S7-1200 or Micro850), every field
-      datasheet-checked or marked `UNVERIFIED`
-- [ ] The one `AddressSyntax` that vendor needs (`SIEMENS` or `AB_TAG`), against
-      the existing protocol; register it in `ADDRESS_SYNTAXES`
+- [x] Second real vendor `HardwareProfile` — Siemens S7-1200 CPU 1214C
+      (`models/siemens_s7_1200.py`), fields datasheet-checked against the
+      official part datasheet (6ES7214-1AG40-0XB0) and the S7-1200 System
+      Manual, or explicitly left unset with a documented reason where no
+      fixed hardware fact exists (`retentive_bits`/`retentive_words`,
+      `scan_time_word` — see the module docstring). `first_scan_bit` /
+      `always_on_bit` / `always_off_bit` are flagged as the standard TIA
+      Portal "system memory byte" convention (`%MB1`), not immutable
+      hardware, unlike the M221's fixed `%S13`.
+- [x] The one `AddressSyntax` that vendor needs — `SIEMENS`
+      (`hardware.py::_Siemens`), against the existing `AddressSyntax`
+      protocol, registered in `ADDRESS_SYNTAXES`. Covers `%I`/`%Q` (byte.bit),
+      `%M` (byte.bit), `%MW` (byte offset), `%IW` (onboard analog, based at
+      `%IW64` per TIA Portal's default). `%QW` deliberately not implemented —
+      this CPU has no onboard analog output and no profile needs it yet.
+      Known, documented limitation: this engine's `AddressArea` model can't
+      represent `%M`/`%MW` byte-overlap (real on Siemens hardware, unlike the
+      M221), and fixing that would mean touching `plc.py`'s address-claim
+      mechanism, which P3 must not do — see `_Siemens`'s docstring and
+      `test_s7_1200_does_not_detect_real_byte_overlap_between_m_and_mw`,
+      which locks the current (documented) behavior in on purpose.
+      17 new tests in `test_hardware.py` (`test_s7_1200_*`), full suite green,
+      `mypy --strict` and `ruff` clean.
 - [ ] A second plant that is not a level process (thermal or motor/conveyor)
 - [ ] Its project file in the P1 schema
 - [ ] PR description lists every framework change the twin forced (target: only
