@@ -1,6 +1,16 @@
 # DigiTwin
 
-A small soft-PLC engine and simulation harness.
+A small **soft-PLC engine and simulation harness**, written in pure Python
+(stdlib only at runtime — no third-party runtime dependencies). It pairs a
+scan-cycle-accurate simulated PLC with a simulated physical plant, run in
+synchronized time behind a shared I/O bus, so you can develop and test control
+logic against realistic process dynamics without real hardware.
+
+The long-term goal is a proper **digital twin for PLCs**: observable (tag
+historian, structured event log, snapshot/restore and time-travel), able to
+mirror real vendor hardware (addressing, memory map, retention, system bits),
+and able to talk the same wire protocols real hardware does (Modbus today).
+See [docs/ROADMAP.md](docs/ROADMAP.md) for where that's headed.
 
 ## Usage
 
